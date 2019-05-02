@@ -1,0 +1,16 @@
+#+TITLE: Ivy
+
+* ivy
+
+   #+BEGIN_SRC emacs-lisp
+ (use-package ivy
+   :hook (after-init . ivy-mode)
+   :demand t
+   :config (setq ivy-count-format "(%d/%d) "
+                 ivy-initial-inputs-alist nil
+                 ivy-display-style 'fancy
+                 ivy-use-virtual-buffers nil
+                 ivy-mode 1
+                 ivy-re-builders-alist '((t . ivy--regex-ignore-order))))
+  #+END_SRC
+

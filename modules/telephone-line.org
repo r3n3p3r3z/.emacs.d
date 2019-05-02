@@ -1,0 +1,42 @@
+#+TITLE: telephone-line
+
+* telephone-line
+
+  #+BEGIN_SRC emacs-lisp
+ (use-package telephone-line :ensure t
+   :config
+   (telephone-line-defsegment my-vc-info ()
+     (when vc-mode
+       (cond
+	((string-match "Git[:-]" vc-mode)
+         (let ((branch (mapconcat 'concat (cdr (split-string vc-mode "[:-]")) "-")))
+           (concat "" (format " %s" branch))))
+	((string-match "SVN-" vc-mode)
+         (let ((revision (cadr (split-string vc-mode "-"))))
+           (concat "" (format "SVN-%s" revision))))
+	(t (format "%s" vc-mode)))))
+
+   (setq telephone-line-lhs
+         '(
+           (accent . (my-vc-info
+                      telephone-line-process-segment))
+           (nil    . (telephone-line-buffer-segment
+                      telephone-line-projectile-segment))))
+
+   (setq telephone-line-rhs
+         '((nil    . (telephone-line-flycheck-segment
+                      telephone-line-misc-info-segment))
+           (accent . (telephone-line-major-mode-segment))
+           ))
+
+   (setq display-time-format "%l:%M %p")
+
+   (setq display-time-default-load-average nil)
+   (setq display-time-use-mail-icon t)
+   (setq display-time-mail-file t)
+
+   (display-time-mode t)
+   (telephone-line-mode 1))
+
+  #+END_SRC
+

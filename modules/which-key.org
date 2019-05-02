@@ -1,0 +1,20 @@
+#+TITLE: which-key
+
+* which-key
+Display available keybindings in popup
+
+[[https://github.com/justbur/emacs-which-key/tree/187ac0eb8990b62d4bfd83aac10a0ae68cdd2ff5][GitHub - justbur/emacs-which-key at 187ac0eb8990b62d4bfd83aac10a0ae68cdd2ff5]]
+
+   #+BEGIN_SRC emacs-lisp
+ (use-package which-key :ensure t
+   :init
+   (setq which-key-sort-order 'which-key-prefix-then-key-order)
+   (setq which-key-popup-type 'side-window
+         which-key-side-window-max-height 0.3
+         which-key-side-window-max-width 0.5
+         which-key-idle-delay 0.0
+         which-key-min-display-lines 8)
+   :config
+   (which-key-mode 1)
+   (which-key-setup-side-window-bottom))
+   #+END_SRC

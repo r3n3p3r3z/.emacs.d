@@ -1,0 +1,10 @@
+#+TITLE: org-download
+
+* org-download
+#+BEGIN_SRC emacs-lisp
+ (use-package org-download :ensure t)
+ (add-hook 'dired-mode-hook 'org-download-enable)
+ (setq org-download-method 'attach)
+ (setq org-image-actual-width 600)
+
+#+END_SRC

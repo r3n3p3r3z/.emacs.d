@@ -1,0 +1,11 @@
+#+TITLE: deft
+
+* deft
+  #+BEGIN_SRC emacs-lisp
+ (use-package deft
+   :ensure t
+   :config (setq deft-directory "~/org/notes"
+                 deft-extensions '("org" "md")
+                 deft-default-extension "org"
+                 deft-use-filename-as-title t))
+  #+END_SRC

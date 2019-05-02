@@ -1,0 +1,14 @@
+#+TITLE: org-journal
+
+* org-journal
+#+BEGIN_SRC emacs-lisp
+(use-package org-journal 
+  :ensure t
+  :custom
+  (org-journal-file-format "%Y-%m-%d.org")
+  (org-journal-dir (concat "~/org/archive/" (format-time-string "%Y/%m/"))))
+
+
+
+#+END_SRC
+

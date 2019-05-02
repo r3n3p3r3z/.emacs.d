@@ -1,0 +1,9 @@
+#+TITLE: Counsel
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package counsel :ensure t
+   :after (ivy))
+
+(global-set-key (kbd "M-x") #'counsel-M-x)
+#+END_SRC

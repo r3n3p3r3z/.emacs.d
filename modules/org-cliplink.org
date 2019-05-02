@@ -1,0 +1,10 @@
+#+TITLE: org-cliplink
+
+* org-cliplink
+
+#+BEGIN_SRC emacs-lisp
+ (use-package org-cliplink :ensure t
+   :config
+   (general-define-key
+    "C-x p i" 'org-cliplink))
+#+END_SRC

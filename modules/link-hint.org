@@ -1,0 +1,6 @@
+#+TITLE: link-hint
+
+* link-hint
+  #+BEGIN_SRC emacs-lisp
+ (use-package link-hint :ensure t)
+  #+END_SRC

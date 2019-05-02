@@ -1,0 +1,12 @@
+#+TITLE: helm-org-rifle
+
+* helm-org-rifle
+  #+BEGIN_SRC emacs-lisp
+ (use-package helm-org-rifle :defer t)
+
+ (defun helm-org-rifle-brain ()
+   "Rifle files in `org-brain-path'."
+   (interactive)
+   (helm-org-rifle-directories (list org-brain-path)))
+
+  #+END_SRC

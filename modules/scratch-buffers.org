@@ -1,0 +1,19 @@
+
+#+TITLE: Scratch - Scratch buffers for major mode
+
+* Scratch
+#+BEGIN_SRC emacs-lisp
+(use-package scratch
+:ensure t
+:config
+(define-key (current-global-map) "\C-cs" #'scratch)
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (when scratch-buffer
+              (save-excursion
+                (goto-char (point-min))
+                (howm-create-here))))))
+
+
+#+END_SRC

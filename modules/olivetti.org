@@ -1,0 +1,8 @@
+#+TITLE: Olivetti - Minor mode for a nice writing environment
+
+** olivetti
+
+ #+BEGIN_SRC emacs-lisp
+ (use-package olivetti :ensure t
+   :commands (olivetti-mode))
+ #+END_SRC

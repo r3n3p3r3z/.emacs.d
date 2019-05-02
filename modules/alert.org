@@ -1,0 +1,8 @@
+#+TITLE: Alert
+
+* alert
+  #+BEGIN_SRC emacs-lisp
+ (use-package alert
+   :ensure t
+   :custom (alert-default-style 'libnotify))
+  #+END_SRC

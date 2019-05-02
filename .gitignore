@@ -1,0 +1,29 @@
+# ignore everything
+*
+
+# git stuff
+!.gitignore
+!LICENCE
+!README.org
+
+# simplemacs init
+!init.el
+
+# simplemacs modules
+!modules/
+!modules/*.org
+# !modules/package.org
+# !modules/aesthetics.org
+# !modules/notmuch.org
+# !modules/helm.org
+# !modules/company.org
+# !modules/yasnippet.org
+# !modules/flycheck.org
+
+# simplemacs activities
+!modules/activities/
+!modules/activities/*.org
+#!modules/activities/*.org
+
+# helpers
+!emc

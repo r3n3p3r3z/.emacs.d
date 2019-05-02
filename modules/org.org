@@ -1,0 +1,38 @@
+#+TITLE: org-mode: the reason why we use emacs
+#+AUTHOR: Aqeel Akber
+
+* org-mode
+
+I would be lying if I said emacs was a good text editor out of the
+box. It's great when you configure it, sure, but why the hell would
+you bother doing that? Answer: Org mode. Look it up.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org
+  :ensure t
+  :bind (:map org-mode-map ("M-RET" . nil))
+  :mode ("\\.org\\'" . org-mode)
+  :init
+
+(setq default-major-mode 'org-mode
+      org-ellipsis "↴"
+      org-lowest-priority ?C
+      org-default-priority ?B)
+
+(setq org-list-allow-alphabetical t)
+
+(global-set-key "\C-cl" 'org-store-link)
+
+(setq org-yank-adjusted-subtrees t))
+
+(require 'org-habit)
+
+(add-to-list 'org-modules 'org-habit)
+
+(setq org-modules '(org-habit
+                    org-timer
+                    org-expiry))
+
+#+END_SRC
+
+

@@ -1,0 +1,17 @@
+#+TITLE: Swiper
+
+* swiper
+#+BEGIN_SRC emacs-lisp
+ (use-package swiper :ensure t
+   :config
+   (general-define-key
+    "C-s" 'swiper))
+
+ (defun bjm-swiper-recenter (&rest args)
+   "recenter display after swiper"
+   (recenter)
+   )
+ (advice-add 'swiper :after #'bjm-swiper-recenter)
+
+#+END_SRC
+

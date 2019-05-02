@@ -1,0 +1,17 @@
+#+TITLE: org-clock
+
+* org-clock
+  #+BEGIN_SRC emacs-lisp
+ (use-package org-clock
+   :after org
+   :preface
+   :custom
+   (org-clock-clocktable-default-properties
+    '(:block day :maxlevel 6 :scope agenda :link nil :compact t :formula %
+             :step day :fileskip0 t :stepskip0 t :narrow 80
+             :properties ("TODO")))
+   (org-clock-continuously t)
+   (org-show-notification-handler (lambda (msg) (alert msg))))
+
+
+  #+END_SRC
