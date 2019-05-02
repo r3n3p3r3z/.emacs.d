@@ -44,20 +44,6 @@
 		      "~/.emacs.d/modules/helm.org"
 		      user-emacs-directory))
 
-;; Ivy
-;; ;; ------------------------------------------------------------------------
-;; (org-babel-load-file (expand-file-name
-;; 		      "~/.emacs.d/modules/ivy.org"
-;; 		      user-emacs-directory))
-
-;; ;; Counsel
-;; ;; ------------------------------------------------------------------------
-;; (org-babel-load-file (expand-file-name
-;; 		      "~/.emacs.d/modules/counsel.org"
-;; 		      user-emacs-directory))
-
-
-
 
 
 ;; company: Auto complete anything, anywhere
@@ -366,11 +352,11 @@
 		      "~/.emacs.d/modules/activities/org-agenda.org"
 		      user-emacs-directory))
 
-;; ;; encryption
-;; ;; ------------------------------------------------------------------------
-;; (org-babel-load-file (expand-file-name
-;; 		      "~/.emacs.d/modules/activities/encryption.org"
-;; 		      user-emacs-directory))
+;; encryption
+;; ------------------------------------------------------------------------
+(org-babel-load-file (expand-file-name
+		      "~/.emacs.d/modules/encryption.org"
+		      user-emacs-directory))
 
 ;; GTD
 ;; ------------------------------------------------------------------------
@@ -480,6 +466,7 @@
    ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
  '(xterm-color-names-bright
    ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
