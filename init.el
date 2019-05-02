@@ -334,15 +334,6 @@
 		      user-emacs-directory))
 
 
-;; zetteldeft
-;; ------------------------------------------------------------------------
-(org-babel-load-file (expand-file-name
-		      "~/.emacs.d/modules/zetteldeft.org"
-		      user-emacs-directory))
-
-
-
-
 
 
 

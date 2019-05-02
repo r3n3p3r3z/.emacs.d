@@ -6,24 +6,22 @@
 !LICENCE
 !README.org
 
-# simplemacs init
+
+!ditaa0_9
+!templates/
+
+
+# init
 !init.el
 
-# simplemacs modules
+# modules
 !modules/
 !modules/*.org
-# !modules/package.org
-# !modules/aesthetics.org
-# !modules/notmuch.org
-# !modules/helm.org
-# !modules/company.org
-# !modules/yasnippet.org
-# !modules/flycheck.org
 
-# simplemacs activities
+# activities
 !modules/activities/
 !modules/activities/*.org
-#!modules/activities/*.org
 
-# helpers
-!emc
+# ignore files below
+
+modules/aesthetics.org
