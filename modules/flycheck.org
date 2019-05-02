@@ -1,7 +1,7 @@
 #+TITLE: flycheck: Get the computer proof reading
-#+AUTHOR: Aqeel Akber
 
-* flycheck
+
+
 =flycheck= is a modern drop in replacement for emacs =flymake=. It's
 faster, more memory efficient, supports more languages, and has a
 great project culture.

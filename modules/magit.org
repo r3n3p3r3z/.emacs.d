@@ -1,7 +1,7 @@
 #+TITLE: Magit
 
 
-* Magit
+
 The magical git client. Let's load magit only when one of the several entry pont
 functions we invoke regularly outside of magit is called.
 

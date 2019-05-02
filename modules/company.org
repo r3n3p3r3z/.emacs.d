@@ -1,7 +1,7 @@
 #+TITLE: company: Auto complete anything, anywhere
-#+AUTHOR: Aqeel Akber
 
-* company
+
+
 
 Auto completion of everything with nice backends. I want to complete
 everything, everywhere!

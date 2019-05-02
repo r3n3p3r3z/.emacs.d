@@ -1,6 +1,6 @@
 #+TITLE: Howm - wiki-like note-taking tool
 
-* Howm
+
 
 howm: Write fragmentarily and read collectively.
 

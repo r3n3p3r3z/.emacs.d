@@ -2,7 +2,6 @@
 
 persistent-scratch is an Emacs package that preserves the state of scratch buffers accross Emacs sessions by saving the state to and restoring it from a file.
 
-* Persistent Scratch
 
 #+BEGIN_SRC emacs-lisp
 (use-package persistent-scratch 

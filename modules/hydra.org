@@ -1,7 +1,7 @@
 #+TITLE: Hydra
 
 
-* hydra
+
   #+BEGIN_SRC emacs-lisp
  (use-package hydra
    :ensure t

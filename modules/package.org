@@ -1,5 +1,5 @@
 #+TITLE: package: Emacs Package Manager
-#+AUTHOR: Alexander Soto
+
 
 * Settings
 #+BEGIN_SRC emacs-lisp

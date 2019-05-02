@@ -1,7 +1,7 @@
 #+TITLE: flyspell: Spell checking in emacs
-#+AUTHOR: Aqeel Akber
 
-* flyspell
+
+
 
 =flyspell= provides on the fly spell checking. Works fine out the box
 for me, might rely on your operating system being set up correctly.

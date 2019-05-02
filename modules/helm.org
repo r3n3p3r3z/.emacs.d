@@ -1,7 +1,4 @@
 #+TITLE: helm: Indescribably awesome
-#+AUTHOR: Aqeel Akber
-
-* helm
 
 Helm is incredible, it really supercharges emacs. It's a framework for
 incremental searching / completion / narrowing down options. Sounds

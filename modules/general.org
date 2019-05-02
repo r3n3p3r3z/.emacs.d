@@ -1,7 +1,5 @@
 #+TITLE: General: Convenience Wrappers for keybindings
 
-* general
-Convenience wrappers for keybindings.
 
  #+BEGIN_SRC emacs-lisp
 (use-package general

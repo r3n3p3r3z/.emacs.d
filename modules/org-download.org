@@ -1,6 +1,6 @@
 #+TITLE: org-download
 
-* org-download
+
 #+BEGIN_SRC emacs-lisp
  (use-package org-download :ensure t)
  (add-hook 'dired-mode-hook 'org-download-enable)

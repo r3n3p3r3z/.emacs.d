@@ -1,7 +1,6 @@
 #+TITLE: EMMS - Emacs Multi Media System
 
 
-** emms
 
    #+BEGIN_SRC emacs-lisp
  (use-package emms :ensure t

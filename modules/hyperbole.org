@@ -1,6 +1,6 @@
 #+TITLE: Hyperbole
 
-* Hyperbole
+
   Hyperbole is an efficient, programmable hypertextual information
   management system.
 

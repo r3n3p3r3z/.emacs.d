@@ -1,6 +1,6 @@
 #+TITLE: async
 
-* async
+
   #+BEGIN_SRC emacs-lisp
  (use-package async :ensure t)
  (autoload 'dired-async-mode "dired-async.el" nil t)

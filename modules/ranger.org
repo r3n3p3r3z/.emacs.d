@@ -1,6 +1,5 @@
 #+TITLE: Ranger - a multi-view column display
 
-* ranger
 a multi-view column display
 
  #+BEGIN_SRC emacs-lisp

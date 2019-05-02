@@ -1,6 +1,5 @@
 #+TITLE: Pomodoro
 
-** org-pomodoro
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro :ensure t)

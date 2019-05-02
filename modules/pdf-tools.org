@@ -1,6 +1,6 @@
 #+TITLE: pdf-tools
 
-* pdf-tools
+
   #+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
   :ensure t

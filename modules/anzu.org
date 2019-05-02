@@ -1,6 +1,5 @@
 #+TITLE: anzu
 
-* anzu
 
 #+BEGIN_SRC emacs-lisp
 (use-package anzu

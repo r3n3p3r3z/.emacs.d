@@ -1,6 +1,6 @@
 #+TITLE: deft
 
-* deft
+
   #+BEGIN_SRC emacs-lisp
  (use-package deft
    :ensure t

@@ -1,7 +1,7 @@
 
 #+TITLE: Scratch - Scratch buffers for major mode
 
-* Scratch
+
 #+BEGIN_SRC emacs-lisp
 (use-package scratch
 :ensure t

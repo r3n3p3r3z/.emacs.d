@@ -1,7 +1,4 @@
 #+TITLE: org-mode: the reason why we use emacs
-#+AUTHOR: Aqeel Akber
-
-* org-mode
 
 I would be lying if I said emacs was a good text editor out of the
 box. It's great when you configure it, sure, but why the hell would

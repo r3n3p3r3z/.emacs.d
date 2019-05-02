@@ -1,6 +1,6 @@
 #+TITLE: org-brain
 
-* org-brain
+
    #+BEGIN_SRC emacs-lisp
  (use-package org-brain :ensure t
  :config

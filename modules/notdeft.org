@@ -1,6 +1,6 @@
 #+TITLE: Notdeft
 
-* notdeft
+
 #+BEGIN_SRC emacs-lisp
  (add-to-list 'load-path "~/.emacs.d/elpa/notdeft-0.6.20190210")
  (load "notdeft-example")

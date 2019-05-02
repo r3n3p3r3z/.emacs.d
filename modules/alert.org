@@ -1,6 +1,6 @@
 #+TITLE: Alert
 
-* alert
+
   #+BEGIN_SRC emacs-lisp
  (use-package alert
    :ensure t

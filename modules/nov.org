@@ -1,4 +1,5 @@
-* nov
+#+TITLE: Nov
+
 #+BEGIN_SRC emacs-lisp
 (use-package nov :ensure t)
 

@@ -1,6 +1,5 @@
 #+TITLE: Projectile
 
-* Projectile
 Projectile is a quick and easy project management package that "just works". We're
 going to install it and make sure it's loaded immediately.
 

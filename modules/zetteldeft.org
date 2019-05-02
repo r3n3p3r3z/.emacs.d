@@ -1,7 +1,6 @@
-#+Zetteldeft
+#+TITLE: Zetteldeft
 
 
-* Zetteldeft
 
 #+BEGIN_SRC emacs-lisp
 

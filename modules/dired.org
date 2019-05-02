@@ -1,6 +1,5 @@
 #+TITLE: dired
 
-* dired
 
   #+BEGIN_SRC emacs-lisp
  (use-package dired

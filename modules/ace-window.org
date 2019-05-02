@@ -1,6 +1,6 @@
 #+TITLE: ace-window
 
-* ace-window
+
 #+BEGIN_SRC emacs-lisp
  (use-package ace-window
    :ensure t
