@@ -1,7 +1,6 @@
 * Introduction
 
 *Step one*
-
 Back up your existing stuff and clone it in.
 
 #+BEGIN_SRC bash
@@ -9,26 +8,24 @@ mv ~/.emacs.d ~/.emacs.d.bak
 git clone https://github.com/DynamicMetaFlow/.emacs.d.git
 #+END_SRC
 
-* The so called "modules"
+* The modules
 
-Simplemacs makes no attempt to create a unified configuration wrapper
-or anything like that. It's emacs configuration by the [[https://en.wikipedia.org/wiki/Unix_philosophy][UNIX
-Philosophy]], find the appropriate file for the package and edit it
-yourself.
+It's emacs configuration by the [[https://en.wikipedia.org/wiki/Unix_philosophy][UNIX Philosophy]], find the appropriate file for
+the package and edit it yourself.
 
 | File                        | Requires | Notes                    |
 | [[file:init.el]]                | None     | Start here               |
 | [[file:modules/package.org]]    | None     | Package management       |
-| [[file:modules/org.org]]        | None     | Beloved Org mode         |
+| [[file:modules/org.org]]        | None     | Org mode                 |
 | [[file:modules/aesthetics.org]] | None     | Theme to your taste here |
-| [[file:modules/notmuch.org]]    | [[https://notmuchmail.org/][notmuch]]  | Email (edit me!)         |
+| [[file:modules/notmuch.org]]    | [[https://notmuchmail.org/][notmuch]]  | Email                    |
 | [[file:modules/helm.org]]       | None     | Minibuffer completion    |
 | [[file:modules/company.org]]    | None     | Buffer completion        |
 | [[file:modules/yasnippet.org]]  | None     | Quick templates          |
 | [[file:modules/flyspell.org]]   | None     | Spell checking           |
 | [[file:modules/flycheck.org]]   | None     | Syntax / Style checking  |
 
-** The so called "activities"
+* The activities
 
 I have extended the modules outline to include "activities". This is
 for activity specific configuration. 

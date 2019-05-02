@@ -375,11 +375,11 @@
 		      "~/.emacs.d/modules/activities/org-agenda.org"
 		      user-emacs-directory))
 
-;; encryption
-;; ------------------------------------------------------------------------
-(org-babel-load-file (expand-file-name
-		      "~/.emacs.d/modules/activities/encryption.org"
-		      user-emacs-directory))
+;; ;; encryption
+;; ;; ------------------------------------------------------------------------
+;; (org-babel-load-file (expand-file-name
+;; 		      "~/.emacs.d/modules/activities/encryption.org"
+;; 		      user-emacs-directory))
 
 ;; GTD
 ;; ------------------------------------------------------------------------
