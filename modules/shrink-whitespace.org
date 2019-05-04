@@ -1,0 +1,14 @@
+#+TITLE: shrink-whitespace
+
+Usually =M-SPC= is bound to ~just-one-space~, but [[https://github.com/jcpetkovich/shrink-whitespace.el][shrink-whitespace]] is actually
+a better alternative because it can shrink space between lines.
+
+Thanks to
+http://pragmaticemacs.com/emacs/delete-blank-lines-and-shrink-whitespace/ for
+the link to this package.
+
+#+BEGIN_SRC emacs-lisp
+(use-package shrink-whitespace
+  :ensure t
+  :bind ("M-SPC" . shrink-whitespace))
+#+END_SRC

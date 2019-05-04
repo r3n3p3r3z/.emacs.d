@@ -1,0 +1,11 @@
+#+TITLE: expand-region
+
+Expand region is useful it's insane.
+
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
+  :ensure t
+  :defer t
+  :bind (("C-c e" . er/expand-region)
+         ("C-M-@" . er/contract-region)))
+#+END_SRC
