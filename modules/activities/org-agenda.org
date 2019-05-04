@@ -3,6 +3,9 @@
 * Org-agenda
 
 #+BEGIN_SRC emacs-lisp
+(setq org-agenda-inhibit-startup t)
+(setq org-agenda-use-tag-inheritance nil)
+
 
 (setq org-directory "~/org/")
 (setq org-file-inbox (concat org-directory "inbox.org"))
@@ -19,8 +22,8 @@
                         "~/org/"
                         "~/org/projects/"
                         "~/Public/wage-theft-app/"
-;                        "~/org/archive/web.org"
-;                        "~/org/archive/filenametimestamps.org"
+                        "~/org/archive/web.org"
+                        "~/org/archive/filenametimestamps.org"
                         ))
 
 
@@ -37,6 +40,11 @@
 
 (setq org-agenda-window-setup 'current-window)
 
+(defvar org-timeline-files nil
+  "The files to be included in `org-timeline-all-files'. Follows
+  the same rules as `org-agenda-files'")
+
+(setq org-timeline-files '("~/org/archive/"))
 
 
 (setq
@@ -155,7 +163,7 @@
                            ((org-agenda-overriding-header "Waiting for")
                             (org-tags-match-list-sublevels nil)))))
 
-   ("D" "Delegated" ((tags "-REFILE/+DELEGATE"
+   ("d" "Delegated" ((tags "-REFILE/+DELEGATE"
                            ((org-agenda-overriding-header "Delegated")
                             (org-tags-match-list-sublevels nil)))))
 
@@ -164,15 +172,11 @@
                            ((org-agenda-overriding-header "Done")
                             (org-tags-match-list-sublevels nil)))))
 
-   ("h" "Habits"
-    ((agenda
-      ""
-      ((org-habit-show-all-today t)
-       (org-habit-show-habits t)
-       (org-agenda-skip-function 'cwebber/skip-unless-habit)))))
+
 
 
    )))
+
 
 
 
@@ -250,15 +254,6 @@
 
 ;; If we leave Emacs running overnight - reset the appointments one minute after midnight
 (run-at-time "24:01" nil 'bh/org-agenda-to-appt)
-
-(defun bh/org-todo (arg)
-  (interactive "p")
-  (if (equal arg 4)
-      (save-restriction
-        (bh/narrow-to-org-subtree)
-        (org-show-todo-tree nil))
-    (bh/narrow-to-org-subtree)
-    (org-show-todo-tree nil)))
 
 
 ;; Narrow/widen in org-mode agenda
@@ -448,34 +443,6 @@
 (global-set-key "\C-cb" 'org-switchb)
 
 ;; Custom Key Bindings
-(global-set-key (kbd "<f5>") 'bh/org-todo)
-(global-set-key (kbd "<S-f5>") 'bh/widen)
-(global-set-key (kbd "<f10>") 'bh/set-truncate-lines)
-(global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
-(global-set-key (kbd "<f9> c") 'calendar)
-(global-set-key (kbd "<f9> h") 'bh/hide-other)
-(global-set-key (kbd "<f9> n") 'bh/toggle-next-task-display)
-
-(global-set-key (kbd "<f9> i") 'bh/punch-in)
-(global-set-key (kbd "<f9> o") 'bh/punch-out)
-
-                                        ; (global-set-key (kbd "<f9> o") 'bh/make-org-scratch)
-
-                                        ; (global-set-key (kbd "<f9> s") 'bh/switch-to-scratch)
-
-(global-set-key (kbd "<f9> S") 'org-save-all-org-buffers)
-
-(global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
-(global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
-
-(global-set-key (kbd "<f9> v") 'visible-mode)
-(global-set-key (kbd "<f9> l") 'org-toggle-link-display)
-(global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
-(global-set-key (kbd "C-<f9>") 'previous-buffer)
-(global-set-key (kbd "M-<f9>") 'org-toggle-inline-images)
-(global-set-key (kbd "C-<f10>") 'next-buffer)
-(global-set-key (kbd "S-<f11>") 'org-clock-goto)
-(global-set-key (kbd "C-<f11>") 'org-clock-in)
 
 (defun bh/hide-other ()
   (interactive)
@@ -1394,7 +1361,6 @@
 
  #+END_SRC
 
- 
 * org-attach
 #+BEGIN_SRC emacs-lisp
  (setq org-attach-auto-tag nil)
@@ -1417,7 +1383,6 @@
 
 #+END_SRC
 
-
 * org-jump
 #+BEGIN_SRC emacs-lisp
  (defun my/org-jump ()
@@ -1426,7 +1391,6 @@
  (let ((current-prefix-arg '(4)))
  (call-interactively 'org-refile)))
 #+END_SRC
-
 
 * bjm capture
   :PROPERTIES:
@@ -1561,7 +1525,7 @@
 
 (defun my/delegated ()
   (interactive)
-  (org-agenda nil "D")
+  (org-agenda nil "d")
   (setq org-agenda-follow-mode 1))
 
 
@@ -1573,18 +1537,21 @@
 
 
  (define-key global-map (kbd "C-1") 'bjm/org-capture-todo)
- (define-key global-map (kbd "C-2") 'bjm/org-capture-zettel)
+; (define-key global-map (kbd "C-2") 'bjm/org-capture-zettel)
  (define-key global-map (kbd "C-3") 'bjm/org-capture-event)
- (define-key global-map (kbd "C-4") 'my/howm-create)
+ (define-key global-map (kbd "C-4") 'howm-create)
  (define-key global-map (kbd "<f1>") 'my/org-brain-visualize-current)
 
 
 ; (define-key global-map (kbd "C-2") 'bjm/org-capture-zettel)
 ; (define-key global-map (kbd "C-4") 'bjm/org-capture-journal)
 
-; (define-prefix-command 'my-digit-map)
-; (global-set-key (kbd "C-0") 'my-digit-map)
-; (define-key 'my-digit-map (kbd "1") 'my/howm-create)
+ (define-prefix-command 'my-digit-map)
+ (global-set-key (kbd "C-2") 'my-digit-map)
+ (define-key 'my-digit-map (kbd "p") 'howm-parent-to)
+ (define-key 'my-digit-map (kbd "c") 'howm-child-to)
+ (define-key 'my-digit-map (kbd "f") 'howm-friendship-to)
+ (define-key 'my-digit-map (kbd "2") 'howm-create)
 
 
 #+END_SRC

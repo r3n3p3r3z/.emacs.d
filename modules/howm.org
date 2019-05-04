@@ -15,27 +15,89 @@ Howm is a note-taking tool on Emacs. It is similar to emacs-wiki.el; you can enj
   :config
 
 (setq howm-template
-"#+TITLE: %title%cursor
-%date
-,#+KEYWORDS:
+":HIDDEN:
+,#+PARENTS: 
+,#+CHILDREN: 
+,#+FRIENDS: 
 
-
-
-
-
-
-
-Related:
+:RELATED:
 %file
+%title
+
+:RESOURCES:
+
+:END:
+,#+TITLE: %cursor
+%fname
+%date
+,#+CATEGORY: 
+,#+KEYWORDS: 
 
 
 
-References:
+
+
+
+
 
 
 ")
 
-(setq howm-file-name-format "%Y-%m-%d-%H%M%S.org")
+(setq howm-template-rules
+  '(("%title" . howm-template-title)
+    ("%date" . howm-template-date)
+    ("%file" . howm-template-previous-file)
+    ("%parent" . howm-template-parent)
+    ("%fname" . howm-template-filename)
+    ("%cursor" . howm-template-cursor)))
+
+(defun howm-template-title (arg)
+  (insert (cdr (assoc 'title arg))))
+
+(defun howm-template-filename (arg)
+ (insert (concat ">>>" (file-name-base buffer-file-name))))
+
+(defun howm-template-parent (arg)
+(insert (cdr (assoc 'parent arg))))
+
+(defun howm-template-date (arg)
+  (insert (cdr (assoc 'date arg))))
+
+(defun howm-template-previous-file (arg)
+  (insert (cdr (assoc 'file arg))))
+
+(defun howm-template-cursor (arg))
+
+
+;; (defun howm-insert-template (title &optional
+;;                                    previous-buffer which-template not-use-file)
+;;   (let* ((beg (point))
+;;          (f (buffer-file-name previous-buffer))
+;;          (af (and f (howm-abbreviate-file-name f)))
+;;          (bf (and f (file-name-base f)))
+;;          )
+;;     (insert (howm-template-string which-template previous-buffer))
+;;     (let* ((date (format-time-string howm-template-date-format))
+;;            (use-file (not not-use-file))
+;;            (file (cond ((not use-file) "")
+;;                        ((null f) "")
+;;                        ((string= f (buffer-file-name)) "")
+;;                        (t (format howm-template-file-format af))))
+;;            (parent (cond ((not use-file) "")
+;;                        ((null bf) "")
+;;                        ((string= bf (buffer-file-name)) "")
+;;                        (t (format  (concat "%s") bf))))
+;;            )
+;;       (let ((arg `((title . ,title) (date . ,date) (file . ,file) (parent . ,parent)
+;;                    ))
+;;             (end (point-marker)))
+;;         (howm-replace howm-template-rules arg beg end)
+;;         end))))
+
+
+
+
+(setq howm-file-name-format "%Y-%m-%dT%H.%M.%S.org")
 (setq howm-template-date-format "#+DATE: [%Y-%m-%d %H:%M]")
 (setq howm-directory "~/org/notes/")
 (setq howm-view-preview-narrow nil)
@@ -230,16 +292,13 @@ when in howmC view"
 ;;   (org-brain--revert-if-visualizing))
 
 
-(defun my/howm-create (&optional which-template here)
+ (defun howm-create (&optional which-template here)
   (interactive "p")
   (let* ((t-c (howm-create-default-title-content))
          (title (car t-c))
          (content (cdr t-c)))
     (howm-create-file-with-title title which-template nil here content)
-    (insert "\n")
-    (howm-insert-filename)
-    (forward-line -1)
-    (end-of-line)
+    (org-cycle '(16))
     ))
 
 
@@ -255,10 +314,38 @@ when in howmC view"
 
 (define-key howm-view-summary-mode-map (kbd "<f1>") 'my/howm-view-brain)
 (define-key howm-view-summary-mode-map (kbd "<f1>") 'my/howm-view-brain)
-(define-key howm-view-summary-mode-map [tab] 'howm-view-summary-open)
+(define-key howm-view-summary-mode-map [tab] 'my/howm-view-summary-open)
 (define-key howm-view-summary-mode-map "\C-m" 'my/howm-view-summary-open)
 
+(defun my/howm-view-summary-open ()
+  (interactive)
+  (howm-view-summary-open)
+  (org-cycle '(16)))
 
+
+
+
+(defun howm-friendship-to ()
+  (interactive)
+  (howm-create)
+  (org-brain-add-friendship)
+  (search-forward "#+TITLE:")
+  (org-cycle '(16)))
+
+(defun howm-parent-to ()
+  (interactive)
+  (howm-create)
+  (org-brain-add-child)
+  (search-forward "#+TITLE:")
+  (org-cycle '(16)))
+
+
+(defun howm-child-to ()
+  (interactive)
+  (howm-create)
+  (org-brain-add-parent)
+  (search-forward "#+TITLE:")
+  (org-cycle '(16)))
 
 
 

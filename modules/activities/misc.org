@@ -95,7 +95,7 @@
  (setq org-agenda-use-tag-inheritance nil) ;; 3-4x speedup
 
 
- (defun my-memacs-org-agenda ()
+ (defun my/memacs-org-agenda ()
    "Opens an org-agenda with activated archive"
    (interactive)
    (memacs-chrome)
@@ -106,7 +106,7 @@
    (org-agenda-archives-mode 'files)
    )
  ;;disabled because I needed "m";; (bind-key "m" 'my-memacs-org-agenda my-map)
- (global-set-key "\C-cm" 'my-memacs-org-agenda)
+ (global-set-key "\C-cm" 'my/memacs-org-agenda)
 
  (defun zenburn ()
  "Activate zenburn theme."

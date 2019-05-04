@@ -19,10 +19,10 @@
   (tyrant-def
 
     ""     nil
-;    "c"   (general-simulate-key "C-c")
-;    "h"   (general-simulate-key "C-h")
-;    "u"   (general-simulate-key "C-u")
-;    "x"   (general-simulate-key "C-x")
+    "c"   (general-simulate-key "C-c")
+    "h"   (general-simulate-key "C-h")
+    "u"   (general-simulate-key "C-u")
+    "x"   (general-simulate-key "C-x")
 
     ;; Theme operations
     "t"   '(:ignore t :which-key "themes")
@@ -166,3 +166,19 @@
 
 #+END_SRC
 
+
+#+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "<f1>"))
+(global-unset-key (kbd "<f2>"))
+(global-unset-key (kbd "<f3>"))
+(global-unset-key (kbd "<f4>"))
+(global-unset-key (kbd "<f5>"))
+(global-unset-key (kbd "<f6>"))
+(global-unset-key (kbd "<f7>"))
+(global-unset-key (kbd "<f8>"))
+(global-unset-key (kbd "<f9>"))
+(global-unset-key (kbd "<f10>"))
+(global-unset-key (kbd "<f11>"))
+(global-unset-key (kbd "<f12>"))
+
+#+END_SRC

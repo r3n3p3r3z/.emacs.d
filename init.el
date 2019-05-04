@@ -65,7 +65,7 @@
 		      "~/.emacs.d/modules/flyspell.org"
 		      user-emacs-directory))
 
-;; flycheck: Get the computer proof reading
+;; flycheck: 
 ;; ------------------------------------------------------------------------
 (org-babel-load-file (expand-file-name
 		      "~/.emacs.d/modules/flycheck.org"
@@ -102,10 +102,10 @@
 		      "~/.emacs.d/modules/org-pomodoro.org"
 		      user-emacs-directory))
 
-;; Olivetti: nice writing environment
+;; writeroom-mode: distraction-free writing for emacs
 ;; ------------------------------------------------------------------------
 (org-babel-load-file (expand-file-name
-		      "~/.emacs.d/modules/olivetti.org"
+		      "~/.emacs.d/modules/writeroom-mode.org"
 		      user-emacs-directory))
 
 ;; ;; EMMS:
@@ -319,6 +319,19 @@
 		      "~/.emacs.d/modules/zenburn.org"
 		      user-emacs-directory))
 
+;; dired+
+;; ------------------------------------------------------------------------
+(org-babel-load-file (expand-file-name
+		      "~/.emacs.d/modules/dired+.org"
+		      user-emacs-directory))
+
+;; wgrep
+;; ------------------------------------------------------------------------
+(org-babel-load-file (expand-file-name
+		      "~/.emacs.d/modules/wgrep.org"
+		      user-emacs-directory))
+
+
 
 
 
@@ -382,11 +395,11 @@
  '(alert-default-style 'libnotify)
  '(ansi-color-names-vector
    ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
- '(company-begin-commands '(self-insert-command))
- '(company-idle-delay 0.2)
- '(company-minimum-prefix-length 0)
- '(company-show-numbers t)
- '(company-tooltip-align-annotations t)
+ '(company-begin-commands '(self-insert-command) t)
+ '(company-idle-delay 0.2 t)
+ '(company-minimum-prefix-length 0 t)
+ '(company-show-numbers t t)
+ '(company-tooltip-align-annotations t t)
  '(compilation-message-face 'default)
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#657b83")

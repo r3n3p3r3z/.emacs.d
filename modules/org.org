@@ -10,6 +10,14 @@ you bother doing that? Answer: Org mode. Look it up.
   :bind (:map org-mode-map ("M-RET" . nil))
   :mode ("\\.org\\'" . org-mode)
   :init
+  (defun my-org-mode-hooks ()
+    (visual-line-mode)
+    (turn-on-auto-fill)
+    (turn-on-flyspell)
+    (yas-minor-mode 1)
+    (outline-minor-mode))
+
+(add-hook 'org-mode-hook 'my-org-mode-hooks)
 
 (setq default-major-mode 'org-mode
       org-ellipsis "↴"
@@ -33,3 +41,61 @@ you bother doing that? Answer: Org mode. Look it up.
 #+END_SRC
 
 
+* Export org-headlines as files
+#+BEGIN_SRC emacs-lisp
+(defun org-export-headlines-to-org ()
+  "Export all subtrees that are *not* tagged with :noexport: to
+separate files.
+
+Subtrees that do not have the :EXPORT_FILE_NAME: property set
+are exported to a filename derived from the headline text."
+  (interactive)
+;  (save-buffer)
+  (let ((modifiedp (buffer-modified-p)))
+    (save-excursion
+      (goto-char (point-min))
+      (goto-char (re-search-forward "^*"))
+      (set-mark (line-beginning-position))
+      (goto-char (point-max))
+      (org-map-entries
+       (lambda ()
+         (let ((export-file (org-entry-get (point) "EXPORT_FILE_NAME")))
+           (unless export-file
+             (org-set-property
+              "EXPORT_FILE_NAME"
+              (replace-regexp-in-string " " "_" (nth 4 (org-heading-components)))))
+           (deactivate-mark)
+           (org-org-export-to-org nil t)
+           (unless export-file (org-delete-property "EXPORT_FILE_NAME"))
+           (set-buffer-modified-p modifiedp)))
+       "-noexport" 'region-start-level))))
+
+
+(defun eos/org-add-ids-to-headlines-in-file ()
+  "Add CUSTOM_ID properties to all headlines in the
+   current file which do not already have one."
+  (interactive)
+  (org-map-entries (lambda () (eos/org-custom-id-get (point) 'create))))
+
+
+(defun eos/org-custom-id-get (&optional pom create prefix)
+  "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+   If POM is nil, refer to the entry at point. If the entry does
+   not have an CUSTOM_ID, the function returns nil. However, when
+   CREATE is non nil, create a CUSTOM_ID if none is present
+   already. PREFIX will be passed through to `org-id-new'. In any
+   case, the CUSTOM_ID of the entry is returned."
+  (interactive)
+  (org-with-point-at pom
+    (let ((id (org-entry-get nil "EXPORT_FILE_NAME")))
+      (cond
+       ((and id (stringp id) (string-match "\\S-" id))
+        id)
+       (create
+        (setq id (org-id-new (concat prefix "h")))
+        (org-entry-put pom "EXPORT_FILENAME" id)
+        (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+        id)))))
+
+
+#+END_SRC

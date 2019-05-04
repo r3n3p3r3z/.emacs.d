@@ -168,4 +168,33 @@
      ("S" projectile-save-project-buffers)))
 
 
+(defhydra eos/hydra-about-emacs ()
+  "
+    About Emacs                                                        [_q_] quit
+    ^^--------------------------------------------------------------------------
+    PID:             %s(emacs-pid)
+    Uptime:          %s(emacs-uptime)
+    Init time:       %s(emacs-init-time)
+    Directory:       %s(identity user-emacs-directory)
+    Invoked from:    %s(concat invocation-directory invocation-name)
+    Version:         %s(identity emacs-version)
+
+    User Info
+    ^^--------------------------------------------------------------------------
+    User name:       %s(user-full-name)
+    Login (real):    %s(user-login-name) (%s(user-real-login-name))
+      UID (real):    %s(user-uid) (%s(user-real-uid))
+      GID (real):    %s(group-gid) (%s(group-real-gid))
+    Mail address:    %s(identity user-mail-address)
+
+    System Info
+    ^^--------------------------------------------------------------------------
+    System name:     %s(system-name)
+    System type:     %s(identity system-type)
+    System config:   %s(identity system-configuration)
+    "
+  ("q" nil nil))
+
+
+
   #+END_SRC
