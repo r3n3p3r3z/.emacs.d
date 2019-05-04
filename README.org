@@ -1,34 +1,11 @@
 * Introduction
 
-*Step one*
-Back up your existing stuff and clone it in.
+1. Back up your existing emacs configuration and clone this repository
 
 #+BEGIN_SRC bash
 mv ~/.emacs.d ~/.emacs.d.bak
 git clone https://github.com/DynamicMetaFlow/.emacs.d.git
 #+END_SRC
 
-* The modules
+This emacs configuration is split into modules and activities.
 
-It's emacs configuration by the [[https://en.wikipedia.org/wiki/Unix_philosophy][UNIX Philosophy]], find the appropriate file for
-the package and edit it yourself.
-
-| File                        | Requires | Notes                    |
-| [[file:init.el]]                | None     | Start here               |
-| [[file:modules/package.org]]    | None     | Package management       |
-| [[file:modules/org.org]]        | None     | Org mode                 |
-| [[file:modules/aesthetics.org]] | None     | Theme to your taste here |
-| [[file:modules/notmuch.org]]    | [[https://notmuchmail.org/][notmuch]]  | Email                    |
-| [[file:modules/helm.org]]       | None     | Minibuffer completion    |
-| [[file:modules/company.org]]    | None     | Buffer completion        |
-| [[file:modules/yasnippet.org]]  | None     | Quick templates          |
-| [[file:modules/flyspell.org]]   | None     | Spell checking           |
-| [[file:modules/flycheck.org]]   | None     | Syntax / Style checking  |
-
-* The activities
-
-I have extended the modules outline to include "activities". This is
-for activity specific configuration. 
-
-| File                                    | Requires | Notes       |
-| [[file:modules/activities/programming.org]] | None     | Minor modes |
