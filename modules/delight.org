@@ -1,7 +1,0 @@
-#+TITLE: delight
-
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package delight :ensure t)
-#+END_SRC

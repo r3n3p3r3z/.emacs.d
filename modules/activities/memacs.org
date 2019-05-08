@@ -1,8 +1,0 @@
-#+TITLE: memacs
-
-* Memacs
-#+BEGIN_SRC emacs-lisp
- (defun memacs-chrome ()
- (interactive)
- (shell-command "~/bin/memacs-chrome.sh"))
-#+END_SRC

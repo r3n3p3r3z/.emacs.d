@@ -1,9 +1,0 @@
-#+TITLE: Projectile
-
-Projectile is a quick and easy project management package that "just works". We're
-going to install it and make sure it's loaded immediately.
-
-#+BEGIN_SRC emacs-lisp
-(use-package projectile :ensure t)
-#+END_SRC
-

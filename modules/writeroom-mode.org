@@ -1,6 +1,0 @@
-#+TITLE: Writeroom-mode - distraction-free writing for Emacs
-
-
- #+BEGIN_SRC emacs-lisp
- (use-package writeroom-mode :ensure t)
- #+END_SRC

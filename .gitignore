@@ -14,14 +14,16 @@
 # init
 !init.el
 
+
 # modules
 !modules/
-!modules/*.org
+!modules/*.el
+
+# modules
+!core/
+!core/*.el
+
 
 # activities
-!modules/activities/
-!modules/activities/*.org
 
-# ignore files below
 
-modules/encryption.org

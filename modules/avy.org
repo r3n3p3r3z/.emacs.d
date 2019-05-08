@@ -1,6 +1,0 @@
-#+TITLE: avy
-
-
-  #+BEGIN_SRC emacs-lisp
-(use-package avy :ensure t)
-  #+END_SRC

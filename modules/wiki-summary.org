@@ -1,7 +1,0 @@
-#+TITLE: wiki-summary
-
-
-#+BEGIN_SRC emacs-lisp
- (use-package wiki-summary :ensure t)
-
-#+END_SRC
