@@ -74,9 +74,12 @@ by Emacs.")
 )
 
 (defvar dotfiles-custom-dir (concat dotfiles-dir ".custom/")
+  "Where custom lisp files are stored")
+
+(defvar dotfiles-screencast-dir (concat dotfiles-dir "screencast/")
     "Where custom lisp files are stored")
 
-    (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir))
+    (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir dotfiles-custom-dir dotfiles-screencast-dir))
     (unless (file-directory-p dir)
       (make-directory dir t)))
 
@@ -103,6 +106,8 @@ by Emacs.")
 (add-to-list 'load-path dotfiles-core-dir)
 (add-to-list 'load-path dotfiles-modules-dir)
 (add-to-list 'load-path dotfiles-vendor-dir)
+(add-to-list 'load-path dotfiles-custom-dir)
+(dotfiles-add-subfolders-to-load-path dotfiles-custom-dir)
 (dotfiles-add-subfolders-to-load-path dotfiles-vendor-dir)
 
 (setq gc-cons-threshold 50000000)

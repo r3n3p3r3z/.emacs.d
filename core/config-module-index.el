@@ -26,6 +26,7 @@
  config/available-modules
  '((config-appearance "how Emacs looks" :recommended)
    (config-fonts "adjust font size on the fly" :recommended)
+   (config-screencast "create and view interactive screencast" :recommended)
    (config-dashboard "a dashboard for emacs" :recommended)
    (config-help "ways to get more help" :recommended)
    (config-general "basic editor settings" :recommended)
@@ -58,6 +59,7 @@
    (config-html "HTML, CSS and friends" :optional)
    (config-javascript "JavaScript language support" :optional)
    (config-js-web-mode "alternative JS support using web-mode" :optional)
+   (config-experimental "playground for experimenting with new modules" :optional)
 
 
 

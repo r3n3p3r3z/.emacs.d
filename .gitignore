@@ -23,7 +23,11 @@
 !core/
 !core/*.el
 
+# screencast
+!screencast/
+!screencast/*.el
 
-# activities
-
-
+# custom folder
+!.custom/
+!.custom/*/
+!.custom/screencast-mode/*.el
