@@ -138,6 +138,7 @@ by Emacs.")
 
 
 ;; Load the modules
+(require 'config-core)
 (require 'config-lib)
 (require 'config-package)
 (require 'config-module-index)
@@ -178,3 +179,8 @@ by Emacs.")
     (defun enriched-decode-display-prop (start end &optional param)
       (list start end))))
 
+
+
+(config-eval-after-init
+ ;; greet the use with some useful tip
+ (run-at-time 5 nil 'config-tip-of-the-day))
