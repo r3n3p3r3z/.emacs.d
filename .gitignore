@@ -29,5 +29,4 @@
 
 # custom folder
 !.custom/
-!.custom/*/
-!.custom/screencast-mode/*.el
+!.custom/*.el
