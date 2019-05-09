@@ -11,6 +11,8 @@
 (use-package diminish :ensure t)
 (use-package all-the-icons :ensure t)
 
+(defvar current-font (font-spec :family "DejaVu Sans Mono" :size 14))
+
 
 ;; Get rid of the training wheels, if you're ready for it.
 (when (not config-personal-taste/training-wheels)

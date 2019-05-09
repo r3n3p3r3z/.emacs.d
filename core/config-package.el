@@ -78,7 +78,19 @@
 
 (defvar dotfiles-packages
   '(
-
+    beacon
+    browse-kill-ring
+    diff-hl
+    easy-kill
+    move-text
+    operate-on-number
+    smartparens
+    super-save
+    smartrep
+    midnight
+    ediff
+    imenu-anywhere
+    volatile-highlights
     )
   "A list of packages to ensure are installed at launch.")
 

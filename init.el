@@ -128,6 +128,7 @@ by Emacs.")
 (require 'config-startup-wizard)
 (require 'config-set-path)
 (require 'config-core)
+(require 'config-keybindings)
 
 ;; macOS specific settings
 (when (eq system-type 'darwin)

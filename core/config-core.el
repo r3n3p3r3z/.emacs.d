@@ -68,30 +68,6 @@ PROMPT sets the `read-string prompt."
 
 
 
-(defun config-update ()
-  "Update User to its latest version."
-  (interactive)
-  (when (y-or-n-p "Do you want to update? ")
-    (message "Updating installed packages...")
-    (epl-upgrade)
-    (message "Updating User...")
-    (cd config-dir)
-    (shell-command "git pull")
-    (config-recompile-init)
-    (message "Update finished. Restart Emacs to complete the process.")))
-
-(defun config-update-packages (&optional arg)
-  "Update User's packages.
-This includes package installed via `require-package'.
-
-With a prefix ARG updates all installed packages."
-  (interactive "P")
-  (when (y-or-n-p "Do you want to update User's packages? ")
-    (if arg
-        (epl-upgrade)
-      (epl-upgrade (cl-remove-if-not (lambda (p) (memq (epl-package-name p) config-packages))
-                                     (epl-installed-packages))))
-    (message "Update finished. Restart Emacs to complete the process.")))
 
 ;;; Emacs in macOS already has fullscreen support
 ;;; Emacs has a similar built-in command in 24.4
@@ -122,4 +98,3 @@ This follows freedesktop standards, should work in X servers."
 
 
 (provide 'config-core)
-
