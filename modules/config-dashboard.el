@@ -63,6 +63,40 @@
           s))
 
 
+(defun avy-dashboard-button (char &optional arg)
+    "Jump to the currently visible CHAR.
+  The window scope is determined by `avy-all-windows' (ARG negates it)."
+    (interactive (list (read-char "char: " t)
+                       current-prefix-arg))
+
+    (avy-with avy-goto-char
+      (avy-jump
+       (if (= 13 char)
+           "\n"
+         (regexp-quote (string char)))
+       :window-flip arg))
+    (push-button arg))
+
+(define-key dashboard-mode-map "n" #'dashboard/next-button)
+(define-key dashboard-mode-map "p" #'dashboard/previous-button)
+(define-key dashboard-mode-map "j" #'dashboard/next-button)
+(define-key dashboard-mode-map "k" #'dashboard/previous-button)
+(define-key dashboard-mode-map "[" #'dashboard/next-button)
+(define-key dashboard-mode-map "]" #'dashboard/previous-button)
+
+(define-key dashboard-mode-map [right] #'dashboard/next-button)
+(define-key dashboard-mode-map [left] #'dashboard/previous-button)
+(define-key dashboard-mode-map [down] #'dashboard/next-button)
+(define-key dashboard-mode-map [up] #'dashboard/previous-button)
+
+(define-key dashboard-mode-map "l" #'dashboard/last-buton)
+(define-key dashboard-mode-map "f" #'dashboard/first-button)
+
+(define-key dashboard-mode-map [tab] #'avy-dashboard-button)
+
+
+
+
 (define-derived-mode dashboard-mode special-mode
   (format "Dashboard")
   "Major mode for the BMACS dashboard buffer."

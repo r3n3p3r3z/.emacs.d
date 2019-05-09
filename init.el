@@ -2,20 +2,6 @@
 
 ;; Skip the default splash screen.
 
-(defmacro after! (feature &rest forms)
-  "A smart wrapper around `with-eval-after-load'. Supresses warnings during
-compilation."
-  (declare (indent defun) (debug t))
-  `(,(if (or (not (bound-and-true-p byte-compile-current-file))
-             (if (symbolp feature)
-                 (require feature nil :no-error)
-               (load feature :no-message :no-error)))
-         #'progn
-       #'with-no-warnings)
-    (with-eval-after-load ',feature ,@forms)))
-
-
-
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 
@@ -85,16 +71,15 @@ by Emacs.")
    called. Use this for transient files that are generated on the fly like caches
    and temporary files. Anything that may need to be cleared if there are
    problems.")
+)
 
-  (defvar dotfiles-packages-dir (concat dotfiles-local-dir "packages/")
-    "Where package.el and quelpa plugins (and their caches) are stored.")
-
-  (defvar dotfiles-custom-dir (concat dotfiles-dir ".custom/")
+(defvar dotfiles-custom-dir (concat dotfiles-dir ".custom/")
     "Where custom lisp files are stored")
 
-  (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir (expand-file-name "elpa" dotfiles-packages-dir)))
+    (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir))
     (unless (file-directory-p dir)
-      (make-directory dir t))))
+      (make-directory dir t)))
+
 
 (setq url-configuration-directory (concat dotfiles-cache-dir "url/"))
 (setq tramp-persistency-file-name (concat dotfiles-cache-dir "tramp"))
@@ -128,7 +113,7 @@ by Emacs.")
 ;; preload the personal settings from `dotfiles-personal-preload-dir'
 (when (file-exists-p dotfiles-personal-preload-dir)
   (message "Loading personal configuration files in %s..." dotfiles-personal-preload-dir)
-  (mapc 'load (directory-files dotfiles-personal-preload-dir 't "^[^#\.].*el$")))
+  (mapc 'load (directory-files dotfiles-personal-preload-dir 't "^[^#\.].*el.*org$")))
 
 (message "Loading Emacs's core...")
 
@@ -138,7 +123,7 @@ by Emacs.")
 
 
 ;; Load the modules
-(require 'config-core)
+
 (require 'config-lib)
 (require 'config-package)
 (require 'config-module-index)
@@ -147,6 +132,7 @@ by Emacs.")
 (require 'config-personal-taste)
 (require 'config-startup-wizard)
 (require 'config-set-path)
+(require 'config-core)
 
 ;; macOS specific settings
 (when (eq system-type 'darwin)
@@ -160,7 +146,7 @@ by Emacs.")
 (message "Loading modules...")
 
 ;; Load the enabled modules.
-(when (not (boundp 'ohai/wizard-did-run)) (config/load-modules))
+(when (not (boundp 'config/wizard-did-run)) (config/load-modules))
 
 ;; config changes made through the customize UI will be stored here
 
