@@ -24,8 +24,8 @@
 !core/*.el
 
 # screencast
-!screencast/
-!screencast/*.el
+!screencasts/
+!screencasts/*.el
 
 # custom folder
 !.custom/
