@@ -1,17 +1,3 @@
-(use-package multiple-cursors
-  :commands multiple-cursors-mode
-  :config
-  ;; MC has `mc-hide-unmatched-lines-mode' bound to C-', which interferes
-  ;; with our ability to add more cursors, so we'll just clear the binding.
-  ;; TODO: add `mc-hide-unmatched-lines-mode' back somewhere else?
-  (bind-keys :map mc/keymap
-             ("C-'" . nil))
-  :bind (("<insert>" . mc/mark-next-like-this)
-	 ("S-<insert>" . mc/mark-previous-like-this)
-	 ("C-'" . mc/mark-more-like-this-extended)
-	 ("C-\"" . mc/mark-all-like-this-dwim)
-	 ("C-M-'" . mc/edit-lines)))
-
 ;; Use C-= to select the innermost logical unit your cursor is on.
 ;; Keep hitting C-= to expand it to the next logical unit.
 ;; Protip: this goes really well with multiple cursors.

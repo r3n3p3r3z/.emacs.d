@@ -1,3 +1,3 @@
-(use-package hyperbole :defer t)
+(use-package hyperbole)
 
 (provide 'config-hyperbole)

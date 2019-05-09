@@ -25,7 +25,6 @@
     (setq howm-view-grep-option "-nH --no-heading --color never"))
 
   (advice-add 'howm-menu-refresh :around #'howm-menu-with-j1)
-  0
 
   (setq howm-view-search-in-result-correctly t)  ;; be aware of paragraph
 

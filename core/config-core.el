@@ -1,6 +1,10 @@
 (require 'thingatpt)
 (require 'cl-lib)
 
+(use-package crux :ensure t)
+(use-package editorconfig :ensure t)
+(use-package epl :ensure t)
+
 (defun config-buffer-mode (buffer-or-name)
   "Retrieve the `major-mode' of BUFFER-OR-NAME."
   (with-current-buffer buffer-or-name
@@ -32,25 +36,9 @@ PROMPT sets the `read-string prompt."
   "Byte-compile all your dotfiles again."
   (interactive)
   (byte-recompile-directory config-dir 0))
+
 (defvar config-tips
-  '("Press <C-c o> to open a file with external program."
-    "Press <s-r> to open a recently visited file."
-    "Press <C-c g> to search in Google."
-    "Press <C-c G> to search in GitHub."
-    "Press <C-c y> to search in YouTube."
-    "Press <C-c U> to search in DuckDuckGo."
-    "Press <C-c r> to rename the current buffer and the file it's visiting if any."
-    "Press <C-c t> to open a terminal in Emacs."
-    "Press <C-c k> to kill all the buffers, but the active one."
-    "Press <C-c D> to delete the current file and buffer."
-    "Press <C-c s> to swap two windows."
-    "Press <S-RET> or <M-o> to open a line beneath the current one."
-    "Press <s-o> to open a line above the current one."
-    "Press <C-Backspace> to kill a line backwards."
-    "Press <C-S-Backspace> or <s-k> to kill the whole line."
-    "Press <s-j> or <C-^> to join lines."
-    "Press <s-.> or <C-c j> to jump to the start of a word in any visible window."
-    "Press <f11> to toggle fullscreen mode."
+  '(""
     ))
 
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
@@ -76,7 +64,7 @@ PROMPT sets the `read-string prompt."
     (when after-init-time
       (eval form))))
 
-;(require 'epl)
+(require 'epl)
 
 
 

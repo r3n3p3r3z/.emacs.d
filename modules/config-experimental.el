@@ -14,7 +14,7 @@
 
        ;; Max time delay between two key presses to be considered a key chord
     (setq key-chord-two-keys-delay 0.1) ; default 0.1
-    
+
     ;; Max time delay between two presses of the same key to be considered a key chord.
     ;; Should normally be a little longer than `key-chord-two-keys-delay'.
     (setq key-chord-one-key-delay 0.2) ; default 0.2
@@ -28,13 +28,6 @@
      (define-key sub-keymap "c" 'org-capture)
      (key-chord-define-global "cc" sub-keymap))
 
-   (defvar key-chord-tips
-     '("Press <jj> quickly to jump to the beginning of a visible word."
-       "Press <jl> quickly to jump to a visible line."
-       "Press <jk> quickly to jump to a visible character."
-       "Press <JJ> quickly to switch to previous buffer."
-       "Press <uu> quickly to visualize the undo tree."
-       "Press <xx> quickly to execute extended command."
-       "Press <yy> quickly to browse the kill ring.")))
+   )
 
 (provide 'config-experimental)

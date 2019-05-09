@@ -13,7 +13,7 @@
 ;; Figure out the current hostname.
 (setq hostname (replace-regexp-in-string "\\(^[[:space:]\n]*\\|[[:space:]\n]*$\\)" "" (with-output-to-string (call-process "hostname" nil standard-output))))
 
- (eval-and-compile
+(eval-and-compile
   (defvar dotfiles-dir (expand-file-name user-emacs-directory)
     "The path to the emacs.d directory.")
 
@@ -33,17 +33,12 @@ by Emacs.")
   (defvar dotfiles-modules-file (expand-file-name "modules.el" dotfiles-personal-dir)
     "This file contains a list of modules that will be loaded by Emacs.")
 
-  (defvar sample-dir (expand-file-name "sample" dotfiles-dir)
-    "This directory is for your personal configuration.
-
-Emacss of Emacs Emacs are encouraged to keep their personal configuration
-changes in this directory.  All Emacs Lisp files there are loaded automatically
-by Emacs.")
-
   (defvar dotfiles-personal-preload-dir (expand-file-name "preload" dotfiles-personal-dir)
     "This directory is for your personal configuration, that you want loaded before Emacs.")
+
   (defvar dotfiles-vendor-dir (expand-file-name ".vendor" dotfiles-dir)
     "This directory houses packages that are not yet available in ELPA (or MELPA).")
+
   (defvar dotfiles-savefile-dir (expand-file-name ".savefile" dotfiles-dir)
     "This folder stores all the automatically generated save/history-files.")
 
@@ -67,17 +62,17 @@ by Emacs.")
    called. Use this for transient files that are generated on the fly like caches
    and temporary files. Anything that may need to be cleared if there are
    problems.")
-)
+  )
 
 (defvar dotfiles-custom-dir (concat dotfiles-dir ".custom/")
   "Where custom lisp files are stored")
 
 (defvar dotfiles-screencast-dir (concat dotfiles-dir "screencast/")
-    "Where custom lisp files are stored")
+  "Where custom lisp files are stored")
 
-    (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir dotfiles-custom-dir))
-    (unless (file-directory-p dir)
-      (make-directory dir t)))
+(dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir dotfiles-custom-dir))
+  (unless (file-directory-p dir)
+    (make-directory dir t)))
 
 
 (setq url-configuration-directory (concat dotfiles-cache-dir "url/"))
@@ -124,9 +119,8 @@ by Emacs.")
 
 
 ;; Load the modules
-
-(require 'config-lib)
 (require 'config-package)
+(require 'config-lib)
 (require 'config-module-index)
 (require 'config-module-selector)
 (require 'config-update)

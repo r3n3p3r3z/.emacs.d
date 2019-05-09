@@ -4,7 +4,12 @@
 
 (require 'term)
 
+(use-package dashboard :ensure t)
 (use-package doom-themes :ensure t)
+(use-package doom-modeline :ensure t)
+(use-package hlinum :ensure t)
+(use-package diminish :ensure t)
+(use-package all-the-icons :ensure t)
 
 
 ;; Get rid of the training wheels, if you're ready for it.
@@ -58,9 +63,7 @@
 ;; Maximise the Emacs frame if that's how you like it.
 (set-frame-parameter nil 'fullscreen 'maximized)
 
-(use-package doom-modeline :ensure t
-  :init
-(doom-modeline-mode 1))
+(doom-modeline-mode 1)
 
 
 ;; Don't defer screen updates when performing operations.
@@ -78,9 +81,7 @@
 (setq linum-format (if (not window-system) "%4d " "%4d"))
 
 ;; Highlight the line number of the current line.
-(use-package hlinum
-  :config
-  (hlinum-activate))
+  (hlinum-activate)
 
 ;; Show column numbers in modeline.
 (setq column-number-mode t)
@@ -92,8 +93,6 @@
 ;; Highlight matching braces.
 (show-paren-mode 1)
 
-;; Unclutter the modeline
-(use-package diminish)
 
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "autopair" '(diminish 'autopair-mode))
@@ -144,11 +143,6 @@
 
 (config-appearance/apply-style)
 
-(use-package all-the-icons
-  :commands (all-the-icons-octicon all-the-icons-faicon all-the-icons-fileicon
-             all-the-icons-wicon all-the-icons-material all-the-icons-alltheicon
-             all-the-icons-install-fonts)
-  :init
   (defun my/*disable-all-the-icons-in-tty (orig-fn &rest args)
     (when (display-graphic-p)
       (apply orig-fn args)))
@@ -157,8 +151,7 @@
   (dolist (fn '(all-the-icons-octicon all-the-icons-material
                  all-the-icons-faicon all-the-icons-fileicon
                  all-the-icons-wicon all-the-icons-alltheicon))
-     (advice-add fn :around #'my/*disable-all-the-icons-in-tty)))
-
+     (advice-add fn :around #'my/*disable-all-the-icons-in-tty))
 
 
 

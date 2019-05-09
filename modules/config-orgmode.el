@@ -10,41 +10,41 @@
    'org-mode-hook
    (lambda ()
      (visual-line-mode 1)
-     (set-visual-wrap-column 80)))
+     (set-visual-wrap-column 80))))
+
   ;; Fancy bullet rendering.
-  (use-package org-bullets
+(use-package org-bullets
+  :demand t
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
   ;; Insert links from clipboard.
   (use-package org-cliplink
+    :demand t
     :config
-    (with-eval-after-load "org"
-      (define-key org-mode-map (kbd "C-c M-l") 'org-cliplink))))
+    (global-set-key (kbd "C-x p i") 'org-cliplink))
 
 (use-package org-download :demand t
 :init
 (setq org-download-method 'attach)
 (setq org-image-actual-width 600))
 
-(use-package org-cliplink
-  :demand t
-  )
-
 (use-package org-journal
   :demand t
   :init
   (setq org-journal-file-format "%Y-%m-%d.org"))
 
-(use-package org-noter :defer t)
+(use-package org-noter :demand t)
 
-(use-package org-pomodoro :defer t)
+(use-package org-pomodoro :demand t)
 
 (use-package org-web-tools
-:ensure t
+:demand t
 :init
 (setq org-web-tools-attach-archive-retry 10))
 
 (use-package org-brain
+  :demand t
   :config
   (setq org-id-track-globally t)
   (setq org-id-locations-file "~/.emacs.d/.org-id-locations")

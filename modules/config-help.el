@@ -20,7 +20,9 @@
 ;; with C-h C-m.
 (use-package discover-my-major
   :commands (discover-my-major discover-my-mode)
-  :bind ("C-h C-m" . discover-my-major))
+  :bind ("C-h RET" . discover-my-major))
+
+
 
 
 

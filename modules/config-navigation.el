@@ -10,7 +10,6 @@
         avy-background t
         avy-timeout-seconds 0.3)
   (with-eval-after-load "isearch"
-
     (define-key isearch-mode-map (kbd "C-;") 'avy-isearch)))
 
 ;; Smart home key.
@@ -62,7 +61,6 @@
   :config (ace-link-setup-default))
 
 (use-package thingatpt :defer t)
-
 
 
 (provide 'config-navigation)

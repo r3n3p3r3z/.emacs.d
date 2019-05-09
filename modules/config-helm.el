@@ -21,7 +21,7 @@
           ;; disable special behavior for left/right, M-left/right keys.
           helm-ff-lynx-style-map nil)
 
-  
+
       (setq helm-M-x-fuzzy-match 'fuzzy
           helm-ag-fuzzy-match 'fuzzy
           helm-apropos-fuzzy-match 'fuzzy

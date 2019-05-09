@@ -1,6 +1,3 @@
-(use-package dashboard
-  :ensure t
-  :config
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-center-content t)
@@ -47,11 +44,6 @@
              ("Capture" "comment"
               (call-interactively (or (command-remapping #'org-capture)
                                       #'org-capture)))
-
-
-
-
-
           ))))
 
 
@@ -134,8 +126,5 @@
   (goto-char (point-max))
   (dashboard/previous-button)
   (beginning-of-line-text))
-
-
-)
 
 (provide 'config-dashboard)

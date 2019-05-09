@@ -1,3 +1,19 @@
+(define-key view-mode-map (kbd "e") 'View-scroll-half-page-forward)
+  (define-key view-mode-map (kbd "u") 'View-scroll-half-page-backward)
+
+  ;; less like
+  (define-key view-mode-map (kbd "N") 'View-search-last-regexp-backward)
+  (define-key view-mode-map (kbd "?") 'View-search-regexp-backward?)
+  (define-key view-mode-map (kbd "g") 'View-goto-line)
+  (define-key view-mode-map (kbd "G") 'View-goto-line-last)
+  ;; vi/w3m like
+  (define-key view-mode-map (kbd "h") 'backward-char)
+  (define-key view-mode-map (kbd "j") 'next-line)
+  (define-key view-mode-map (kbd "k") 'previous-line)
+  (define-key view-mode-map (kbd "l") 'forward-char)
+
+
+
 ;; Align your code in a pretty way.
 (global-set-key (kbd "C-x \\") 'align-regexp)
 
