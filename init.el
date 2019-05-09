@@ -79,7 +79,7 @@ by Emacs.")
 (defvar dotfiles-screencast-dir (concat dotfiles-dir "screencast/")
     "Where custom lisp files are stored")
 
-    (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir dotfiles-custom-dir dotfiles-screencast-dir))
+    (dolist (dir (list dotfiles-local-dir dotfiles-etc-dir dotfiles-cache-dir dotfiles-custom-dir))
     (unless (file-directory-p dir)
       (make-directory dir t)))
 
