@@ -10,7 +10,7 @@
 ;; so let's tell it to write them to `~/.emacs.d/bak` instead.
 ;; If you have an accident, check this directory - you might get lucky.
 (setq backup-directory-alist
-      `(("." . ,(expand-file-name (concat dotfiles-dir "bak")))))
+      `(("." . ,(expand-file-name (concat dotfiles-dir ".bak")))))
 
 ;; Automatically save buffers before launching M-x compile and friends,
 ;; instead of asking you if you want to save.
