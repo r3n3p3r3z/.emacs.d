@@ -1,6 +1,4 @@
 
-;;; Code:
-
 (require 'config-package)
 
 ;; Tab indentation is a disease; a cancer of this planet.

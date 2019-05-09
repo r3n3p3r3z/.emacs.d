@@ -1,27 +1,3 @@
-;;; -*- lexical-binding: t -*-
-;;; config-package.el --- Package system configuration.
-
-;; Copyright (C) 2015 Bodil Stokke
-
-;; Author: Bodil Stokke <bodil@bodil.org>
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Code:
-
-;; `(online?)` is a function that tries to detect whether you are online.
-;; We want to refresh our package list on Emacs start if we are.
 (require 'cl)
 (defun online? ()
   (if (and (functionp 'network-interface-list)

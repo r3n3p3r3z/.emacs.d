@@ -1,33 +1,3 @@
-;;; -*- lexical-binding: t -*-
-;;; config-editing.el --- Configure your editing style.
-
-;; Copyright (C) 2015 Bodil Stokke
-
-;; Author: Bodil Stokke <bodil@bodil.org>
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Code:
-
-;; Multiple cursors!
-;; Use <insert> to place a cursor on the next match for the current selection.
-;; Use S-<insert> to place one on the previous match.
-;; Use C-' to use extended mark mode, giving you more control.
-;; Use C-" to place cursors on all matches.
-;; Select a region and C-M-' to place cursors on each line of the selection.
-;; Bonus: <insert> key no longer activates overwrite mode.
-;; What is that thing for anyway?
 (use-package multiple-cursors
   :commands multiple-cursors-mode
   :config

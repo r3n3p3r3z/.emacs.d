@@ -1,7 +1,3 @@
-;;; -*- lexical-binding: t -*-
-
-;; Skip the default splash screen.
-
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 
