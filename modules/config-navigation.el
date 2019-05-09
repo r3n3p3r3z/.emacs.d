@@ -27,13 +27,13 @@
 ;; https://github.com/abo-abo/avy
 (use-package avy
   :commands (avy-goto-char-2 avy-goto-line avy-go-word-or-subword-1 avy-goto-char-timer)
-  :bind (("C-;" . avy-goto-word-1)
-         ("C-:" . avy-goto-char))
+  :bind ("C-." . avy-goto-char)
   :config
   (setq avy-all-windows 'all-frames
         avy-background t
         avy-timeout-seconds 0.3)
   (with-eval-after-load "isearch"
+
     (define-key isearch-mode-map (kbd "C-;") 'avy-isearch)))
 
 ;; Smart home key.

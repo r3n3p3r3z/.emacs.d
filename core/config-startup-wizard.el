@@ -30,19 +30,6 @@
        ("Dark" . dark))))
 
 
-(defun config-startup-wizard/get-training-wheels ()
-  (x-popup-dialog
-   t '("Would you like to get rid of the toolbar,
-menu bar and scrollbar?
-
-This is how adult emacsen roll, but you
-might want to get comfortable with being
-emacs before you assume your final form.
-
-This is OK too; no pressure yet."
-       ("I'm ready" . nil)
-       ("Wait, I'm scared" . t))))
-
 (defun config-startup-wizard ()
   (interactive)
 
@@ -51,13 +38,14 @@ This is OK too; no pressure yet."
 
 This is the first time you've run it, so let's
 start off by asking you some basic questions
-about how you like to emacs.
+about how you would like to use emacs.
 
 If you change your mind about any of these
 decisions, you can re-run this wizard with
-`M-x config-startup-wizard` (that is Alt+X
-config-startup-wizard <enter> to non-native
-speakers)."
+`M-x config-startup-wizard` that is Alt+X
+config-startup-wizard <enter>.
+
+"
        ("I am ready to emacs" . t)) t)
 
   (customize-save-variable
