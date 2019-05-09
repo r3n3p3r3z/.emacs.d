@@ -76,7 +76,7 @@ PROMPT sets the `read-string prompt."
     (when after-init-time
       (eval form))))
 
-(require 'epl)
+;(require 'epl)
 
 
 
