@@ -92,6 +92,8 @@
 (define-key dashboard-mode-map "l" #'dashboard/last-buton)
 (define-key dashboard-mode-map "f" #'dashboard/first-button)
 
+
+(define-key dashboard-mode-map "s" #'org-save-all-org-buffers)
 (define-key dashboard-mode-map [tab] #'avy-dashboard-button)
 
 
