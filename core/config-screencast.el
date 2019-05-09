@@ -2,5 +2,7 @@
 
 (require 'screencast)
 
+(load-file "~/.emacs.d/screencasts/screencast-outline.el")
+
 
 (provide 'config-screencast)
