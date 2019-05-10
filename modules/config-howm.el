@@ -1,6 +1,7 @@
 (use-package howm
-  :init
-  (setq howm-view-preview-narrow nil)
+  :after howm
+  :config
+    (setq howm-view-preview-narrow nil)
   (add-hook 'org-mode-hook 'howm-mode)
   (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
 

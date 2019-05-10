@@ -79,6 +79,7 @@
 (defvar dotfiles-packages
   '(
     beacon
+    elmacro
     browse-kill-ring
     diff-hl
     easy-kill

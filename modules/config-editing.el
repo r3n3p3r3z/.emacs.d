@@ -141,22 +141,6 @@
   (when (and config-flyspell (executable-find ispell-program-name))
     (flyspell-mode +1)))
 
-(defun user-cleanup-maybe ()
-  "Invoke `whitespace-cleanup' if `user-clean-whitespace-on-save' is not nil."
-  (when user-clean-whitespace-on-save
-    (whitespace-cleanup)))
-
-(defun user-enable-whitespace ()
-  "Enable `whitespace-mode' if `user-whitespace' is not nil."
-  (when config-whitespace
-    ;; keep the whitespace decent all the time (in this buffer)
-    (add-hook 'before-save-hook 'user-cleanup-maybe nil t)
-    (whitespace-mode +1)))
-
-(setq whitespace-mode nil)
-
-(add-hook 'text-mode-hook 'user-enable-flyspell)
-(add-hook 'text-mode-hook 'user-enable-whitespace)
 
 ;; enable narrowing commands
 (put 'narrow-to-region 'disabled nil)
@@ -234,31 +218,6 @@
 (with-region-or-buffer indent-region)
 (with-region-or-buffer untabify)
 
-;; automatically indenting yanked text if in programming-modes
-(defun yank-advised-indent-function (beg end)
-  "Do indentation, as long as the region isn't too large."
-  (if (<= (- end beg) config-yank-indent-threshold)
-      (indent-region beg end nil)))
-
-(defmacro advise-commands (advice-name commands class &rest body)
-  "Apply advice named ADVICE-NAME to multiple COMMANDS.
-
-The body of the advice is in BODY."
-  `(progn
-     ,@(mapcar (lambda (command)
-                 `(defadvice ,command (,class ,(intern (concat (symbol-name command) "-" advice-name)) activate)
-                    ,@body))
-               commands)))
-
-(advise-commands "indent" (yank yank-pop) after
-  "If current mode is one of `config-yank-indent-modes',
-indent yanked text (with prefix arg don't indent)."
-  (if (and (not (ad-get-arg 0))
-           (not (member major-mode config-indent-sensitive-modes))
-           (or (derived-mode-p 'prog-mode)
-               (member major-mode config-yank-indent-modes)))
-      (let ((transient-mark-mode nil))
-        (yank-advised-indent-function (region-beginning) (region-end)))))
 
 ;; abbrev config
 (add-hook 'text-mode-hook 'abbrev-mode)
@@ -270,12 +229,6 @@ indent yanked text (with prefix arg don't indent)."
 ;; .zsh file is shell script too
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . shell-script-mode))
 
-;; whitespace-mode config
-(require 'whitespace)
-(setq whitespace-line-column 80) ;; limit line length
-(setq whitespace-style '(face tabs empty trailing lines-tail))
-
-;; saner regex syntax
 (require 're-builder)
 (setq reb-re-syntax 'string)
 
@@ -362,14 +315,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; use settings from .editorconfig file when present
 (require 'editorconfig)
 (editorconfig-mode 1)
-
-
-
-
-
-
-
-
 
 ;; Use C-= to select the innermost logical unit your cursor is on.
 ;; Keep hitting C-= to expand it to the next logical unit.
@@ -464,11 +409,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
                            (ido-read-file-name "File: "))))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-;; A key for intelligently shrinking whitespace.
-;; See https://github.com/jcpetkovich/shrink-whitespace.el for details.
-(use-package shrink-whitespace
-  :commands shrink-whitespace
-  :bind ("C-c DEL" . shrink-whitespace))
 
 ;; Highlight changed areas with certain operations, such as undo, kill, yank.
 (use-package volatile-highlights

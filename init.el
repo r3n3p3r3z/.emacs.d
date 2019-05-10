@@ -57,6 +57,11 @@ by Emacs.")
    config files that are stable (i.e. it should be unlikely that you need to delete
    them if something goes wrong).")
 
+
+  (defvar dotfiles-screencasts-dir (expand-file-name "screencasts" user-emacs-directory)
+    "The home of Emacs's core functionality.")
+
+
   (defvar dotfiles-cache-dir (concat dotfiles-host-dir "/cache/")
     "Host-namespaced directory for volatile storage. Deleted when `my/reset' is
    called. Use this for transient files that are generated on the fly like caches
@@ -111,6 +116,8 @@ by Emacs.")
   (message "Loading personal configuration files in %s..." dotfiles-personal-preload-dir)
   (mapc 'load (directory-files dotfiles-personal-preload-dir 't "^[^#\.].*el.*org$")))
 
+
+
 (message "Loading Emacs's core...")
 
 (setq custom-file (expand-file-name "custom.el" dotfiles-dir))
@@ -120,14 +127,14 @@ by Emacs.")
 
 ;; Load the modules
 (require 'config-package)
+(require 'config-startup-wizard)
+(require 'config-core)
 (require 'config-lib)
 (require 'config-module-index)
 (require 'config-module-selector)
 (require 'config-update)
 (require 'config-personal-taste)
-(require 'config-startup-wizard)
 (require 'config-set-path)
-(require 'config-core)
 (require 'config-keybindings)
 
 ;; macOS specific settings
@@ -139,19 +146,29 @@ by Emacs.")
   (require 'config-linux))
 
 
-(message "Loading modules...")
 
-;; Load the enabled modules.
-(when (not (boundp 'config/wizard-did-run)) (config/load-modules))
+
+(message "Loading modules...")
 
 ;; config changes made through the customize UI will be stored here
 
 ;; load the personal settings (this includes `custom-file')
+
+;; Load the enabled modules.
+(when (not (boundp 'config/wizard-did-run)) (config/load-modules))
+
 (when (file-exists-p dotfiles-personal-dir)
   (message "Loading personal configuration files in %s..." dotfiles-personal-dir)
   (mapc 'load (delete
                dotfiles-modules-file
                (directory-files dotfiles-personal-dir 't "^[^#\.].*\\.el$"))))
+
+
+(cl-loop for file in (reverse (directory-files-recursively dotfiles-screencasts-dir "\\.el$"))
+  do (load file))
+
+
+
 
 (message "I'm ready to do thy bidding, Master %s!" current-user)
 
