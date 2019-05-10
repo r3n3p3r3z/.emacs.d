@@ -3,6 +3,13 @@
 (prefer-coding-system 'utf-8)
 (load-library "iso-transl")
 
+(use-package editorconfig :ensure t)
+
+(use-package epl :ensure t)
+
+(require 'epl)
+
+
 ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -10,7 +17,7 @@
 ;; so let's tell it to write them to `~/.emacs.d/bak` instead.
 ;; If you have an accident, check this directory - you might get lucky.
 (setq backup-directory-alist
-      `(("." . ,(expand-file-name (concat dotfiles-dir ".bak")))))
+      `(("." . ,(expand-file-name (concat user-emacs-directory ".bak")))))
 
 ;; Automatically save buffers before launching M-x compile and friends,
 ;; instead of asking you if you want to save.
@@ -41,7 +48,7 @@
 
 
 ;; If available, use `xdg-open' to open URLs.
-(when (config/is-exec "xdg-open")
+(when (core/is-exec "xdg-open")
   (setq-default
    browse-url-browser-function (quote browse-url-generic)
    browse-url-generic-program "xdg-open"))

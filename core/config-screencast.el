@@ -1,4 +1,4 @@
-(load-file "~/.emacs.d/.custom/screencast-mode.el")
+(load-file "~/.emacs.d/lisp/screencast-mode.el")
 
 (require 'screencast)
 (setq screencast-speed 1.2)

@@ -1,4 +1,4 @@
-(use-package exec-path-from-shell :demand t)
+(use-package exec-path-from-shell)
 
 (exec-path-from-shell-initialize)
 
@@ -19,8 +19,6 @@ Windows external keyboard from time to time."
     (setq mac-option-modifier 'meta)
     (message "Command is now bound to SUPER and Option is bound to META.")))
 
-;(define-key user-mode-map (kbd "C-c w") 'user-swap-meta-and-super)
-;(define-key user-mode-map (kbd "s-/") 'hippie-expand)
 
 ;; There's no point in hiding the menu bar on macOS, so let's not do it
 (menu-bar-mode +1)

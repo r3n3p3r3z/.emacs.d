@@ -14,8 +14,9 @@
 (defvar current-font (font-spec :family "DejaVu Sans Mono" :size 14))
 
 
+
 ;; Get rid of the training wheels, if you're ready for it.
-(when (not config-personal-taste/training-wheels)
+(when (not core-personal-taste/training-wheels)
   (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
     (when (fboundp mode) (funcall mode -1))))
 
@@ -34,20 +35,20 @@
 
 
 ;; Configure the light colour scheme.
-(defun config-appearance/light ()
+(defun core-appearance/light ()
   (interactive)
   (load-theme 'doom-solarized-light)
 
-  (run-hooks 'config-appearance/hook)
-  (run-hooks 'config-appearance/light-hook))
+  (run-hooks 'core-appearance/hook)
+  (run-hooks 'core-appearance/light-hook))
 
 ;; Configure the dark colour scheme.
-(defun config-appearance/dark ()
+(defun core-appearance/dark ()
   (interactive)
   (load-theme 'doom-Iosvkem)
 
-  (run-hooks 'config-appearance/hook)
-  (run-hooks 'config-appearance/dark-hook))
+  (run-hooks 'core-appearance/hook)
+  (run-hooks 'core-appearance/dark-hook))
 
 ;; Setup hooks to re-run after all modules have loaded, allowing
 ;; other modules to tweak the theme without having to wait
@@ -55,12 +56,12 @@
 (add-hook
  'config/modules-loaded-hook
  (lambda ()
-   (run-hooks 'config-appearance/hook)
+   (run-hooks 'core-appearance/hook)
    (cond
-    ((equal config-personal-taste/style 'dark)
-     (run-hooks 'config-appearance/dark-hook))
-    ((equal config-personal-taste/style 'light)
-     (run-hooks 'config-appearance/light-hook)))))
+    ((equal core-personal-taste/style 'dark)
+     (run-hooks 'core-appearance/dark-hook))
+    ((equal core-personal-taste/style 'light)
+     (run-hooks 'core-appearance/light-hook)))))
 
 ;; Maximise the Emacs frame if that's how you like it.
 (set-frame-parameter nil 'fullscreen 'maximized)
@@ -135,15 +136,15 @@
 (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output)
 
 ;; Install the colour scheme according to personal taste.
-(defun config-appearance/apply-style ()
+(defun core-appearance/apply-style ()
   (interactive)
   (cond
-   ((equal config-personal-taste/style 'dark)
-    (config-appearance/dark))
-   ((equal config-personal-taste/style 'light)
-    (config-appearance/light))))
+   ((equal core-personal-taste/style 'dark)
+    (core-appearance/dark))
+   ((equal core-personal-taste/style 'light)
+    (core-appearance/light))))
 
-(config-appearance/apply-style)
+(core-appearance/apply-style)
 
   (defun my/*disable-all-the-icons-in-tty (orig-fn &rest args)
     (when (display-graphic-p)

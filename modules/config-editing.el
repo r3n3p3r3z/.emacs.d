@@ -1,6 +1,7 @@
 (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
 (setq-default tab-width 8)            ;; but maintain correct appearance
 
+(use-package beacon)
 
 ;; Newline at end of file
 (setq require-final-newline t)
@@ -23,6 +24,8 @@
 (setq undo-outer-limit (* 1024 10 10))
 (setq undo-strong-limit (* 1024 10 10))
 
+(use-package elmacro)
+
 ;; hippie expand is dabbrev expand on steroids
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
                                          try-expand-dabbrev-all-buffers
@@ -37,6 +40,8 @@
 
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
+
+(use-package smartparens)
 
 ;; smart pairing for all
 (require 'smartparens-config)
@@ -99,6 +104,7 @@
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
+(use-package super-save)
 (require 'super-save)
 ;; add integration with ace-window
 (add-to-list 'super-save-triggers 'ace-window)
@@ -115,14 +121,11 @@
 ;; highlight the current line
 (global-hl-line-mode +1)
 
-(require 'volatile-highlights)
-(volatile-highlights-mode t)
-(diminish 'volatile-highlights-mode)
 
 ;; note - this should be after volatile-highlights is required
 ;; add the ability to cut the current line, without marking it
 (require 'rect)
-(crux-with-region-or-line kill-region)
+;(crux-with-region-or-line kill-region)
 
 ;; tramp, for sudo access
 (require 'tramp)
@@ -187,16 +190,18 @@
 (setq dired-dwim-target t)
 
 ;; enable some really cool extensions like C-x C-j(dired-jump)
-(require 'dired-x)
 
 ;; ediff - don't start another frame
+(use-package ediff)
 (require 'ediff)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; clean up obsolete buffers automatically
+(use-package midnight)
 (require 'midnight)
 
 ;; smarter kill-ring navigation
+(use-package browse-kill-ring)
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
 (global-set-key (kbd "s-y") 'browse-kill-ring)
@@ -267,17 +272,21 @@
 ;; enable winner-mode to manage window configurations
 (winner-mode +1)
 
+(use-package diff-hl)
 ;; diff-hl
 (global-diff-hl-mode +1)
 (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
 ;; easy-kill
+(use-package easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
 (global-set-key [remap mark-sexp] 'easy-mark)
 
 ;; operate-on-number
+(use-package operate-on-number)
 (require 'operate-on-number)
+(use-package smartrep)
 (require 'smartrep)
 
 (smartrep-define-key global-map "C-c ."

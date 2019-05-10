@@ -1,14 +1,14 @@
 (require 'config-personal-taste)
 
 
-(defun config-startup-wizard/get-style ()
+(defun core-startup-wizard/get-style ()
   (x-popup-dialog
    t '("Light or dark background?"
        ("Light" . light)
        ("Dark" . dark))))
 
 
-(defun config-startup-wizard ()
+(defun core-startup-wizard ()
   (interactive)
 
   (x-popup-dialog
@@ -20,22 +20,22 @@ about how you would like to use emacs.
 
 If you change your mind about any of these
 decisions, you can re-run this wizard with
-`M-x config-startup-wizard` that is Alt+X
-config-startup-wizard <enter>.
+`M-x core-startup-wizard` that is Alt+X
+core-startup-wizard <enter>.
 
 "
-       ("I am ready to emacs" . t)) t)
+       ("I am ready to EMACS!!!" . t)) t)
 
   (customize-save-variable
-   'config-personal-taste/style
-   (config-startup-wizard/get-style))
+   'core-personal-taste/style
+   (core-startup-wizard/get-style))
 
-  (customize-save-variable 'config-personal-taste/run-wizard nil)
-  (setq config/wizard-did-run t)
-  (config/select-modules))
+  (customize-save-variable 'core-personal-taste/run-wizard nil)
+  (setq core-wizard-did-run t)
+  (core-select-modules))
 
-(when config-personal-taste/run-wizard
-  (config-startup-wizard))
+(when core-personal-taste/run-wizard
+  (core-startup-wizard))
 
 
 

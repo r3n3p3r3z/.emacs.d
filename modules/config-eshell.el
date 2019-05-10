@@ -34,19 +34,6 @@
 (use-package esh-autosuggest
   :hook (eshell-mode . esh-autosuggest-mode))
 
-;; Extend pcomplete with smart completion provided by the fish shell, or
-;; bash if fish isn't available.
-(use-package bash-completion
-  :if (config/is-exec "bash")
-  :commands bash-completion-dynamic-complete
-  :init
-  (add-hook 'shell-dynamic-complete-functions #'bash-completion-dynamic-complete)
-  (setq fish-completion-fallback-on-bash-p t))
-(use-package fish-completion
-  :if (config/is-exec "fish")
-  :config
-  (global-fish-completion-mode))
-
 
 
 (provide 'config-eshell)

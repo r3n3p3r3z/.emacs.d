@@ -5,8 +5,6 @@
 ;; If npm is installed, add its local prefix to the executable
 ;; search path, which helps Emacs find linters etc.
 ;; This isn't Windows compatible.
-(-when-let (npm-prefix (config/exec-if-exec "npm" "config get prefix"))
-  (setenv "PATH" (concat npm-prefix "/bin:" (getenv "PATH"))))
 
 ;; Use web-mode for all JS files.
 (use-package web-mode

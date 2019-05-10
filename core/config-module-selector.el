@@ -2,26 +2,26 @@
 (require 'widget)
 (require 'cus-edit)
 
-(defun config/select-modules ()
+(defun core-select-modules ()
   "Select the modules Config Emacs should load on startup."
   (interactive)
 
-  (switch-to-buffer "*Config Emacs Modules*")
+  (switch-to-buffer "*Configure Emacs Modules*")
   (kill-all-local-variables)
   (-let [inhibit-read-only t] (erase-buffer))
   (remove-overlays)
 
-  (setq-local selected-modules config/modules)
+  (setq-local selected-modules core-modules)
 
   (-let ((save-settings
           (lambda (&rest ignore)
             (interactive)
-            (customize-save-variable 'config/modules selected-modules)
+            (customize-save-variable 'core-modules selected-modules)
             (package-refresh-contents)
-            (config/load-modules)
+            (core-load-modules)
             (kill-buffer))))
 
-    (widget-insert (propertize "Config Emacs Modules" 'face 'custom-group-tag))
+    (widget-insert (propertize "Configure Emacs Modules" 'face 'custom-group-tag))
     (widget-insert "\n")
 
     (widget-insert "
@@ -57,7 +57,7 @@ An Emacs Master does not use mice.
                             :doc ,desc
                             :value ,sym
                             :format "%t %d")))
-                 config/available-modules))
+                 core-available-modules))
 
     (widget-insert "\n")
 
