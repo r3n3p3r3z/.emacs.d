@@ -9,6 +9,8 @@ cd ~/.emacs.d
 make compile
 #+END_SRC
 
-Start emacs and select the modules
+Start emacs and select modules to use.
+
+A personal folder to store configuration is created in ~/.personal.d and autoloaded by emacs
 
 
