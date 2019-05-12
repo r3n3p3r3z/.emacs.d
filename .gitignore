@@ -7,31 +7,7 @@
 !README.org
 
 
-!ditaa0_9/
-!templates/
-
-
-# init
-!init.el
-
-
-# modules
-!modules/
-!modules/*.el
-
-# modules
-!core/
-!core/*.el
-
-# modules
-!lisp/
-!lisp/*.el
-
-
-# screencast
-!screencasts/
-!screencasts/*.el
-
-# custom folder
-!.custom/
-!.custom/*.el
+#
+!config.org
+!compile.el
+!Makefile

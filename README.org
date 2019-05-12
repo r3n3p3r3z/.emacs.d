@@ -5,7 +5,10 @@
 #+BEGIN_SRC bash
 mv ~/.emacs.d ~/.emacs.d.bak
 git clone https://github.com/DynamicMetaFlow/.emacs.d.git
+cd ~/.emacs.d
+make compile
 #+END_SRC
 
-This emacs configuration is split into modules and activities.
+Start emacs and select the modules
+
 
