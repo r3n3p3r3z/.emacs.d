@@ -1,4 +1,6 @@
+# -*- coding: utf-8 ; buffer-read-only: 1 ; -*-
 #+TITLE: Emacs Configuration
+
 * Init
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
 ;;; init.el --- user-init-file                    -*- lexical-binding: t -*-
@@ -731,7 +733,7 @@
  (define-key dashboard-mode-map "f" #'dashboard/first-button)
 
 
- (define-key dashboard-mode-map "s" #'org-save-all-org-buffers)
+ (define-key dashboard-mode-map "S" #'org-save-all-org-buffers)
  (define-key dashboard-mode-map [tab] #'avy-dashboard-button)
 
 
@@ -911,9 +913,7 @@
 
  (global-auto-revert-mode t)
 
- (use-package editorconfig
-   :init
- (editorconfig-mode 1))
+ (use-package editorconfig)
 
 
 
@@ -963,8 +963,7 @@
 
  ;; Automatically insert matching braces and do other clever
  ;; things pertaining to braces and such.
- (electric-pair-mode 1)
-
+ 
  ;; Duplicate start of line or region with C-M-<end>.
  ;; From http://www.emacswiki.org/emacs/DuplicateStartOfLineOrRegion
  (defun duplicate-start-of-line-or-region ()
@@ -994,37 +993,38 @@
      (exchange-point-and-mark)))
  (global-set-key (kbd "C-M-<end>") 'duplicate-start-of-line-or-region)
 
- ;; Hack for setting a fixed wrap column in visual-line-mode.
- (defun set-visual-wrap-column (new-wrap-column &optional buffer)
-   "Force visual line wrap at NEW-WRAP-COLUMN in BUFFER (defaults
-     to current buffer) by setting the right-hand margin on every
-     window that displays BUFFER.  A value of NIL or 0 for
-     NEW-WRAP-COLUMN disables this behavior."
-   (interactive (list (read-number "New visual wrap column, 0 to disable: " (or visual-wrap-column fill-column 0))))
-   (if (and (numberp new-wrap-column)
-            (zerop new-wrap-column))
-       (setq new-wrap-column nil))
-   (with-current-buffer (or buffer (current-buffer))
-     (visual-line-mode t)
-     (set (make-local-variable 'visual-wrap-column) new-wrap-column)
-     (add-hook 'window-configuration-change-hook 'update-visual-wrap-column nil t)
-     (let ((windows (get-buffer-window-list)))
-       (while windows
-         (when (window-live-p (car windows))
-           (with-selected-window (car windows)
-             (update-visual-wrap-column)))
-         (setq windows (cdr windows))))))
- (defun update-visual-wrap-column ()
-   (if (not visual-wrap-column)
-       (set-window-margins nil nil)
-     (let* ((current-margins (window-margins))
-            (right-margin (or (cdr current-margins) 0))
-            (current-width (window-width))
-            (current-available (+ current-width right-margin)))
-       (if (<= current-available visual-wrap-column)
-           (set-window-margins nil (car current-margins))
-         (set-window-margins nil (car current-margins)
-                             (- current-available visual-wrap-column))))))
+ ;; ;; Hack for setting a fixed wrap column in visual-line-mode.
+;;  (defun set-visual-wrap-column (new-wrap-column &optional buffer)
+;;    "Force visual line wrap at NEW-WRAP-COLUMN in BUFFER (defaults
+;;      to current buffer) by setting the right-hand margin on every
+;;      window that displays BUFFER.  A value of NIL or 0 for
+;;      NEW-WRAP-COLUMN disables this behavior."
+;;    (interactive (list (read-number "New visual wrap column, 0 to disable: " (or visual-wrap-column fill-column 0))))
+;;    (if (and (numberp new-wrap-column)
+;;             (zerop new-wrap-column))
+;;        (setq new-wrap-column nil))
+;;    (with-current-buffer (or buffer (current-buffer))
+;;      (visual-line-mode t)
+;;      (set (make-local-variable 'visual-wrap-column) new-wrap-column)
+;;      (add-hook 'window-configuration-change-hook 'update-visual-wrap-column nil t)
+;;      (let ((windows (get-buffer-window-list)))
+;;        (while windows
+;;          (when (window-live-p (car windows))
+;;            (with-selected-window (car windows)
+;;              (update-visual-wrap-column)))
+;;          (setq windows (cdr windows))))))
+
+;; (defun update-visual-wrap-column ()
+;;    (if (not visual-wrap-column)
+;;        (set-window-margins nil nil)
+;;      (let* ((current-margins (window-margins))
+;;             (right-margin (or (cdr current-margins) 0))
+;;             (current-width (window-width))
+;;             (current-available (+ current-width right-margin)))
+;;        (if (<= current-available visual-wrap-column)
+;;            (set-window-margins nil (car current-margins))
+;;          (set-window-margins nil (car current-margins)
+;;                              (- current-available visual-wrap-column))))))
 
  ;; A function for easily editing a file as root through TRAMP.
  (defun sudo-edit (&optional arg)
@@ -1204,70 +1204,72 @@
  #+END_SRC
 ** Helm
  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-helm.el
- (use-package helm
-   :config
-   (require 'helm-config)
-   (require 'helm)
-   ;; Activate Helm.
-   (helm-mode 1)
-   (with-eval-after-load "module-project"
-     (use-package helm-projectile
-       ;; A binding for using Helm to pick files using Projectile,
-       ;; and override the normal grep with a Projectile based grep.
-       :bind (("C-c C-f" . helm-projectile-find-file-dwim)
-              ("C-x C-g" . helm-projectile-grep))
-       :config (helm-projectile-on)))
-   ;; Tell Helm to resize the selector as needed.
-   (helm-autoresize-mode 1)
-   ;; Make Helm look nice.
-   (setq-default helm-display-header-line nil
-                 helm-autoresize-min-height 10
-                 helm-autoresize-max-height 35
-                 helm-split-window-in-side-p t
+   (use-package helm
+        :config
+      (require 'helm-config)
+      (require 'helm)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(define-key helm-map (kbd "C-z") 'helm-select-action)
+      ;; Activate Helm.
+      (helm-mode 1)
+      (with-eval-after-load "module-project"
+        (use-package helm-projectile
+          ;; A binding for using Helm to pick files using Projectile,
+          ;; and override the normal grep with a Projectile based grep.
+          :bind (("C-c C-f" . helm-projectile-find-file-dwim)
+                 ("C-x C-g" . helm-projectile-grep))
+          :config (helm-projectile-on)))
+      ;; Tell Helm to resize the selector as needed.
+      (helm-autoresize-mode 1)
+      ;; Make Helm look nice.
+      (setq-default helm-display-header-line nil
+                    helm-autoresize-min-height 10
+                    helm-autoresize-max-height 35
+                    helm-split-window-in-side-p t
 
-                 helm-M-x-fuzzy-match t
-                 helm-buffers-fuzzy-matching t
-                 helm-recentf-fuzzy-match t
-                 helm-apropos-fuzzy-match t)
-   (set-face-attribute 'helm-source-header nil :height 0.75)
-   ;; Replace common selectors with Helm versions.
-   :bind (("M-x" . helm-M-x)
-          ("C-x C-f" . helm-find-files)
-          ("C-x C-g" . helm-do-grep)
-          ("C-x b" . helm-buffers-list)
-          ("C-x c g" . helm-google-suggest)
-          ("C-t" . helm-imenu)
-          ("M-y" . helm-show-kill-ring)))
+                    helm-M-x-fuzzy-match t
+                    helm-buffers-fuzzy-matching t
+                    helm-recentf-fuzzy-match t
+                    helm-apropos-fuzzy-match t)
+      (set-face-attribute 'helm-source-header nil :height 0.75)
+      ;; Replace common selectors with Helm versions.
+      :bind (("M-x" . helm-M-x)
+             ("C-x C-f" . helm-find-files)
+             ("C-x C-g" . helm-do-grep)
+             ("C-x b" . helm-buffers-list)
+             ("C-x c g" . helm-google-suggest)
+             ("C-t" . helm-imenu)
+             ("M-y" . helm-show-kill-ring)))
 
- ;; Enrich isearch with Helm using the `C-S-s' binding.
- ;; swiper-helm behaves subtly different from isearch, so let's not
- ;; override the default binding.
- (use-package swiper-helm
-   :bind (("C-s" . swiper-helm)))
+    ;; Enrich isearch with Helm using the `C-S-s' binding.
+    ;; swiper-helm behaves subtly different from isearch, so let's not
+    ;; override the default binding.
+    (use-package swiper-helm
+      :bind (("C-s" . swiper-helm)))
 
- ;; Enable fuzzy matching in Helm navigation.
- (use-package helm-flx
-   :config
-   (with-eval-after-load "helm"
-     (require 'helm-flx)
-     (helm-flx-mode 1)))
+    ;; Enable fuzzy matching in Helm navigation.
+    (use-package helm-flx
+      :config
+      (with-eval-after-load "helm"
+        (require 'helm-flx)
+        (helm-flx-mode 1)))
 
- ;; Set up a couple of tweaks from helm-ext.
- (use-package helm-ext
-   :config
-   (helm-ext-ff-enable-skipping-dots t)
-   (helm-ext-ff-enable-auto-path-expansion t))
+    ;; Set up a couple of tweaks from helm-ext.
+    (use-package helm-ext
+      :config
+      (helm-ext-ff-enable-skipping-dots t)
+      (helm-ext-ff-enable-auto-path-expansion t))
 
- ;; Use Helm to complete with multiple matches in eshell.
- (add-hook 'eshell-mode-hook
-           (lambda ()
-             (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)))
-
-
+    ;; Use Helm to complete with multiple matches in eshell.
+    (add-hook 'eshell-mode-hook
+              (lambda ()
+                (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)))
 
 
 
- (provide 'module-helm)
+
+
+    (provide 'module-helm)
  #+END_SRC
 ** Help
  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-help.el
@@ -1350,7 +1352,10 @@
    :bind (("C-x o" . ace-window)
           ("C-x C-o" . ace-swap-window))
    :config
-   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  (ace-window-display-mode)
+  (setq aw-dispatch-always t))
+
+   
 
  ;; Use C-x M-p to kill the buffer in the other window, revealing
  ;; the next buffer in the stack.
@@ -1390,8 +1395,7 @@
    (add-hook
     'org-mode-hook
     (lambda ()
-      (visual-line-mode 1)
-      (set-visual-wrap-column 80)))
+      (visual-line-mode 1)))
    ;; Fancy bullet rendering.
    (use-package org-bullets
      :config
@@ -1400,7 +1404,7 @@
    (use-package org-cliplink
      :config
      (with-eval-after-load "org"
-       (define-key org-mode-map (kbd "C-c M-l") 'org-cliplink))))
+       (define-key org-mode-map (kbd "C-x p i") 'org-cliplink))))
 
  (use-package org-download
  :init
@@ -1417,7 +1421,7 @@
 
  (use-package org-web-tools
  :init
- (setq org-web-tools-attach-archive-retry 10))
+ (setq org-web-tools-attach-archive-retry 15))
 
  (use-package org-brain
    :config
@@ -1451,74 +1455,6 @@
 * Screencasts
 ** screencast-mode
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/lisp/screencast-mode.el
-  ;;; screencast.el --- demonstrate the capabilities of Emacs
-
-  ;; Copyright (C) 2009 ESBEN Andreasen <esbenandreasen@gmail.com>
-
-  ;; Authors: Esben Andreasen <esbenandreasen@gmail.com>
-  ;; Version: 1.1
-  ;; Keywords: demo screencast
-
-  ;; This file is not an official part of Emacs.
-
-  ;; This program is free software; you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation; either version 2, or (at your option)
-  ;; any later version.
-
-  ;; This program is distributed in the hope that it will be useful,
-  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ;; GNU General Public License for more details.
-
-  ;; You should have received a copy of the GNU General Public License
-  ;; along with this program; if not, you can either send email to this
-  ;; program's maintainer or write to: The Free Software Foundation,
-  ;; Inc.; 59 Temple Place, Suite 330; Boston, MA 02111-1307, USA.
-
-  ;;; Commentary:
-
-  ;; This file allows you to create video-like sessions, which
-  ;; demonstrates the capabilities of Emacs.
-
-  ;;; Usage:
-
-  ;; Install this file to an appropriate directory in your load-path,
-  ;; and add these expressions to your ~/.emacs
-
-  ;; (auto-load 'screencast "screencast")
-
-  ;; Try it out by evaluating (screencast-screencast-producer) and (screencast-screencast-user)
-
-  ;; Your own screencast files should have a (require 'screencast)
-
-  ;;; Conventions:
-
-  ;; PRODUCER : creates a screencast
-
-  ;; USER     : sees a screencast
-
-  ;; producer sections in this document contains variables which the producer
-  ;; should modify as need be, and functions to be called during the creation of a
-  ;; screencast
-
-  ;;; Change-log:
-
-  ;; 1.0: core functionality
-
-  ;; 1.1: PRODUCER ADDITIONS:
-  ;;      public variables which contain information about the current screencast
-  ;;      ability to change last-command and last-command-char
-  ;;      ability to use let and flet, while still outputting command descriptions
-  ;;      ability to create blinking sections to move the attention towards those
-  ;;	ability to show the region as if transient-mark-mode was on
-  ;;
-  ;;      split the screencasts for the producer into a basic and an advanced
-  ;;	voice synthesizing of typed text. Requires festival to be installed.
-  ;;	global speed control
-  ;;      typed strings in screencasts can not contain tabs and newlines
-  ;;; Code:
-
   (defconst screencast-message-buffer-name "*Screencast Messages*"
     "The name of the buffer to put messages from the screencast in")
 
