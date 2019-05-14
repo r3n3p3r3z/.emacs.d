@@ -493,6 +493,8 @@
    :init
    (doom-modeline-mode 1)
    )
+
+
  (use-package doom-themes
    :init
    (load-theme 'doom-Iosvkem)
@@ -510,6 +512,10 @@
    (doom-themes-org-config
 
     ))
+
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
+
 
 
 
@@ -1142,6 +1148,10 @@
 
  (use-package vlf)
  (use-package scratch)
+(use-package desktop-environment
+:init
+(desktop-environment-mode +1))
+
  (use-package visual-fill-column
    :commands visual-fill-column-mode
    :config
@@ -1152,6 +1162,7 @@
      (+ (if (boundp 'display-line-numbers) 6 0)
         fill-column)))
 
+(global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
 
  ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
  (defalias 'yes-or-no-p 'y-or-n-p)
