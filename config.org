@@ -215,7 +215,7 @@
  (exec-path-from-shell-initialize)
 
  (provide 'core-linux)
- #+END_SRC 
+ #+END_SRC
 ** macOS
   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-macos.el
  (use-package exec-path-from-shell)
@@ -246,6 +246,144 @@
  ;; Enable emoji, and stop the UI from freezing when trying to display them.
  (when (fboundp 'set-fontset-font)
    (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
+
+;; The general philosophy of the movement and evaluation keys is that
+;; adding more modifier keys causes the same action, but "bigger". So,
+;; for example, M-left goes left by the word rather than the
+;; character. s-return evaluates the immediately preceding form, but
+;; S-s-return evaluates the currounding top level form. And so on.
+
+;; use OS X's Spotlight for M-x locate
+(setq locate-make-command-line (lambda (s) `("mdfind" "-name" ,s)))
+
+;; alt-click for mouse-2, command-click for mouse-3
+;; ...is this broken?
+(setq mac-emulate-three-button-mouse t)
+
+;; shift-select is standard in OS X inputs
+(setq shift-select-mode t)
+
+;;;; Normalize key bindings with Mac OS X system ones
+
+;; command + up/down/left/right = file start/end, line start/end
+(global-set-key (kbd "<s-up>")    'beginning-of-buffer)
+(global-set-key (kbd "<s-down>")  'end-of-buffer)
+(global-set-key (kbd "<s-left>")  'move-beginning-of-line)
+(global-set-key (kbd "<s-right>") 'move-end-of-line)
+
+(define-key global-map (kbd "s-+") 'text-scale-increase)
+(define-key global-map (kbd "s--") 'text-scale-decrease)
+
+;; TODO discuss default installation of undo-tree
+;; undo-tree-mode aliased to command+z/shift+command+z
+;; (require 'undo-tree)
+;; (global-undo-tree-mode 1)
+;; (global-set-key (kbd "s-z") 'undo)
+;; (global-set-key (kbd "s-Z") 'undo-tree-redo)
+
+;; the fantastic undo-tree-visualize on C-s-z
+;;(global-set-key [C-s-268632090] 'undo-tree-visualize)
+
+;; command-f, the default OSX search keybinding, but with regexp
+(global-set-key (kbd "s-f") 'isearch-forward-regexp)
+
+;; TODO discuss inclusion of visual-regexp
+;; command-r, forward-replace
+;; (require 'visual-regexp)
+;; (global-set-key (kbd "s-r") 'vr/replace)
+;; (global-set-key [8388690] 'vr/query-replace) ; s-R
+
+;; make M-up and M-down the same as C-up and C-down because the former
+;; is how it's bound in OSX
+(global-set-key (kbd "<M-up>") 'backward-paragraph)
+(global-set-key (kbd "<M-down>") 'forward-paragraph)
+
+;; option-delete = backword-kill-word in OS X
+(global-set-key (kbd "M-<backspace>") 'backward-kill-word)
+
+;; I like a single frame, so I'd rather have this kill the buffer
+(global-set-key (kbd "s-w") 'kill-this-buffer)
+
+;; TODO ido-find-file or similar (helm, whatever)
+;;(global-set-key (kbd "s-o") 'ido-find-file)
+
+;; In dired, move deletions to trash
+(setq delete-by-moving-to-trash t)
+
+;; don't use the right alt/option key as M-, so it can still be used
+;; to type accented characters. Fück yeah.
+(setq ns-right-alternate-modifier nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; RAILWAY CAT EMACS
+
+;; default railway has these the other way round
+(setq mac-option-modifier 'meta)
+(setq mac-command-modifier 'super)
+
+;; ... and doesn't set these default CUA bindings
+(global-set-key [(super a)] 'mark-whole-buffer)
+(global-set-key [(super c)] 'kill-ring-save)
+(global-set-key [(super g)] 'isearch-repeat-forward)
+(global-set-key [(super l)] 'goto-line)
+(global-set-key [(super q)] 'save-buffers-kill-terminal)
+(global-set-key [(super s)] 'save-buffer)
+(global-set-key [(super v)] 'yank)
+(global-set-key [(super x)] 'kill-region)
+(global-set-key [(super w)] (lambda ()
+                              (interactive)
+                              (kill-buffer (current-buffer))))
+(global-set-key [(super z)] 'undo)
+
+;; turn off super disturbing visible bell
+(setq visible-bell nil)
+
+;; does not work yet in railway cat :(
+(setq mac-right-alternate-modifier nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; PROG MODES
+
+;; these are bound to "kill-this-buffer" by default
+(global-set-key (kbd "s-K") nil)
+(global-set-key (kbd "s-k") nil)
+(add-hook 'prog-mode-hook
+          (lambda ()
+            ;; compile short cuts
+            (define-key (current-local-map) (kbd "s-K") 'compile)
+            (define-key (current-local-map) (kbd "s-k") 'recompile)))
+
+;; TODO discuss paredit
+;; (eval-after-load 'paredit
+;;   '(progn
+;;      ;; fights with my preferred navigation keys
+;;      (dolist (binding (list (kbd "M-<up>") (kbd "M-<down>") (kbd "C-M-<left>") (kbd "C-M-<right>")))
+;;        (define-key paredit-mode-map binding nil))
+
+;;      ;; not just in lisp mode(s)
+;;      (global-set-key (kbd "C-M-<left>") 'backward-sexp)
+;;      (global-set-key (kbd "C-M-<right>") 'forward-sexp)
+
+;;      (global-set-key (kbd "M-(") 'paredit-wrap-round)
+;;      (global-set-key (kbd "M-[") 'paredit-wrap-square)
+;;      (global-set-key (kbd "M-{") 'paredit-wrap-curly)
+
+;;      (global-set-key (kbd "M-)") 'paredit-close-round-and-newline)
+;;      (global-set-key (kbd "M-]") 'paredit-close-square-and-newline)
+;;      (global-set-key (kbd "M-}") 'paredit-close-curly-and-newline)
+
+;; 	 (diminish 'paredit-mode)))
+
+;; Evaluate code, larger scope with more modifiers. I bind these over
+;; all prog modes to do the right thing in any language with a REPL.
+
+;; just the last sexp:
+(define-key emacs-lisp-mode-map (kbd "<s-return>") 'eval-last-sexp)
+
+;; ... add shift to eval last defun (i.e. top level form)
+(define-key emacs-lisp-mode-map (kbd "<S-s-return>") 'eval-defun)
+
+;; ... add meta to eval entire buffer
+(define-key emacs-lisp-mode-map (kbd "<M-S-s-return>") 'eval-last-psexp)
+
 
 
  (provide 'core-macos)
@@ -858,7 +996,10 @@
                     name (file-name-nondirectory new-name)))))))
  (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
 
+(require 'dired)
 
+(setq wdired-use-dired-vertical-movement 'sometimes)
+(define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
 
  (provide 'module-dired)
  #+END_SRC
@@ -889,8 +1030,7 @@
 
  (setq require-final-newline t)
 
- (setq create-lockfiles nil)
- (setq echo-keystrokes 0.01)
+  (setq echo-keystrokes 0.01)
 
  (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
  (setq-default tab-width 8)            ;; but maintain correct appearance
@@ -969,7 +1109,7 @@
 
  ;; Automatically insert matching braces and do other clever
  ;; things pertaining to braces and such.
- 
+
  ;; Duplicate start of line or region with C-M-<end>.
  ;; From http://www.emacswiki.org/emacs/DuplicateStartOfLineOrRegion
  (defun duplicate-start-of-line-or-region ()
@@ -999,39 +1139,6 @@
      (exchange-point-and-mark)))
  (global-set-key (kbd "C-M-<end>") 'duplicate-start-of-line-or-region)
 
- ;; ;; Hack for setting a fixed wrap column in visual-line-mode.
-;;  (defun set-visual-wrap-column (new-wrap-column &optional buffer)
-;;    "Force visual line wrap at NEW-WRAP-COLUMN in BUFFER (defaults
-;;      to current buffer) by setting the right-hand margin on every
-;;      window that displays BUFFER.  A value of NIL or 0 for
-;;      NEW-WRAP-COLUMN disables this behavior."
-;;    (interactive (list (read-number "New visual wrap column, 0 to disable: " (or visual-wrap-column fill-column 0))))
-;;    (if (and (numberp new-wrap-column)
-;;             (zerop new-wrap-column))
-;;        (setq new-wrap-column nil))
-;;    (with-current-buffer (or buffer (current-buffer))
-;;      (visual-line-mode t)
-;;      (set (make-local-variable 'visual-wrap-column) new-wrap-column)
-;;      (add-hook 'window-configuration-change-hook 'update-visual-wrap-column nil t)
-;;      (let ((windows (get-buffer-window-list)))
-;;        (while windows
-;;          (when (window-live-p (car windows))
-;;            (with-selected-window (car windows)
-;;              (update-visual-wrap-column)))
-;;          (setq windows (cdr windows))))))
-
-;; (defun update-visual-wrap-column ()
-;;    (if (not visual-wrap-column)
-;;        (set-window-margins nil nil)
-;;      (let* ((current-margins (window-margins))
-;;             (right-margin (or (cdr current-margins) 0))
-;;             (current-width (window-width))
-;;             (current-available (+ current-width right-margin)))
-;;        (if (<= current-available visual-wrap-column)
-;;            (set-window-margins nil (car current-margins))
-;;          (set-window-margins nil (car current-margins)
-;;                              (- current-available visual-wrap-column))))))
-
  ;; A function for easily editing a file as root through TRAMP.
  (defun sudo-edit (&optional arg)
    (interactive "p")
@@ -1041,6 +1148,11 @@
                               (helm-read-file-name "File: ")
                             (ido-read-file-name "File: "))))
      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+;; Causes entire elements (with children) to be treated as sexps.
+(setq nxml-sexp-element-flag t)
+;; prog-mode should have auto-completion by default.
+
 
  (provide 'module-editing)
  #+END_SRC
@@ -1146,11 +1258,45 @@
  (load-file "~/.emacs.d/lisp/screencast-mode.el")
 
 
+(setq-default
+ isearch-allow-scroll t                 ; Allow scrolling in an isearch session
+ lazy-highlight-cleanup nil             ; Leave highlights after an isearch session
+ lazy-highlight-initial-delay 0)        ; Start highlighting immediately
+
+
+(require 'vc-hooks)
+
+;; Always follow symlinks to files under source-control. dont ask.
+(setq vc-follow-symlinks t)
+;; Modifications related to whitespace management
+
+;; Disable tab indentation
+(setq-default indent-tabs-mode nil)
+
+;; Remove trailing whitespace before save.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+
+
+(setq
+ auto-save-default nil
+ backup-inhibited t
+ confirm-nonexistent-file-or-buffer nil
+ create-lockfiles nil
+ mouse-wheel-progressive-speed nil)
+
+
+(define-key global-map [remap list-buffers] 'ibuffer)
+
+
  (use-package vlf)
  (use-package scratch)
 (use-package desktop-environment
 :init
 (desktop-environment-mode +1))
+
+(winner-mode +1)
+
 
  (use-package visual-fill-column
    :commands visual-fill-column-mode
@@ -1165,7 +1311,10 @@
 (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
 
  ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
- (defalias 'yes-or-no-p 'y-or-n-p)
+(autoload 'ibuffer "ibuffer")
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
 
  ;; Emacs writes backup files to `filename~` by default. This is messy,
  ;; so let's tell it to write them to `~/.emacs.d/bak` instead.
@@ -1178,8 +1327,15 @@
  (setq compilation-ask-about-save nil)
 
  ;; Make the selection work like most people expect.
- (delete-selection-mode t)
+ (delete-selection-mode 1)
  (transient-mark-mode t)
+
+(global-set-key (kbd "DEL") 'backward-delete-char)
+
+;; Enable `downcase-region' and `upcase-region'
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
 
  ;; Automatically update unmodified buffers whose files have changed.
  (global-auto-revert-mode 1)
@@ -1193,6 +1349,9 @@
  ;; Make compilation buffers scroll to follow the output, but stop scrolling
  ;; at the first error.
  (setq compilation-scroll-output 'first-error)
+
+(setq-default uniquify-buffer-name-style 'forward)
+
 
  (provide 'module-general)
  #+END_SRC
@@ -1366,7 +1525,7 @@
   (ace-window-display-mode)
   (setq aw-dispatch-always t))
 
-   
+
 
  ;; Use C-x M-p to kill the buffer in the other window, revealing
  ;; the next buffer in the stack.
@@ -1487,12 +1646,12 @@
 
   (defvar screencast-speech nil "If non-nil, slowly typed strings are read aloud")
 
-  (defvar screencast-speed 1.2 "How fast the screencast should be. Higher values equals higher speed. This can not be changed _during_ the screencast.") 
+  (defvar screencast-speed 1.2 "How fast the screencast should be. Higher values equals higher speed. This can not be changed _during_ the screencast.")
   ;;;; BEGIN PRODUCER VARIABLES
   ;; these variables should be changed as needed by the producer
 
   (defvar screencast-dont-print-list '(
-                                       progn 
+                                       progn
                                         let
                                         flet
                                         save-excursion
@@ -1523,7 +1682,7 @@
 
   (defvar screencast-producer-step-number 0
     "Variable to be used for producer functions if they need to
-  know the current step number. 
+  know the current step number.
   This is a _COPY_ of the value the screencast uses!")
 
   (defvar screencast-producer-beginat 0
@@ -1533,7 +1692,7 @@
 
 
   ;;;; BEGIN MODE
-  (defvar screencast-mode-map 
+  (defvar screencast-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "RET") 'screencast-goto-step)
       map)
@@ -1558,9 +1717,9 @@
     "Short name for `screencast-producer-insert-with-delay'.
   This is chosen as it improves readability a lot in the screencast-source.")
 
-  (defun screencast-producer-set-last-command (f last) 
+  (defun screencast-producer-set-last-command (f last)
     "Sets the last-command to LAST before evaluating F.
-  Also prints the info about F, like it would have done normally." 
+  Also prints the info about F, like it would have done normally."
     (screencast-producer-show-command (car f))
     (eval-with-last f last)
     )
@@ -1572,11 +1731,11 @@
                 '(setq this-command last)
                 f)))
 
-  (defun screencast-producer-set-last-char (char f) 
+  (defun screencast-producer-set-last-char (char f)
     "Sets the last-command to CHAR before evaluating F.
   Also prints the info about F, like it would have done normally."
     (screencast-producer-show-command (car f))
-    (eval (list 'progn 
+    (eval (list 'progn
                 '(setq last-command-char (string-to-char char))
                 f)))
 
@@ -1595,7 +1754,7 @@
    command-buffer regains its status.
 
 
-  IMPORTANT: 
+  IMPORTANT:
 
   You are responsible for killing the `COMMAND-BUFFER'
   before the outermost screencast ends, otherwise you'll receive
@@ -1607,7 +1766,7 @@
     (if screencast-message-buffer
         (pop-to-buffer (get-buffer screencast-message-buffer-name))
       )
-    (screencast-internal list 
+    (screencast-internal list
                          (get-buffer command-buffer-name)
                          screencast-producer-beginat)
     )
@@ -1635,7 +1794,7 @@
             ;; unless there's a LOT of regions, the blinks will be synchronous
             (run-with-timer screencast-producer-blink-time nil 'delete-overlay overlay))
           )
-        (sit-for (* 2 screencast-producer-blink-time)) 
+        (sit-for (* 2 screencast-producer-blink-time))
         )))
 
   ;;;; END PRODUCER FUNCTIONS
@@ -1649,8 +1808,8 @@
                   [mouse-1]))
           )
       (define-key map keyc action)
-      (put-text-property 
-       beg 
+      (put-text-property
+       beg
        end
        'keymap map))
     )
@@ -1672,14 +1831,14 @@
     (add-text-properties beg (- end 0)
                          (list
                           'face 'shadow
-                          'mouse-face 'highlight 
+                          'mouse-face 'highlight
                           'help-echo "mouse-1: continue from this step"
                           ))
     (make-region-clickable beg (- end 0) 'screencast-goto-step))
 
   (defun screencast-get-step ()
     "Returns the step-number of a step-reference region.
-  If not in step-reference region, returns nil" 
+  If not in step-reference region, returns nil"
 
     (if
         ;; check if we are at a step-reference region
@@ -1744,17 +1903,17 @@
     (let ((step (if (not (= 1 arg))
                     arg
                   (screencast-get-step)))
-          ;; bug? using (point), standing at point max gives nil values! 
+          ;; bug? using (point), standing at point max gives nil values!
           (list (get-text-property (point-min) 'screencast-list))
           (name (get-text-property (point-min) 'screencast-command-buffer-name)))
       ;;     (print step)
       ;;     (print list)
       ;;     (print name)
-      (screencast list name 
-                  -1 ; we just ran the screencast, so version should be no problem      
+      (screencast list name
+                  -1 ; we just ran the screencast, so version should be no problem
                   (if step
                       (- step 1)    ; the command just before!
-                  
+
                     0))
       ))
 
@@ -1773,8 +1932,8 @@
                   [mouse-1]))
           )
       (define-key map keyc action)
-      (put-text-property 
-       beg 
+      (put-text-property
+       beg
        end
        'keymap map))
     )
@@ -1783,8 +1942,8 @@
     "Inserts the STEP number and key-binding for a command, COM."
     (screencast-newline-only-once)
     (insert "Step " (number-to-string step) ": `" (symbol-name com) "'")
-    (newline) 
-    (insert "  Callable with: ") 
+    (newline)
+    (insert "  Callable with: ")
     (insert (where-is-return com command-buffer))
     (screencast-fontify-step-region)
     (newline)
@@ -1811,8 +1970,8 @@
   Also requires `screencast-speech' to be non-nil.
   The speech speed depends on the typing speed (`screencast-speed-relation-speech-type')."
     (when (and (not nopause) screencast-speech)
-      (let* ((duration (concat 
-                        "-b \"(Parameter.set 'Duration_Stretch " 
+      (let* ((duration (concat
+                        "-b \"(Parameter.set 'Duration_Stretch "
                         (number-to-string (* screencast-pause-char-length
                                              screencast-speed-relation-speech-type)) ")\""))
              (tosay (replace-regexp-in-string "'" "'\"'\"'" string))
@@ -1838,7 +1997,7 @@
           ;; simple filling. If the char position equals fill-column. The
           ;; whole word is moved to the next line.
           (when (and (= (- (line-end-position) (line-beginning-position)) fill-column))
-            (search-backward " ") 
+            (search-backward " ")
             (insert "\n ") ; two space indentation as the previous space is moved too
             (end-of-line)  ; ?
             )
@@ -1882,13 +2041,13 @@
   Functions are evaluated in the buffer named COMMAND-BUFFER-NAME.
   VERSION is the version of screencast-mode the screencast is
   written for, older versions of screencast-mode might not support
-  everything in newer screencasts.  
+  everything in newer screencasts.
   The first BEGINAT elements of the list will be done without
-  delays.  
+  delays.
   INIT is a list of functions to be evaluated in the message-buffer
   prior to the first message"
     (when (> version screencast-version)
-      (error 
+      (error
        (concat "The version of the screencast (" (number-to-string
                                                   version) ") is newer than the version of the screencast-mode
   itself (" (number-to-string screencast-version) "). You might still be able
@@ -1909,8 +2068,8 @@
                                              screencast-speed))
            ;; buffers
            (message-buffer (if screencast-use-message-buffer (buffer-recreate screencast-message-buffer-name)))
-           (command-buffer (if (or (not screencast-use-message-buffer) 
-                                   (string= command-buffer-name 
+           (command-buffer (if (or (not screencast-use-message-buffer)
+                                   (string= command-buffer-name
                                             screencast-message-buffer-name)
                                    message-buffer)
                                (buffer-recreate command-buffer-name)))
@@ -1955,7 +2114,7 @@
       (screencast-line))
      ((eq 'n c)                     ; newline
       (newline))
-     ((eq 'p c)                     ; pause 
+     ((eq 'p c)                     ; pause
       (screencast-pause-maybe nopause))
      ((eq 'b c)                     ; break
       (screencast-make-break nopause)
@@ -1982,9 +2141,9 @@
                  nil
                t))
             )
-        ;; producer variables        
-        (setq screencast-producer-nopause nopause) 
-        (setq screencast-producer-step-number screencast-step-number) 
+        ;; producer variables
+        (setq screencast-producer-nopause nopause)
+        (setq screencast-producer-step-number screencast-step-number)
         (cond
          ((symbolp c)
           ;; special symbols
@@ -2000,18 +2159,18 @@
                   (screencast-show-command (car c) screencast-step-number command-buffer)
                 )
               )
-            (unless nopause     
+            (unless nopause
               (screencast-pause-maybe nopause screencast-pause-command-length) ; pause
               )
-            (if (member (car c) '(let flet)) 
+            (if (member (car c) '(let flet))
                 (progn
-                  ;; we want the environment - but also to print the commands! 
+                  ;; we want the environment - but also to print the commands!
                   (eval (list (car c)     ; the members above
                               (cadr c)    ;the lets of flets
                               '(screencast-internal (cddr c) command-buffer beginat))) ;the rest
                   )
               ;; evaluate standard
-              (progn 
+              (progn
                 ;; save excursion style which allows for inner screencasts
                 (pop-to-buffer command-buffer)
                 (eval c)
@@ -2170,7 +2329,7 @@
       executed function, the screencast is restarted from the first
       step."  ))
 
-  (defconst screencast-screencast-text-producer-advanced 
+  (defconst screencast-screencast-text-producer-advanced
     '(
       "This screencast covers the advanced functions of screencast-mode."n
       "Please read the documentation for the functions as well."n
@@ -2178,7 +2337,7 @@
       "You, as a producer, are supposed to be using the functions starting with `screencast-producer-' (and `screencast' itself ofcourse), they are tailored for ease of use. The others are for internal use - and there's no guarantee they are stable throughout versions."
       b
       "It is possible to use multiple command-buffers:"
-      (screencast-producer-new-buffer 
+      (screencast-producer-new-buffer
        '((i "I'm a new command-buffer"))
        "new-command-buffer")
       (progn (kill-buffer "new-command-buffer"))
