@@ -1,505 +1,22 @@
-# -*- coding: utf-8 ; buffer-read-only: 1 ; -*-
+:HIDDEN:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+
+#+HTML_HEAD: <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+#+HTML_HEAD: <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+
+#+PROPERTY: header-args :tangle config.el
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+HTML_HEAD_EXTRA: <style>div#content { max-width: 2000px; }</style>
+:END:
 #+TITLE: Emacs Configuration
+#+TODO: ACTIVE | DISABLED
 
-* Init
-#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-;;; init.el --- user-init-file                    -*- lexical-binding: t -*-
-
-
-(defvar current-user
-  (getenv
-   (if (equal system-type 'windows-nt) "USERNAME" "USER")))
-
-(message "I'm powering up... Be patient, Master %s!" current-user)
-
-
-(defvar dotfiles-core-dir (expand-file-name "core" user-emacs-directory)
-    "The home of Emacs's core functionality.")
-
-(defvar dotfiles-modules-dir (expand-file-name  "modules" user-emacs-directory)
-    "This directory houses all of the built-in Emacs modules.")
-
-(defvar dotfiles-personal-dir (expand-file-name ".personal.d" "~/")
-    "This directory is for your personal configuration.")
-
-(defvar dotfiles-custom-dir (concat user-emacs-directory "lisp/")
-  "Where custom lisp files are stored")
-
-(defvar dotfiles-screencasts-dir (expand-file-name "screencasts" user-emacs-directory)
-    "The home of Emacs's core functionality.")
-
-(dolist (dir (list dotfiles-custom-dir dotfiles-personal-dir))
-  (unless (file-directory-p dir)
-    (make-directory dir t)))
-
-
-(defun dotfiles-add-subfolders-to-load-path (parent-dir)
-  "Add all level PARENT-DIR subdirs to the `load-path'."
-  (dolist (f (directory-files parent-dir))
-    (let ((name (expand-file-name f parent-dir)))
-      (when (and (file-directory-p name)
-                 (not (string-prefix-p "." f)))
-        (add-to-list 'load-path name)
-        (dotfiles-add-subfolders-to-load-path name)))))
-
-;; Always load newest byte code
-(setq load-prefer-newer t)
-
-
-
-;; We start off by telling Emacs where we intend to keep things, and some
-;; other basic system setup.
-
-;; Initialise the package system first of all.
-;(package-initialize)
-
-;; Skip the default splash screen.
-(setq inhibit-startup-message t)
-(setq initial-scratch-message "")
-
-;; Figure out the current hostname.
-(setq hostname (replace-regexp-in-string "\\(^[[:space:]\n]*\\|[[:space:]\n]*$\\)" "" (with-output-to-string (call-process "hostname" nil standard-output))))
-
-;; Figure out the path to our .emacs.d by getting the path part of the
-;; current file (`init.el`).
-(setq dotfiles-dir (file-name-directory
-                    (or (buffer-file-name) (file-chase-links load-file-name))))
-
-;; We need to tell Emacs where to find Emacs's library packages.
-(add-to-list 'load-path (concat dotfiles-dir "core"))
-
-
-
-
-;; We'll keep the various parts of our configuration in the `modules` subfolder
-;; of our .emacs.d. We'll need to add that to the system load path so Emacs can
-;; find our modules when we ask for them.
-(add-to-list 'load-path (concat dotfiles-dir "modules"))
-
-;; Define where we want to keep `loaddefs.el` (our autoload declarations) and
-;; `custom.el` (our user settings file).
-(setq autoload-file (concat dotfiles-dir "loaddefs.el"))
-(setq custom-file (concat dotfiles-dir "custom.el"))
-
-(setq byte-compile-warnings nil)
-
-;; Load the user settings from `custom.el`.
-(load custom-file 'noerror)
-
-(message "Loading modules...")
-
-
-
-(setq custom-safe-themes t)
-
-;; Load the Emacs fundamentals.
-(require 'core-lib)
-(require 'core-package)
-(require 'core-module-index)
-(require 'core-module-selector)
-(require 'core-update)
-(require 'core-personal-taste)
-(require 'core-startup-wizard)
-(require 'core-set-path)
-
-
-; macOS specific settings
-(when (eq system-type 'darwin)
- (require 'core-macos))
- ;Linux specific settings
-(when (eq system-type 'gnu/linux)
-  (require 'core-linux))
-
-
-;; Load the enabled modules.
-(when (not (boundp 'core/wizard-did-run)) (core/load-modules))
-(cl-loop for file in (reverse (directory-files-recursively dotfiles-custom-dir "\\.el$"))
-         do (load file))
-
-(cl-loop for file in (reverse (directory-files-recursively dotfiles-personal-dir "\\.el$"))
-         do (load file))
-
-(cl-loop for file in (reverse (directory-files-recursively dotfiles-screencasts-dir "\\.el$"))
-         do (load file))
-
-
-(message "I'm ready to do thy bidding, Master %s!" current-user)
-
-
-
-#+END_SRC
 * Core
-** Libraries
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-lib.el
- (require 'core-package)
-
- ;; Ensure the New Standard Library is installed and always available.
- ;; f.el    - files and paths  https://github.com/rejeep/f.el
- ;; s.el    - strings          https://github.com/magnars/s.el
- ;; dash.el - lists            https://github.com/magnars/dash.el
- (use-package f)
- (use-package s)
- (use-package dash)
-
-
-
- (defun core/font-lock-replace-symbol (mode reg sym)
-   "Given a major mode `mode', replace the regular expression `reg' with
- the symbol `sym' when rendering."
-   (font-lock-add-keywords
-    mode `((,reg
-            (0 (progn (compose-region (match-beginning 1) (match-end 1)
-                                      ,sym 'decompose-region)))))))
-
-
-
- (defun core/exec (command)
-   "Run a shell command and return its output as a string, whitespace trimmed."
-   (s-trim (shell-command-to-string command)))
-
- (defun core/exec-with-rc (command &rest args)
-   "Run a shell command and return a list containing two values: its return
- code and its whitespace trimmed output."
-   (with-temp-buffer
-     (list (apply 'call-process command nil (current-buffer) nil args)
-           (s-trim (buffer-string)))))
-
- (defun core/is-exec (command)
-   "Returns true if `command' is an executable on the system search path."
-   (f-executable? (s-trim (shell-command-to-string (s-concat "which " command)))))
-
- (defun core/resolve-exec (command)
-   "If `command' is an executable on the system search path, return its absolute path.
- Otherwise, return nil."
-   (-let [path (s-trim (shell-command-to-string (s-concat "which " command)))]
-     (when (f-executable? path) path)))
-
- (defun core/exec-if-exec (command args)
-   "If `command' satisfies `core/is-exec', run it with `args' and return its
- output as per `core/exec'. Otherwise, return nil."
-   (when (core/is-exec command) (core/exec (s-concat command " " args))))
-
-
-
- (defun core/getent (user)
-   "Get the /etc/passwd entry for the user `user' as a list of strings,
- or nil if there is no such user. Empty fields will be represented as nil,
- as opposed to empty strings."
-   (-let [ent (core/exec (s-concat "getent passwd " user))]
-     (when (not (s-blank? ent))
-       (-map (lambda (i) (if (s-blank? i) nil i))
-             (s-split ":" ent)))))
-
- (defun core/user-full-name ()
-   "Guess the user's full name. Returns nil if no likely name could be found."
-   (or (core/exec-if-exec "git" "config --get user.name")
-       (elt (core/getent (getenv "USER")) 4)))
-
- (defun core/user-email ()
-   "Guess the user's email address. Returns nil if none could be found."
-   (or (core/exec-if-exec "git" "config --get user.email")
-       (getenv "EMAIL")))
-
-
-
- (provide 'core-lib)
- ;;; core-lib.el ends here
- #+END_SRC
-** Linux
-  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-linux.el
-
- ;; On Linux Emacs doesn't use the shell PATH if it's not started from
- ;; the shell. Let's fix that:
- (use-package exec-path-from-shell)
-
- (exec-path-from-shell-initialize)
-
- (provide 'core-linux)
- #+END_SRC
-** macOS
-  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-macos.el
- (use-package exec-path-from-shell)
-
- (exec-path-from-shell-initialize)
-
- ;; It's all in the Meta
- (setq ns-function-modifier 'hyper)
-
- (defun user-swap-meta-and-super ()
-   "Swap the mapping of Meta and Super.
- Very useful for people using their Mac with a
- Windows external keyboard from time to time."
-   (interactive)
-   (if (eq mac-command-modifier 'super)
-       (progn
-         (setq mac-command-modifier 'meta)
-         (setq mac-option-modifier 'super)
-         (message "Command is now bound to META and Option is bound to SUPER."))
-     (setq mac-command-modifier 'super)
-     (setq mac-option-modifier 'meta)
-     (message "Command is now bound to SUPER and Option is bound to META.")))
-
-
- ;; There's no point in hiding the menu bar on macOS, so let's not do it
- (menu-bar-mode +1)
-
- ;; Enable emoji, and stop the UI from freezing when trying to display them.
- (when (fboundp 'set-fontset-font)
-   (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
-
-;; The general philosophy of the movement and evaluation keys is that
-;; adding more modifier keys causes the same action, but "bigger". So,
-;; for example, M-left goes left by the word rather than the
-;; character. s-return evaluates the immediately preceding form, but
-;; S-s-return evaluates the currounding top level form. And so on.
-
-;; use OS X's Spotlight for M-x locate
-(setq locate-make-command-line (lambda (s) `("mdfind" "-name" ,s)))
-
-;; alt-click for mouse-2, command-click for mouse-3
-;; ...is this broken?
-(setq mac-emulate-three-button-mouse t)
-
-;; shift-select is standard in OS X inputs
-(setq shift-select-mode t)
-
-;;;; Normalize key bindings with Mac OS X system ones
-
-;; command + up/down/left/right = file start/end, line start/end
-(global-set-key (kbd "<s-up>")    'beginning-of-buffer)
-(global-set-key (kbd "<s-down>")  'end-of-buffer)
-(global-set-key (kbd "<s-left>")  'move-beginning-of-line)
-(global-set-key (kbd "<s-right>") 'move-end-of-line)
-
-(define-key global-map (kbd "s-+") 'text-scale-increase)
-(define-key global-map (kbd "s--") 'text-scale-decrease)
-
-;; TODO discuss default installation of undo-tree
-;; undo-tree-mode aliased to command+z/shift+command+z
-;; (require 'undo-tree)
-;; (global-undo-tree-mode 1)
-;; (global-set-key (kbd "s-z") 'undo)
-;; (global-set-key (kbd "s-Z") 'undo-tree-redo)
-
-;; the fantastic undo-tree-visualize on C-s-z
-;;(global-set-key [C-s-268632090] 'undo-tree-visualize)
-
-;; command-f, the default OSX search keybinding, but with regexp
-(global-set-key (kbd "s-f") 'isearch-forward-regexp)
-
-;; TODO discuss inclusion of visual-regexp
-;; command-r, forward-replace
-;; (require 'visual-regexp)
-;; (global-set-key (kbd "s-r") 'vr/replace)
-;; (global-set-key [8388690] 'vr/query-replace) ; s-R
-
-;; make M-up and M-down the same as C-up and C-down because the former
-;; is how it's bound in OSX
-(global-set-key (kbd "<M-up>") 'backward-paragraph)
-(global-set-key (kbd "<M-down>") 'forward-paragraph)
-
-;; option-delete = backword-kill-word in OS X
-(global-set-key (kbd "M-<backspace>") 'backward-kill-word)
-
-;; I like a single frame, so I'd rather have this kill the buffer
-(global-set-key (kbd "s-w") 'kill-this-buffer)
-
-;; TODO ido-find-file or similar (helm, whatever)
-;;(global-set-key (kbd "s-o") 'ido-find-file)
-
-;; In dired, move deletions to trash
-(setq delete-by-moving-to-trash t)
-
-;; don't use the right alt/option key as M-, so it can still be used
-;; to type accented characters. Fück yeah.
-(setq ns-right-alternate-modifier nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; RAILWAY CAT EMACS
-
-;; default railway has these the other way round
-(setq mac-option-modifier 'meta)
-(setq mac-command-modifier 'super)
-
-;; ... and doesn't set these default CUA bindings
-(global-set-key [(super a)] 'mark-whole-buffer)
-(global-set-key [(super c)] 'kill-ring-save)
-(global-set-key [(super g)] 'isearch-repeat-forward)
-(global-set-key [(super l)] 'goto-line)
-(global-set-key [(super q)] 'save-buffers-kill-terminal)
-(global-set-key [(super s)] 'save-buffer)
-(global-set-key [(super v)] 'yank)
-(global-set-key [(super x)] 'kill-region)
-(global-set-key [(super w)] (lambda ()
-                              (interactive)
-                              (kill-buffer (current-buffer))))
-(global-set-key [(super z)] 'undo)
-
-;; turn off super disturbing visible bell
-(setq visible-bell nil)
-
-;; does not work yet in railway cat :(
-(setq mac-right-alternate-modifier nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; PROG MODES
-
-;; these are bound to "kill-this-buffer" by default
-(global-set-key (kbd "s-K") nil)
-(global-set-key (kbd "s-k") nil)
-(add-hook 'prog-mode-hook
-          (lambda ()
-            ;; compile short cuts
-            (define-key (current-local-map) (kbd "s-K") 'compile)
-            (define-key (current-local-map) (kbd "s-k") 'recompile)))
-
-;; TODO discuss paredit
-;; (eval-after-load 'paredit
-;;   '(progn
-;;      ;; fights with my preferred navigation keys
-;;      (dolist (binding (list (kbd "M-<up>") (kbd "M-<down>") (kbd "C-M-<left>") (kbd "C-M-<right>")))
-;;        (define-key paredit-mode-map binding nil))
-
-;;      ;; not just in lisp mode(s)
-;;      (global-set-key (kbd "C-M-<left>") 'backward-sexp)
-;;      (global-set-key (kbd "C-M-<right>") 'forward-sexp)
-
-;;      (global-set-key (kbd "M-(") 'paredit-wrap-round)
-;;      (global-set-key (kbd "M-[") 'paredit-wrap-square)
-;;      (global-set-key (kbd "M-{") 'paredit-wrap-curly)
-
-;;      (global-set-key (kbd "M-)") 'paredit-close-round-and-newline)
-;;      (global-set-key (kbd "M-]") 'paredit-close-square-and-newline)
-;;      (global-set-key (kbd "M-}") 'paredit-close-curly-and-newline)
-
-;; 	 (diminish 'paredit-mode)))
-
-;; Evaluate code, larger scope with more modifiers. I bind these over
-;; all prog modes to do the right thing in any language with a REPL.
-
-;; just the last sexp:
-(define-key emacs-lisp-mode-map (kbd "<s-return>") 'eval-last-sexp)
-
-;; ... add shift to eval last defun (i.e. top level form)
-(define-key emacs-lisp-mode-map (kbd "<S-s-return>") 'eval-defun)
-
-;; ... add meta to eval entire buffer
-(define-key emacs-lisp-mode-map (kbd "<M-S-s-return>") 'eval-last-psexp)
-
-
-
- (provide 'core-macos)
- #+END_SRC
-
-** Module index
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-module-index.el
- (setq
-  core/available-modules
-  '((module-appearance "how Emacs looks" :recommended)
-    (module-dashboard "an emacs dashboard" :recommended)
-    (module-fonts "adjust font size on the fly" :recommended)
-    (module-general "basic editor settings" :recommended)
-    (module-navigation "moving around better" :recommended)
-    (module-ext-window-nav "alternative window navigation" :recommended)
-    (module-editing "editing improvements (multiple cursors etc)" :recommended)
-    (module-complete "auto completion" :recommended)
-    (module-snippets "snippet management" :recommended)
-    (module-dired "enhanced file manager" :recommended)
-    (module-flycheck "run linters automatically with Flycheck" :recommended)
-    (module-git "Git tools" :recommended)
-    (module-orgmode "your personal everything manager" :recommended)
-    (module-help "ways to get more help" :recommended)
-    (module-helm "advanced selection and narrowing" :recommended)
-    (module-markdown "Markdown support" :recommended)
-
-    ))
-
- (require 'cl)
- (defcustom core/modules (mapcar #'car
-                                 (remove-if-not
-                                  (lambda (i) (equal :recommended (caddr i)))
-                                  core/available-modules))
-   "Your choice of Emacs modules.")
-
- (defun core/load-modules ()
-   (interactive)
-   (dolist (module core/modules) (require module nil t))
-   (run-hooks 'core/modules-loaded-hook))
-
- (provide 'core-module-index)
- #+END_SRC
-** Module selector
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-module-selector.el
- (require 'core-lib)
- (require 'widget)
- (require 'cus-edit)
-
- (defun core/select-modules ()
-   "Select the modules that should load on startup."
-   (interactive)
-
-   (switch-to-buffer "*Emacs Modules*")
-   (kill-all-local-variables)
-   (-let [inhibit-read-only t] (erase-buffer))
-   (remove-overlays)
-
-   (setq-local selected-modules core/modules)
-
-   (-let ((save-settings
-           (lambda (&rest ignore)
-             (interactive)
-             (customize-save-variable 'core/modules selected-modules)
-             (package-refresh-contents)
-             (core/load-modules)
-             (kill-buffer))))
-
-     (widget-insert (propertize "Emacs Modules" 'face 'custom-group-tag))
-     (widget-insert "\n")
-
-     (widget-insert "
- This menu allows you to select feature modules for Emacs.
-
- Navigate between checkboxes using <tab> and S-<tab>, or use the cursor
- keys to move around. Hit <return> to toggle checkboxes, or to press the
- buttons. When you're done, press the `Save' or `Cancel' buttons, or just
- save the buffer (C-x C-s).
- ")
-
-     (widget-insert "\n  ")
-     (widget-create 'push-button
-                    :tag "Save"
-                    :notify save-settings)
-     (widget-insert "  ")
-     (widget-create 'push-button :tag "Cancel"
-                    :notify (lambda (&rest ignore) (kill-buffer)))
-
-     (widget-insert "\n\n  ")
-     (apply 'widget-create 'checklist
-            :indent 2
-            :greedy t
-            :value selected-modules
-            :notify (lambda (this &rest ignore)
-                      (setq-local selected-modules (widget-value this)))
-            (-map (lambda (mod)
-                    (-let [(sym desc) mod]
-                      `(item :tag ,(s-concat (s-pad-right 24 " " (symbol-name sym)))
-                             :doc ,desc
-                             :value ,sym
-                             :format "%t %d")))
-                  core/available-modules))
-
-     (widget-insert "\n")
-
-     (use-local-map (copy-keymap widget-keymap))
-     (local-set-key (kbd "C-x C-s") save-settings)
-
-     (widget-setup)
-     (widget-forward 1)))
-
-
-
- (provide 'core-module-selector)
- #+END_SRC
 ** Package
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-package.el
+ #+BEGIN_SRC emacs-lisp
  ;; `(online?)` is a function that tries to detect whether you are online.
  ;; We want to refresh our package list on Emacs start if we are.
  (require 'cl)
@@ -557,107 +74,373 @@
  ;; instead of expecting you to do it manually.
  (setq use-package-always-ensure t)
 
+   #+END_SRC
+** Libraries
+*** config
+ #+BEGIN_SRC emacs-lisp
+(eval-when-compile (require 'cl-lib))
 
- (provide 'core-package)
+ (defun core/font-lock-replace-symbol (mode reg sym)
+   "Given a major mode `mode', replace the regular expression `reg' with
+ the symbol `sym' when rendering."
+   (font-lock-add-keywords
+    mode `((,reg
+            (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                      ,sym 'decompose-region)))))))
+ (defun core/exec (command)
+   "Run a shell command and return its output as a string, whitespace trimmed."
+   (s-trim (shell-command-to-string command)))
+
+ (defun core/exec-with-rc (command &rest args)
+   "Run a shell command and return a list containing two values: its return
+ code and its whitespace trimmed output."
+   (with-temp-buffer
+     (list (apply 'call-process command nil (current-buffer) nil args)
+           (s-trim (buffer-string)))))
+
+ (defun core/is-exec (command)
+   "Returns true if `command' is an executable on the system search path."
+   (f-executable? (s-trim (shell-command-to-string (s-concat "which " command)))))
+
+ (defun core/resolve-exec (command)
+   "If `command' is an executable on the system search path, return its absolute path.
+ Otherwise, return nil."
+   (-let [path (s-trim (shell-command-to-string (s-concat "which " command)))]
+     (when (f-executable? path) path)))
+
+ (defun core/exec-if-exec (command args)
+   "If `command' satisfies `core/is-exec', run it with `args' and return its
+ output as per `core/exec'. Otherwise, return nil."
+   (when (core/is-exec command) (core/exec (s-concat command " " args))))
+
+
+
+ (defun core/getent (user)
+   "Get the /etc/passwd entry for the user `user' as a list of strings,
+ or nil if there is no such user. Empty fields will be represented as nil,
+ as opposed to empty strings."
+   (-let [ent (core/exec (s-concat "getent passwd " user))]
+     (when (not (s-blank? ent))
+       (-map (lambda (i) (if (s-blank? i) nil i))
+             (s-split ":" ent)))))
+
+ (defun core/user-full-name ()
+   "Guess the user's full name. Returns nil if no likely name could be found."
+   (or (core/exec-if-exec "git" "config --get user.name")
+       (elt (core/getent (getenv "USER")) 4)))
+
+ (defun core/user-email ()
+   "Guess the user's email address. Returns nil if none could be found."
+   (or (core/exec-if-exec "git" "config --get user.email")
+       (getenv "EMAIL")))
+
+(defmacro after! (feature &rest forms)
+  "A smart wrapper around `with-eval-after-load'. Supresses warnings during
+compilation."
+  (declare (indent defun) (debug t))
+  `(,(if (or (not (bound-and-true-p byte-compile-current-file))
+             (if (symbolp feature)
+                 (require feature nil :no-error)
+               (load feature :no-message :no-error)))
+         #'progn
+       #'with-no-warnings)
+    (with-eval-after-load ',feature ,@forms)))
+
+
+  (eval-and-compile
+
+    (defun my/resolve-hook-forms (hooks)
+      (cl-loop with quoted-p = (eq (car-safe hooks) 'quote)
+               for hook in (doom-enlist (doom-unquote hooks))
+               if (eq (car-safe hook) 'quote)
+                collect (cadr hook)
+               else if quoted-p
+                collect hook
+               else collect (intern (format "%s-hook" (symbol-name hook)))))
+
+    (defvar my/transient-counter 0)
+    (defmacro add-transient-hook! (hook &rest forms)
+      "Attaches transient forms to a HOOK.
+
+    HOOK can be a quoted hook or a sharp-quoted function (which will be advised).
+
+    These forms will be evaluated once when that function/hook is first invoked,
+    then it detaches itself."
+      (declare (indent 1))
+      (let ((append (eq (car forms) :after))
+            (fn (intern (format "my/transient-hook-%s" (cl-incf my/transient-counter)))))
+        `(when ,hook
+           (fset ',fn
+                 (lambda (&rest _)
+                   ,@forms
+                   (cond ((functionp ,hook) (advice-remove ,hook #',fn))
+                         ((symbolp ,hook)   (remove-hook ,hook #',fn)))
+                   (unintern ',fn nil)))
+           (cond ((functionp ,hook)
+                  (advice-add ,hook ,(if append :after :before) #',fn))
+                 ((symbolp ,hook)
+                  (add-hook ,hook #',fn ,append)))))))
+
+  (defmacro add-hook! (&rest args)
+    "A convenience macro for `add-hook'. Takes, in order:
+
+    1. Optional properties :local and/or :append, which will make the hook
+       buffer-local or append to the list of hooks (respectively),
+    2. The hooks: either an unquoted major mode, an unquoted list of major-modes,
+       a quoted hook variable or a quoted list of hook variables. If unquoted, the
+       hooks will be resolved by appending -hook to each symbol.
+    3. A function, list of functions, or body forms to be wrapped in a lambda.
+
+  Examples:
+      (add-hook! 'some-mode-hook 'enable-something)
+      (add-hook! some-mode '(enable-something and-another))
+      (add-hook! '(one-mode-hook second-mode-hook) 'enable-something)
+      (add-hook! (one-mode second-mode) 'enable-something)
+      (add-hook! :append (one-mode second-mode) 'enable-something)
+      (add-hook! :local (one-mode second-mode) 'enable-something)
+      (add-hook! (one-mode second-mode) (setq v 5) (setq a 2))
+      (add-hook! :append :local (one-mode second-mode) (setq v 5) (setq a 2))
+
+  Body forms can access the hook's arguments through the let-bound variable
+  `args'."
+    (declare (indent defun) (debug t))
+    (let ((hook-fn 'add-hook)
+          append-p local-p)
+      (while (keywordp (car args))
+        (pcase (pop args)
+          (:append (setq append-p t))
+          (:local  (setq local-p t))
+          (:remove (setq hook-fn 'remove-hook))))
+      (let ((hooks (my/resolve-hook-forms (pop args)))
+            (funcs
+             (let ((val (car args)))
+               (if (memq (car-safe val) '(quote function))
+                   (if (cdr-safe (cadr val))
+                       (cadr val)
+                     (list (cadr val)))
+                 (list args))))
+            forms)
+        (dolist (fn funcs)
+          (setq fn (if (symbolp fn)
+                       `(function ,fn)
+                     `(lambda (&rest _) ,@args)))
+          (dolist (hook hooks)
+            (push (cond ((eq hook-fn 'remove-hook)
+                         `(remove-hook ',hook ,fn ,local-p))
+                        (t
+                         `(add-hook ',hook ,fn ,append-p ,local-p)))
+                  forms)))
+        `(progn ,@(nreverse forms)))))
+
+  (defmacro remove-hook! (&rest args)
+    "Convenience macro for `remove-hook'. Takes the same arguments as
+  `add-hook!'."
+    `(add-hook! :remove ,@args))
+
  #+END_SRC
-** Personal taste
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-personal-taste.el
- (defgroup core-emacs nil
-   "Your personal taste in emacs."
-   :prefix "core-personal-taste/")
-
- (defcustom core-personal-taste/run-wizard t
-   "Should we run the startup wizard on the next startup?"
-   :group 'core-emacs
-   :type '(choice (const :tag "Yes" t)
-                  (const :tag "No" nil)))
-
-
- (provide 'core-personal-taste)
+*** packages
+**** async
+ #+BEGIN_SRC emacs-lisp
+(use-package async :demand t
+    :config
+    (dired-async-mode 1))
  #+END_SRC
-** Set-path
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-set-path.el
+**** subr-x
+ #+BEGIN_SRC emacs-lisp
+(use-package subr-x :demand t :ensure nil)
+
+ #+END_SRC
+
+
+
+**** dash
+ #+BEGIN_SRC emacs-lisp
+(use-package dash
+  :ensure t
+  :config
+  (dash-enable-font-lock))
+(use-package dash-functional
+  :ensure t)
+ #+END_SRC
+
+**** f
+ #+BEGIN_SRC emacs-lisp
+(use-package f
+  :ensure t)
+ #+END_SRC
+
+**** s
+  #+BEGIN_SRC emacs-lisp
+(use-package s
+  :ensure t)
+  #+END_SRC
+
+**** ht
+  #+BEGIN_SRC emacs-lisp
+(use-package ht
+  :ensure t)
+  #+END_SRC
+
+**** a
+ #+begin_src emacs-lisp
+(require 'let-alist)
+(use-package a
+  :ensure t)
+ #+end_src
+
+**** persistent-soft
+ #+BEGIN_SRC emacs-lisp
+(use-package persistent-soft
+  :ensure t)
+ #+END_SRC
+
+** Linux
+*** config
+ #+BEGIN_SRC emacs-lisp
+(setq x-gtk-use-system-tooltips nil)
+  #+END_SRC
+*** packages
+***** exec-path-from-shell
+  #+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+:config
+(exec-path-from-shell-initialize))
+  #+END_SRC
+** DISABLED macOS
+*** DISABLED config
+  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-macos.el
+ (setq ns-function-modifier 'hyper)
+
+ (defun user-swap-meta-and-super ()
+   "Swap the mapping of Meta and Super.
+ Very useful for people using their Mac with a
+ Windows external keyboard from time to time."
+   (interactive)
+   (if (eq mac-command-modifier 'super)
+       (progn
+         (setq mac-command-modifier 'meta)
+         (setq mac-option-modifier 'super)
+         (message "Command is now bound to META and Option is bound to SUPER."))
+     (setq mac-command-modifier 'super)
+     (setq mac-option-modifier 'meta)
+     (message "Command is now bound to SUPER and Option is bound to META.")))
+
+ (menu-bar-mode +1)
+
+ (when (fboundp 'set-fontset-font)
+   (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
+
+(setq locate-make-command-line (lambda (s) `("mdfind" "-name" ,s)))
+
+(setq mac-emulate-three-button-mouse t)
+
+(setq shift-select-mode t)
+
+(global-set-key (kbd "<s-up>")    'beginning-of-buffer)
+(global-set-key (kbd "<s-down>")  'end-of-buffer)
+(global-set-key (kbd "<s-left>")  'move-beginning-of-line)
+(global-set-key (kbd "<s-right>") 'move-end-of-line)
+
+(define-key global-map (kbd "s-+") 'text-scale-increase)
+(define-key global-map (kbd "s--") 'text-scale-decrease)
+
+(global-set-key (kbd "s-f") 'isearch-forward-regexp)
+
+(global-set-key (kbd "<M-up>") 'backward-paragraph)
+(global-set-key (kbd "<M-down>") 'forward-paragraph)
+
+(global-set-key (kbd "M-<backspace>") 'backward-kill-word)
+
+(global-set-key (kbd "s-w") 'kill-this-buffer)
+
+(setq delete-by-moving-to-trash t)
+
+(setq ns-right-alternate-modifier nil)
+
+(setq mac-option-modifier 'meta)
+(setq mac-command-modifier 'super)
+
+(global-set-key [(super a)] 'mark-whole-buffer)
+(global-set-key [(super c)] 'kill-ring-save)
+(global-set-key [(super g)] 'isearch-repeat-forward)
+(global-set-key [(super l)] 'goto-line)
+(global-set-key [(super q)] 'save-buffers-kill-terminal)
+(global-set-key [(super s)] 'save-buffer)
+(global-set-key [(super v)] 'yank)
+(global-set-key [(super x)] 'kill-region)
+(global-set-key [(super w)] (lambda ()
+                              (interactive)
+                              (kill-buffer (current-buffer))))
+(global-set-key [(super z)] 'undo)
+
+(setq visible-bell nil)
+
+(setq mac-right-alternate-modifier nil)
+
+(global-set-key (kbd "s-K") nil)
+(global-set-key (kbd "s-k") nil)
+(add-hook 'prog-mode-hook
+          (lambda ()
+            ;; compile short cuts
+            (define-key (current-local-map) (kbd "s-K") 'compile)
+            (define-key (current-local-map) (kbd "s-k") 'recompile)))
+
+ #+END_SRC
+*** DISABLED packages
+**** DISABLED exec-path-from-shell
+ #+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+:config
+(exec-path-from-shell-initialize))
+ #+END_SRC
+
+**** DISABLED pbcopy
+ #+BEGIN_SRC emacs-lisp
+(use-package pbcopy
+  :ensure t)
+ #+END_SRC
+**** DISABLED Set-path
+   #+BEGIN_SRC emacs-lisp
  (paradox-require 'exec-path-from-shell)
 
  (when (memq window-system '(x mac ns))
    (exec-path-from-shell-initialize))
-
- (provide 'core-set-path)
- #+END_SRC
-** Startup-wizard
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-startup-wizard.el
-
- (require 'core-personal-taste)
-
- (defun core-startup-wizard ()
-   (interactive)
-
-   (customize-save-variable 'core-personal-taste/run-wizard nil)
-   (setq core/wizard-did-run t)
-   (core/select-modules))
-
- (when core-personal-taste/run-wizard
-   (core-startup-wizard))
-
-
-
- (provide 'core-startup-wizard)
- #+END_SRC
-
-** Update
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-update.el
- (defun core/update ()
-   (interactive)
-   (let ((default-directory dotfiles-dir)
-         (buf (get-buffer-create "*core-emacs update*")))
-     (switch-to-buffer-other-window buf)
-     (shell-command "git pull --ff-only --stat" buf)
-     (end-of-buffer)
-     (insert "\nRun `M-x core/select-modules' to review and install new modules.\n")
-     (local-set-key (kbd "q") 'quit-window)))
-
- (provide 'core-update)
- #+END_SRC
+   #+END_SRC
 * Modules
 ** Appearance
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-appearance.el
- (require 'core-package)
+*** config
+ #+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil
+                         :family "Source Code Pro"
+                         :height 100
+                         :weight 'normal
+                         :width 'normal
+                         )
+     (set-face-attribute 'Info-quoted nil
+                         :slant 'Italic)
+     (set-face-attribute 'font-lock-string-face nil
+                         :slant 'Italic)
 
- (use-package better-defaults)
+ (defun module-fonts/spec-to-list (spec)
+   (s-split "-" spec))
 
- (use-package all-the-icons)
+ (defun module-fonts/list-to-spec (spec)
+   (s-join "-" spec))
 
- (use-package doom-modeline
-   :init
-   (doom-modeline-mode 1)
-   )
+ (defun module-fonts/update-font-spec-size (spec increment)
+   (module-fonts/list-to-spec
+    (-update-at 7 (lambda (i) (number-to-string
+                               (+ (string-to-number i) increment)))
+                (module-fonts/spec-to-list spec))))
 
+ (defun module-fonts/update-font-size (increment)
+   (set-frame-font
+    (module-fonts/update-font-spec-size (frame-parameter nil 'font) increment)))
 
- (use-package doom-themes
-   :init
-   (load-theme 'doom-Iosvkem)
-   :config
-   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-   ;; Enable flashing mode-line on errors
-   (doom-themes-visual-bell-config)
-   ;; Enable custom neotree theme (all-the-icons must be installed!)
-   (doom-themes-neotree-config)
-   ;; or for treemacs users
-   (doom-themes-treemacs-config)
-   ;; Corrects (and improves) org-mode's native fontification.
-   (doom-themes-org-config
-
-    ))
-
-(setq mouse-autoselect-window t
-      focus-follows-mouse t)
-
-
-
-
-
+ (global-set-key (kbd "C-M--") (lambda () (interactive)
+                                 (module-fonts/update-font-size -1)))
+ (global-set-key (kbd "C-M-=") (lambda () (interactive)
+                                 (module-fonts/update-font-size 1)))
 
  (require 'term)
 
@@ -672,13 +455,8 @@
    (blink-cursor-mode -1))
 
  ;; Show line numbers in buffers.
- (global-linum-mode t)
+ (global-linum-mode -1)
  (setq linum-format (if (not window-system) "%4d " "%4d"))
-
- ;; Highlight the line number of the current line.
- (use-package hlinum
-   :config
-   (hlinum-activate))
 
  ;; Show column numbers in modeline.
  (setq column-number-mode t)
@@ -698,10 +476,124 @@
  ;; Highlight matching braces.
  (show-paren-mode 1)
 
+ ;; Handle ANSI colours in compile buffer output.
+ ;; From https://gist.github.com/jwiegley/8ae7145ba5ce64250a05
+ (defun compilation-ansi-color-process-output ()
+   (ansi-color-process-output nil)
+   (set (make-local-variable 'comint-last-output-start)
+        (point-marker)))
+ (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output)
 
+ (setq-default
+   bidi-display-reordering nil         ; disable bidirectional text for tiny performance boost
+   blink-matching-paren nil            ; don't blink--too distracting
+   cursor-in-non-selected-windows nil  ; hide cursors in other windows
+   display-line-numbers-width 3        ; minimum width used to display line numbers
+   frame-inhibit-implied-resize t      ; prevent frames from automatically resizing themselves
+   highlight-nonselected-windows nil   ; don't highlight selections in other windows
+   fringe-indicator-alist (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist)
+   indicate-buffer-boundaries nil      ; don't indicate beginning and end of buffer in fringe
+   indicate-empty-lines nil            ; don't indicate empty lines in fringe
+   max-mini-window-height 0.3          ; maximum height for resizing mini windows
+   mode-line-default-help-echo nil     ; disable mode-line mouseovers
+   mouse-yank-at-point t               ; middle-click paste at point, not at click
+   resize-mini-windows 'grow-only      ; Minibuffer resizing
+   show-help-function nil              ; hide :help-echo text
+   split-width-threshold 160           ; favor horizontal splits
+   use-dialog-box nil                  ; always avoid GUI
+   visible-cursor nil                  ; don't make cursor 'very visible'
+   x-stretch-cursor nil                ; don't add wide glyph under cursor
+   sentence-end-double-space nil
+   mark-ring-max 64
+   global-mark-ring-max 128
+   save-interprogram-paste-before-kill t
+   create-lockfiles nil
+   echo-keystrokes 0.01
+   global-hl-line-mode t
+
+
+   jit-lock-defer-time nil             ; defer jit font locking slightly to [try to] improve Emacs performance
+   jit-lock-stealth-nice 0.5           ; pause time between fontify chunks
+   jit-lock-stealth-time 1             ; time to wait before start of stealth fontify
+   jit-lock-stealth-verbose nil        ; silence stealth fontification
+   ;; `pos-tip' defaults
+   pos-tip-internal-border-width 6     ; increase pos-tip width
+   pos-tip-border-width 1              ; define border width
+   ;; no beeping or blinking please
+   ring-bell-function #'ignore         ; don't beep
+   visible-bell nil)                   ; don't blink
+
+    #+END_SRC
+*** packages
+**** better-defaults
+ #+BEGIN_SRC emacs-lisp
+(use-package better-defaults)
+
+
+(setq mouse-autoselect-window nil
+      focus-follows-mouse nil)
+
+
+ #+END_SRC
+**** all-the-icons
+ #+BEGIN_SRC emacs-lisp
+(use-package all-the-icons)
+
+(use-package all-the-icons-ivy
+  :ensure t
+  :config
+  (all-the-icons-ivy-setup)
+ (defun my/*disable-all-the-icons-in-tty (orig-fn &rest args)
+     (when (display-graphic-p)
+       (apply orig-fn args)))
+
+(setq all-the-icons-ivy-file-commands
+      '(counsel-find-file counsel-file-jump counsel-recentf counsel-projectile-find-file counsel-projectile-find-dir))
+
+   ;; all-the-icons doesn't work in the terminal, so we "disable" it.
+   (dolist (fn '(all-the-icons-octicon all-the-icons-material
+                  all-the-icons-faicon all-the-icons-fileicon
+                  all-the-icons-wicon all-the-icons-alltheicon))
+      (advice-add fn :around #'my/*disable-all-the-icons-in-tty)))
+
+ #+END_SRC
+**** doom-modeline
+ #+BEGIN_SRC emacs-lisp
+(use-package doom-modeline
+   :init
+   (doom-modeline-mode 1))
+ #+END_SRC
+**** doom-themes
+ #+BEGIN_SRC emacs-lisp
+ (use-package doom-themes
+   :config
+   :init
+   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+   ;; Enable flashing mode-line on errors
+   (doom-themes-visual-bell-config)
+   ;; Enable custom neotree theme (all-the-icons must be installed!)
+   (doom-themes-neotree-config)
+   ;; or for treemacs users
+   (doom-themes-treemacs-config)
+   ;; Corrects (and improves) org-mode's native fontification.
+   (doom-themes-org-config))
+
+(load-theme 'doom-one)
+
+ #+END_SRC
+**** hlinum
+ #+BEGIN_SRC emacs-lisp
+ ;; Highlight the line number of the current line.
+ (use-package hlinum
+   :config
+   (hlinum-activate))
+ #+END_SRC
+**** diminish
+ #+BEGIN_SRC emacs-lisp
  ;; Unclutter the modeline
  (use-package diminish)
-
 
  (eval-after-load "eldoc" '(diminish 'eldoc-mode))
  (eval-after-load "autopair" '(diminish 'autopair-mode))
@@ -714,84 +606,625 @@
  (eval-after-load "cider" '(diminish 'cider-mode))
  (eval-after-load "smartparens" '(diminish 'smartparens-mode))
 
-
- ;; Handle ANSI colours in compile buffer output.
- ;; From https://gist.github.com/jwiegley/8ae7145ba5ce64250a05
- (defun compilation-ansi-color-process-output ()
-   (ansi-color-process-output nil)
-   (set (make-local-variable 'comint-last-output-start)
-        (point-marker)))
- (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output)
-
- (defun my/*disable-all-the-icons-in-tty (orig-fn &rest args)
-     (when (display-graphic-p)
-       (apply orig-fn args)))
-
-   ;; all-the-icons doesn't work in the terminal, so we "disable" it.
-   (dolist (fn '(all-the-icons-octicon all-the-icons-material
-                  all-the-icons-faicon all-the-icons-fileicon
-                  all-the-icons-wicon all-the-icons-alltheicon))
-      (advice-add fn :around #'my/*disable-all-the-icons-in-tty))
-
-
-
- (provide 'module-appearance)
  #+END_SRC
-** Complete
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-complete.el
- (require 'core-package)
 
- (use-package company
-   :demand t
-   :commands company-mode
+**** which-key
+   #+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :demand t
+  :bind ("C-h C-k" . which-key-show-top-level)
+  :config
+  (setq which-key-sort-order #'which-key-prefix-then-key-order
+        which-key-sort-uppercase-first nil
+        which-key-add-column-padding 1
+        which-key-max-display-columns nil
+        which-key-idle-delay 0.0
+        which-key-special-keys nil
+        which-key-min-display-lines 7)
+  (set-face-attribute 'which-key-local-map-description-face nil :weight 'bold)
+  (which-key-setup-side-window-bottom)
+  (which-key-mode)
+  :diminish which-key-mode)
+   #+END_SRC
+**** discover-my-major
+ #+BEGIN_SRC emacs-lisp
+(use-package discover-my-major
+  :commands (discover-my-major discover-my-mode)
+  :bind ("<f1>" . discover-my-major))
+ #+END_SRC
+**** hydra
+ #+BEGIN_SRC emacs-lisp
+(use-package hydra)
+ #+END_SRC
+** General
+*** config
+ #+BEGIN_SRC emacs-lisp
+ (setq savehist-file (concat dotfiles-cache-dir "savehist")
+       history-length 500
+       savehist-save-minibuffer-history t
+       savehist-autosave-interval nil ; save on kill only
+       savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
+       save-place-file (concat dotfiles-cache-dir "saveplace"))
+
+(setq-default save-place t)
+
+
+
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+
+(setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
+
+  (setq undo-limit (* 1024 10 10)
+        undo-outer-limit (* 1024 10 10)
+        undo-strong-limit (* 1024 10 10))
+
+
+ (setq-default
+  bookmark-default-file         (concat dotfiles-cache-dir "bookmarks")
+  abbrev-file-name             (concat dotfiles-local-dir "abbrev.el")
+  auto-save-list-file-name     (concat dotfiles-cache-dir "autosave")
+  pcache-directory             (concat dotfiles-cache-dir "pcache"))
+
+;; move auto-save to the cache
+(let ((dir (expand-file-name (concat dotfiles-cache-dir "auto-save/"))))
+  (setq auto-save-list-file-prefix (concat dir "saves-"))
+  (setq auto-save-file-name-transforms `((".*" ,(concat dir "save-") t))))
+
+(setq help-window-select t)
+
+(setq-default
+ ad-redefinition-action 'accept          ; silence advised function warnings
+ apropos-do-all t                        ; make `apropos' more useful
+ compilation-always-kill t               ; kill compilation process before starting another
+ compilation-ask-about-save nil          ; save all buffers on `compile'
+ compilation-scroll-output t             ; scroll to end of compilation output
+ confirm-nonexistent-file-or-buffer t    ; confirm nonexisting files/buffers when opening
+ idle-update-delay 2                     ; update ui less often (performance)
+ warning-minimum-level :error            ; don't show warnings only errors
+ ;; keep the point out of the minibuffer
+ minibuffer-prompt-properties '(read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt))
+
+ (set-terminal-coding-system 'utf-8)
+ (set-keyboard-coding-system 'utf-8)
+ (prefer-coding-system 'utf-8)
+ (load-library "iso-transl")
+
+
+(setq-default
+ isearch-allow-scroll t                 ; Allow scrolling in an isearch session
+ lazy-highlight-cleanup nil             ; Leave highlights after an isearch session
+ lazy-highlight-initial-delay 0)        ; Start highlighting immediately
+
+
+(require 'vc-hooks)
+
+;; Always follow symlinks to files under source-control. dont ask.
+(setq vc-follow-symlinks t)
+;; Modifications related to whitespace management
+
+;; Disable tab indentation
+(setq-default indent-tabs-mode nil)
+
+;; Remove trailing whitespace before save.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(setq
+ auto-save-default nil
+ backup-inhibited t
+ confirm-nonexistent-file-or-buffer nil
+ create-lockfiles nil
+ mouse-wheel-progressive-speed nil)
+
+
+(define-key global-map [remap list-buffers] 'ibuffer)
+
+
+
+(winner-mode +1)
+
+
+
+(global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
+
+ ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
+(autoload 'ibuffer "ibuffer")
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+
+ ;; Emacs writes backup files to `filename~` by default. This is messy,
+ ;; so let's tell it to write them to `~/.emacs.d/bak` instead.
+ ;; If you have an accident, check this directory - you might get lucky.
+(setq backup-directory-alist   ;; Save backups in $(pwd)/.bak
+      '(("." . ".bak"))        ;;
+      )
+
+(setq version-control t
+      backup-by-copying t      ;; Copy-on-write-esque
+      kept-new-versions 64     ;; Indeliable-ink-esque
+      kept-old-versions 0      ;;
+      delete-old-versions t    ;;
+      )
+
+
+
+ ;; Automatically save buffers before launching M-x compile and friends,
+ ;; instead of asking you if you want to save.
+ (setq compilation-ask-about-save nil)
+
+ ;; Make the selection work like most people expect.
+ (delete-selection-mode 1)
+ (transient-mark-mode t)
+
+(global-set-key (kbd "DEL") 'backward-delete-char)
+
+;; Enable `downcase-region' and `upcase-region'
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+
+ ;; Automatically update unmodified buffers whose files have changed.
+ (global-auto-revert-mode 1)
+
+ ;; If available, use `xdg-open' to open URLs.
+ (when (core/is-exec "xdg-open")
+   (setq-default
+    browse-url-browser-function (quote browse-url-generic)
+    browse-url-generic-program "xdg-open"))
+
+ ;; Make compilation buffers scroll to follow the output, but stop scrolling
+ ;; at the first error.
+ (setq compilation-scroll-output 'first-error)
+
+(setq-default uniquify-buffer-name-style 'forward)
+
+
+(global-unset-key [(control z)])
+(global-unset-key [(control x)(control z)])
+(global-unset-key (kbd "<f1>"))
+(global-unset-key (kbd "<f2>"))
+(global-unset-key (kbd "<f3>"))
+(global-unset-key (kbd "<f4>"))
+(global-unset-key (kbd "<f5>"))
+(global-unset-key (kbd "<f6>"))
+(global-unset-key (kbd "<f7>"))
+(global-unset-key (kbd "<f8>"))
+(global-unset-key (kbd "<f9>"))
+(global-unset-key (kbd "<f10>"))
+(global-unset-key (kbd "<f11>"))
+(global-unset-key (kbd "<f12>"))
+
+(dotimes (n 10)
+  (global-unset-key (kbd (format "C-%d" n)))
+  (global-unset-key (kbd (format "M-%d" n)))
+  )
+
+  #+END_SRC
+*** packages
+**** recentf
+ #+BEGIN_SRC emacs-lisp
+(use-package recentf
+  :demand t
+  :config
+  (setq recentf-save-file (concat dotfiles-etc-dir "recentf")
+      recentf-max-menu-items 0
+      recentf-max-saved-items 300)
+  (recentf-mode))
+
+ #+END_SRC
+
+**** vlf
+ #+BEGIN_SRC emacs-lisp
+(use-package vlf)
+ #+END_SRC
+**** scratch
+   #+BEGIN_SRC emacs-lisp
+(use-package scratch)
+   #+END_SRC
+**** persistent-scratch
+ #+BEGIN_SRC emacs-lisp
+(use-package persistent-scratch
+:init
+(persistent-scratch-setup-default))
+ #+END_SRC
+**** desktop-environment
+  #+BEGIN_SRC emacs-lisp
+(use-package desktop-environment
+:init
+(desktop-environment-mode +1))
+  #+END_SRC
+
+**** visual-fill-column
+ #+BEGIN_SRC emacs-lisp
+(use-package visual-fill-column
+   :commands visual-fill-column-mode
    :config
-   ;; Enable company-mode globally.
-   (global-company-mode)
-   ;; Except when you're in term-mode.
-   (setq company-global-modes '(not term-mode))
-   ;; Give Company a decent default configuration.
-   (setq company-minimum-prefix-length 2
-         company-selection-wrap-around t
-         company-show-numbers t
-         company-tooltip-align-annotations t
-         company-require-match nil
-         company-dabbrev-downcase nil
-         company-dabbrev-ignore-case nil)
-   ;; Sort completion candidates that already occur in the current
-   ;; buffer at the top of the candidate list.
-   (setq company-transformers '(company-sort-by-occurrence))
-   ;; Show documentation where available for selected completion
-   ;; after a short delay.
-   (use-package company-quickhelp
-     :config
-     (setq company-quickhelp-delay 1)
-     (company-quickhelp-mode 1))
-   ;; Add a completion source for emoji. 😸
-   (use-package company-emoji
-     :config
-     (company-emoji-init))
-
-   ;; Use C-\ to activate the Company autocompleter.
-   ;; We invoke company-try-hard to gather completion candidates from multiple
-   ;; sources if the active source isn't being very forthcoming.
-   (use-package company-try-hard
-     :commands company-try-hard
-     :bind ("C-\\" . company-try-hard)
-     :config
-     (bind-keys :map company-active-map
-                ("C-\\" . company-try-hard)))
-   :diminish company-mode)
-
- (provide 'module-complete)
+   (setq-default
+     visual-fill-column-center-text t
+     visual-fill-column-width
+     ;; take Emacs 26 line numbers into account
+     (+ (if (boundp 'display-line-numbers) 6 0)
+        fill-column)))
  #+END_SRC
-** Dashboard
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-dashboard.el
- (require 'core-package)
+**** company
+   #+BEGIN_SRC emacs-lisp
+   (use-package company
+     :demand t
+     :commands company-mode
+     :config
+     ;; Enable company-mode globally.
+     (global-company-mode)
+     ;; Except when you're in term-mode.
+     (setq company-global-modes '(not term-mode))
+     ;; Give Company a decent default configuration.
+     (setq company-minimum-prefix-length 2
+           company-selection-wrap-around t
+           company-show-numbers t
+           company-tooltip-align-annotations t
+           company-require-match nil
+           company-dabbrev-downcase nil
+           company-dabbrev-ignore-case nil)
+     ;; Sort completion candidates that already occur in the current
+     ;; buffer at the top of the candidate list.
+     (setq company-transformers '(company-sort-by-occurrence))
+     ;; Show documentation where available for selected completion
+     ;; after a short delay.
+     (use-package company-quickhelp
+       :config
+       (setq company-quickhelp-delay 1)
+       (company-quickhelp-mode 1))
+     ;; Add a completion source for emoji. 😸
+     (use-package company-emoji
+       :config
+       (company-emoji-init))
+
+     ;; Use C-\ to activate the Company autocompleter.
+     ;; We invoke company-try-hard to gather completion candidates from multiple
+     ;; sources if the active source isn't being very forthcoming.
+     (use-package company-try-hard
+       :commands company-try-hard)
+
+   )
+   #+END_SRC
+
+**** ivy
+  #+BEGIN_SRC emacs-lisp
+(use-package ivy
+   :config
+  (setq ivy-height 15                                  ; slightly longer ivy completions list
+        ivy-wrap t                                     ; wrap around at end of completions list
+        ivy-fixed-height-minibuffer t                  ; use consistent height for ivy
+        projectile-completion-system 'ivy              ; use ivy for projectile
+        smex-completion-method 'ivy                    ; use ivy for smex
+        ivy-initial-inputs-alist nil                   ; don't use ^ as initial input
+        ivy-format-function #'ivy-format-function-line ; highlight til EOL
+        ivy-use-virtual-buffers nil                    ; dont' show recent files in switch-buffer
+        ivy-virtual-abbreviate 'full                   ; show full path if showing virtual buffer
+        ivy-magic-slash-non-match-action nil           ; disable magic slash on non-match
+        ivy-on-del-error-function nil                  ; don't quit minibuffer on delete-error
+        ivy-use-selectable-prompt t)                   ; allow input prompt value to be selectable
+
+  (after! magit     (setq magit-completing-read-function #'ivy-completing-read))
+  (after! yasnippet (add-to-list 'yas-prompt-functions #'+ivy-yas-prompt nil #'eq))
+
+)
+
+
+(use-package counsel
+  :hook
+  (after-init . ivy-mode)
+  :diminish ivy-mode
+  :bind
+  (("C-c C-r" . ivy-resume)
+   ("M-x" . counsel-M-x)
+   ("<execute>" . counsel-M-x)
+   ("C-c i" . counsel-imenu)
+   ("C-x b" . counsel-switch-buffer)
+   ("C-x B" . counsel-switch-buffer-other-window)
+   ("C-x k" . kill-buffer)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x l" . counsel-locate)
+   ("C-c j" . counsel-git)
+   :map help-map
+   ("f" . counsel-describe-function)
+   ("v" . counsel-describe-variable)
+   ("l" . counsel-info-lookup-symbol)
+   :map ivy-minibuffer-map
+   ("C-o" . ivy-occur)
+   ("<return>" . ivy-alt-done)
+   ("M-<return>" . ivy-immediate-done)
+   :map read-expression-map
+   ("C-r" . counsel-minibuffer-history))
+  :custom
+  (counsel-find-file-at-point t)
+  (ivy-use-virtual-buffers nil)
+  (ivy-display-style 'fancy)
+  (ivy-use-selectable-prompt t)
+  (ivy-re-builders-alist
+   '((ivy-switch-buffer . ivy--regex-plus)
+     (swiper . ivy--regex-plus)
+     (t . ivy--regex-fuzzy)))
+  :config
+(defun my/counsel-switch-buffer-other-window ()
+(interactive)
+(ace-window nil)
+(counsel-switch-buffer))
+  (ivy-set-actions
+   t
+   '(("I" insert "insert")))
+  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur))
+
+(use-package swiper
+  :bind
+  (("C-s" . counsel-grep-or-swiper)
+   ("C-r" . counsel-grep-or-swiper)
+   :map swiper-map
+   ("M-q" . swiper-query-replace)
+   ("C-l". swiper-recenter-top-bottom))
+  :custom
+  (counsel-grep-swiper-limit 20000)
+  (counsel-rg-base-command
+   "rg -i -M 120 --no-heading --line-number --color never %s .")
+  (counsel-grep-base-command
+   "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
+
+(use-package wgrep
+  :commands
+  wgrep-change-to-wgrep-mode
+  ivy-wgrep-change-to-wgrep-mode)
+
+(use-package deadgrep
+  :bind* (("M-s" . deadgrep)))
+
+
+(use-package historian
+  :init
+  (require 'el-patch)
+
+  (autoload #'historian--nadvice/completing-read "historian")
+  (setq historian-save-file (concat user-emacs-directory ".historian"))
+
+  (el-patch-feature historian)
+
+  (el-patch-defun historian-load ()
+    (interactive)
+    (setq historian--history-table
+          (if (file-exists-p historian-save-file)
+              (with-temp-buffer
+                (insert-file-contents historian-save-file)
+                (read (current-buffer)))
+            (make-hash-table))))
+
+  (el-patch-define-minor-mode historian-mode
+    "historian minor mode"
+    :init-value nil
+    :group 'historian
+    :global t
+    (if historian-mode
+        (progn
+          (historian-load)
+          (advice-add 'completing-read :filter-return
+                      #'historian--nadvice/completing-read)
+          (add-hook 'kill-emacs-hook #'historian-save))
+
+      (historian-save)
+      (advice-remove 'completing-read #'historian--nadvice/completing-read)
+      (remove-hook 'kill-emacs-hook #'historian-save))))
+
+(use-package ivy-historian)
+
+(use-package smex
+  :config
+(setq smex-save-file (concat dotfiles-cache-dir "/smex-items"))
+(smex-initialize))
+
+(use-package ivy-rich
+  :demand t
+  :after ivy)
+
+(defun +ivy-buffer-transformer (str)
+  "Dim special buffers, buffers whose file aren't in the current buffer, and
+virtual buffers. Uses `ivy-rich' under the hood."
+  (let ((buf (get-buffer str)))
+    (require 'ivy-rich)
+    (cond (buf (ivy-rich-switch-buffer-transformer str))
+          ((and (eq ivy-virtual-abbreviate 'full)
+                ivy-rich-switch-buffer-align-virtual-buffer)
+           (ivy-rich-switch-buffer-virtual-buffer str))
+          ((eq ivy-virtual-abbreviate 'full)
+           (propertize (abbreviate-file-name str) 'str 'ivy-virtual))
+          (t (propertize str 'face 'ivy-virtual)))))
+
+(defun +ivy*rich-switch-buffer-buffer-name (str)
+  (propertize
+   (ivy-rich-pad str ivy-rich-switch-buffer-name-max-length)
+   'face (cond ((string-match-p "^ *\\*" str)
+                'font-lock-comment-face)
+               ((and buffer-file-truename
+                     (not (file-in-directory-p buffer-file-truename (my/project-root))))
+                'font-lock-doc-face)
+               (t nil))))
+(advice-add 'ivy-rich-switch-buffer-buffer-name :override #'+ivy*rich-switch-buffer-buffer-name)
+
+
+
+
+(ivy-mode +1)
+(historian-mode +1)
+(ivy-historian-mode +1)
+
+
+(defun +ivy/wgrep-occur ()
+  "Invoke the search+replace wgrep buffer on the current ag/rg search results."
+  (interactive)
+  (unless (window-minibuffer-p)
+    (user-error "No completion session is active"))
+  (require 'wgrep)
+  (let* ((caller (ivy-state-caller ivy-last))
+         (occur-fn (plist-get ivy--occurs-list caller))
+         (buffer
+          (generate-new-buffer
+           (format "*ivy-occur%s \"%s\"*"
+                   (if caller (concat " " (prin1-to-string caller)) "")
+                   ivy-text))))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (funcall occur-fn))
+      (setf (ivy-state-text ivy-last) ivy-text)
+      (setq ivy-occur-last ivy-last)
+      (setq-local ivy--directory ivy--directory))
+    (ivy-exit-with-action
+     `(lambda (_)
+        (pop-to-buffer ,buffer)
+        (ivy-wgrep-change-to-wgrep-mode)))))
+
+(defun +ivy--tasks-candidates (tasks)
+  "Generate a list of task tags (specified by `+ivy-task-tags') for
+`+ivy/tasks'."
+  (let* ((max-type-width
+          (cl-loop for task in +ivy-task-tags maximize (length (car task))))
+         (max-desc-width
+          (cl-loop for task in tasks maximize (length (cl-cdadr task))))
+         (max-width (max (- (frame-width) (1+ max-type-width) max-desc-width)
+                         25)))
+    (cl-loop
+     with fmt = (format "%%-%ds %%-%ds%%s%%s:%%s" max-type-width max-width)
+     for alist in tasks
+     collect
+     (let-alist alist
+       (format fmt
+               (propertize .type 'face (cdr (assoc .type +ivy-task-tags)))
+               (substring .desc 0 (min max-desc-width (length .desc)))
+               (propertize " | " 'face 'font-lock-comment-face)
+               (propertize (abbreviate-file-name .file) 'face 'font-lock-keyword-face)
+               (propertize .line 'face 'font-lock-constant-face))))))
+
+(defun +ivy--tasks (target)
+  (let* (case-fold-search
+         (task-tags (mapcar #'car +ivy-task-tags))
+         (cmd
+          (format "%s -H -S --no-heading -- %s %s"
+                  (or (when-let* ((bin (executable-find "rg")))
+                        (concat bin " --line-number"))
+                      (when-let* ((bin (executable-find "ag")))
+                        (concat bin " --numbers"))
+                      (error "ripgrep & the_silver_searcher are unavailable"))
+                  (shell-quote-argument
+                   (concat "\\s("
+                           (string-join task-tags "|")
+                           ")([\\s:]|\\([^)]+\\):?)"))
+                  target)))
+    (save-match-data
+      (cl-loop with out = (shell-command-to-string cmd)
+               for x in (and out (split-string out "\n" t))
+               when (condition-case-unless-debug ex
+                      (string-match
+                       (concat "^\\([^:]+\\):\\([0-9]+\\):.+\\("
+                               (string-join task-tags "\\|")
+                               "\\):?\\s-*\\(.+\\)")
+                       x)
+                      (error
+                       (print! (red "Error matching task in file: (%s) %s"
+                                    (error-message-string ex)
+                                    (car (split-string x ":"))))
+                       nil))
+               collect `((type . ,(match-string 3 x))
+                         (desc . ,(match-string 4 x))
+                         (file . ,(match-string 1 x))
+                         (line . ,(match-string 2 x)))))))
+
+(defun +ivy--tasks-open-action (x)
+  "Jump to the file and line of the current task."
+  (let ((location (cadr (split-string x " | ")))
+        (type (car (split-string x " "))))
+    (cl-destructuring-bind (file line) (split-string location ":")
+      (with-ivy-window
+        (find-file (expand-file-name file (doom-project-root)))
+        (goto-char (point-min))
+        (forward-line (1- (string-to-number line)))
+        (search-forward type (line-end-position) t)
+        (backward-char (length type))
+        (recenter)))))
+
+(defun +ivy/tasks (&optional arg)
+  "Search through all TODO/FIXME tags in the current project. If ARG, only
+search current file. See `+ivy-task-tags' to customize what this searches for."
+  (interactive "P")
+  (ivy-read (format "Tasks (%s): "
+                    (if arg
+                        (concat "in: " (file-relative-name buffer-file-name))
+                      "project"))
+            (+ivy--tasks-candidates
+             (+ivy--tasks (if arg buffer-file-name (doom-project-root))))
+            :action #'+ivy--tasks-open-action
+            :caller '+ivy/tasks))
+
+(defun +ivy-git-grep-other-window-action (x)
+  "Opens the current candidate in another window."
+  (when (string-match "\\`\\(.*?\\):\\([0-9]+\\):\\(.*\\)\\'" x)
+    (select-window
+     (with-ivy-window
+       (let ((file-name   (match-string-no-properties 1 x))
+             (line-number (match-string-no-properties 2 x)))
+         (find-file-other-window (expand-file-name file-name (ivy-state-directory ivy-last)))
+         (goto-char (point-min))
+         (forward-line (1- (string-to-number line-number)))
+         (re-search-forward (ivy--regex ivy-text t) (line-end-position) t)
+         (run-hooks 'counsel-grep-post-action-hook)
+         (selected-window))))))
+
+
+(provide 'module-ivy)
+  #+END_SRC
+**** yasnippets
+   #+BEGIN_SRC emacs-lisp
+
+
+ ;; The s.el package contains a lot of functions useful in snippets.
+ (use-package s)
+
+ ;; Install yasnippet and make it available globally.
+ ;; Read about it here: http://capitaomorte.github.io/yasnippet/
+ (use-package yasnippet
+   ;;:commands yas-global-mode
+   :config
+   (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+:config
+(require 'yasnippet-snippets))
+
+(use-package auto-yasnippet
+:config
+(require 'auto-yasnippet))
+
+
+ (provide 'module-snippets)
+ ;;; module-snippets.el ends here
+   #+END_SRC
+**** Git
+   #+BEGIN_SRC emacs-lisp
+ (use-package magit
+   :commands magit-status
+   :bind ("C-x g" . magit-status))
+
+
+ (use-package gist)
+ (use-package git-timemachine)
+
+
+   #+END_SRC
+**** el-patch
+   #+BEGIN_SRC emacs-lisp
+(use-package el-patch)
+   #+END_SRC
+**** Dashboard
+   #+BEGIN_SRC emacs-lisp
  (use-package dashboard
    :init
-   (dashboard-setup-startup-hook)
+   ;(dashboard-setup-startup-hook)
    :config
-   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
    (setq dashboard-center-content t)
    (setq dashboard-startup-banner ()  )
  ;  (add-to-list 'dashboard-items '(agenda) t)
@@ -820,9 +1253,6 @@
            `( ("Open project" "briefcase"
               (call-interactively (or (command-remapping #'projectile-switch-project)
                                       #'projectile-switch-project)))
-              ("Recently opened files" "file-text"
-              (call-interactively (or (command-remapping #'helm-recentf)
-                                      #'helm-recentf)))
 
               ("Bookmarks" "bookmark"
               (call-interactively (or (command-remapping #'bookmark-jump)
@@ -863,24 +1293,15 @@
 
  (define-key dashboard-mode-map "n" #'dashboard/next-button)
  (define-key dashboard-mode-map "p" #'dashboard/previous-button)
- (define-key dashboard-mode-map "j" #'dashboard/next-button)
- (define-key dashboard-mode-map "k" #'dashboard/previous-button)
- (define-key dashboard-mode-map "[" #'dashboard/next-button)
- (define-key dashboard-mode-map "]" #'dashboard/previous-button)
 
  (define-key dashboard-mode-map [right] #'dashboard/next-button)
  (define-key dashboard-mode-map [left] #'dashboard/previous-button)
  (define-key dashboard-mode-map [down] #'dashboard/next-button)
  (define-key dashboard-mode-map [up] #'dashboard/previous-button)
 
- (define-key dashboard-mode-map "l" #'dashboard/last-buton)
- (define-key dashboard-mode-map "f" #'dashboard/first-button)
 
-
- (define-key dashboard-mode-map "S" #'org-save-all-org-buffers)
+ (define-key dashboard-mode-map "s" #'org-save-all-org-buffers)
  (define-key dashboard-mode-map [tab] #'avy-dashboard-button)
-
-
 
 
  (define-derived-mode dashboard-mode special-mode
@@ -900,32 +1321,113 @@
             collect (cons car nil) into alist
             finally do (setq fringe-indicator-alist alist)))
 
-
  (defun dashboard/next-button ()
    (interactive)
    (ignore-errors (goto-char (next-button (point)))))
  (defun dashboard/previous-button ()
    (interactive)
-   (ignore-errors (goto-char (previous-button (point)))))
+   (ignore-errors (goto-char (previous-button (point))))))
 
- (defun dashboard/first-button ()
-   (interactive)
-   (goto-char (point-min))
-   (dashboard/next-button))
+   #+END_SRC
 
- (defun dashboard/last-button ()
-   (interactive)
-   (goto-char (point-max))
-   (dashboard/previous-button)
-   (beginning-of-line-text))
+** Navigation
+*** config
+ #+BEGIN_SRC emacs-lisp
+(setq scroll-error-top-bottom t)
 
- )
+(defun smart-beginning-of-line ()
+  "Move point to first non-whitespace character or beginning-of-line."
+  (interactive "^")
+  (let ((oldpos (point)))
+    (back-to-indentation)
+    (and (= oldpos (point))
+         (beginning-of-line))))
+(global-set-key (kbd "<home>") 'smart-beginning-of-line)
+(global-set-key (kbd "C-a") 'smart-beginning-of-line)
 
- (provide 'module-dashboard)
+;; Consider CamelCase chunks as words when navigating.
+(global-subword-mode 1)
+
+;; Use C-x M-p to kill the buffer in the other window, revealing
+;; the next buffer in the stack.
+(global-set-key
+ (kbd "C-x M-p")
+ (lambda () (interactive)
+   (save-excursion
+     (other-window 1)
+     (quit-window))))
  #+END_SRC
-** Dired
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-dired.el
- (require 'core-package)
+*** packages
+**** avy
+ #+BEGIN_SRC emacs-lisp
+(use-package avy
+  :demand t
+  :bind (("C-;" . avy-goto-word-1)
+         ("C-:" . avy-goto-char))
+  :config
+  (with-eval-after-load "isearch"
+    (define-key isearch-mode-map (kbd "C-;") 'avy-isearch)))
+ #+END_SRC
+**** anzu
+ #+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :demand t
+  :config
+  (global-anzu-mode 1)
+  ;; Anzu provides a version of `query-replace' and friends which give visual
+  ;; feedback when composing regexps. Let's replace the regular versions.
+  :bind(("C-%" . anzu-query-replace-at-cursor)
+        ("M-%" . anzu-query-replace)
+        ("C-M-%" . anzu-query-replace-regexp))
+  :diminish anzu-mode)
+ #+END_SRC
+**** Ext-window-nav
+   #+BEGIN_SRC emacs-lisp :tangle
+(use-package ace-window
+  :config
+  (setq aw-scope 'frame))
+
+ (defun module/previous-window ()
+   (interactive)
+   (-let [current (selected-window)]
+     (cond
+      ((eq module/--last-window current)
+       (ace-select-window))
+
+      ((window-live-p module/--last-window)
+       (select-window module/--last-window))
+
+      (t
+       (ace-select-window)))
+     (setq module/--last-window current)))
+
+ (defun module/select-window ()
+   (interactive)
+   (setq module/--last-window (selected-window))
+   (ace-select-window))
+
+ (setq module/--last-window (selected-window))
+
+ (global-set-key (kbd "C-x o") 'module/previous-window)
+ (global-set-key (kbd "C-x C-o") 'module/select-window)
+ (global-set-key (kbd "C-x \\") 'ace-swap-window)
+
+
+   #+END_SRC
+**** windmove
+ #+BEGIN_SRC emacs-lisp
+(use-package windmove)
+ #+END_SRC
+
+**** beacon
+ #+BEGIN_SRC emacs-lisp
+(use-package beacon
+   :init
+   (beacon-mode 1))
+ #+END_SRC
+**** dired
+   #+BEGIN_SRC emacs-lisp
+
  (setq global-auto-revert-non-file-buffers t)
  (setq auto-revert-verbose nil)
 
@@ -1002,40 +1504,60 @@
 (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
 
  (provide 'module-dired)
- #+END_SRC
+   #+END_SRC
 ** Editing
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-editing.el
- (require 'core-package)
+*** config
+ #+BEGIN_SRC emacs-lisp :tangle
+(setq bookmark-save-flag 1) ;; save after every change
 
- (use-package elmacro)
- (use-package windmove)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
+      select-enable-clipboard t
+      select-enable-primary t)
 
- (use-package avy
-   :config
-   (setq avy-background t)
-   (setq avy-style 'at-full))
+(setq-default
+ fill-column 100                  ; set line-wrapping column to 100
+ word-wrap t                     ; enable word wrap so lines are wrapped at nearest space
+ ;; TODO: Investigate these further
+ truncate-lines t
+ truncate-partial-width-windows 50)
 
- (use-package midnight)
- (require 'midnight)
+(setq-default
+ indent-tabs-mode nil         ; don't insert tabs by default
+ require-final-newline t      ; ensure newline exists at end of file
+ tab-always-indent t          ; always indent line when pressing TAB (don't add tab character)
+ tab-width 2                  ; default tab width of 2 characters
+ tabify-regexp "^\t* [ \t]+") ; only tabify initial whitespace when converting to tabifying
 
- (use-package beacon
-   :init
-   (beacon-mode 1))
+(setq-default
+ vc-follow-symlinks t                             ; automatically follow symlinks
+ save-interprogram-paste-before-kill t)           ; save clipboard contents into kill-ring before replacing them
+(global-auto-revert-mode t)                       ; revert changed buffers
+(show-paren-mode)                                 ; highlight matching parenthesis
+(push '("/LICENSE$" . text-mode) auto-mode-alist) ; license files should be handled in text mode
 
- (use-package browse-kill-ring)
- (require 'browse-kill-ring)
- (browse-kill-ring-default-keybindings)
- (global-set-key (kbd "s-y") 'browse-kill-ring)
+ ;; whitespace-mode
+(setq-default
+ whitespace-line-column fill-column
+ whitespace-style
+ '(face indentation tabs tab-mark spaces space-mark newline newline-mark trailing lines-tail)
+ whitespace-display-mappings
+ '((tab-mark ?\t [?› ?\t])
+   (newline-mark ?\n [?¬ ?\n])
+   (space-mark ?\  [?·] [?.])))
 
+(setq-default
+ scroll-conservatively 1001             ; always scroll to the point no matter how far away (don't recenter)
+ scroll-margin 3                        ; don't automatically scroll to retain a margin
+ scroll-preserve-screen-position t)     ; preserve point location on screen when scrolling
 
  (setq require-final-newline t)
 
-  (setq echo-keystrokes 0.01)
+ (setq echo-keystrokes 0.001)
 
  (setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
  (setq-default tab-width 8)            ;; but maintain correct appearance
 
- (use-package super-save)
+
  (require 'super-save)
  ;; add integration with ace-window
  (add-to-list 'super-save-triggers 'ace-window)
@@ -1058,10 +1580,6 @@
 
 
  (global-auto-revert-mode t)
-
- (use-package editorconfig)
-
-
 
  (windmove-default-keybindings)
 
@@ -1087,14 +1605,6 @@
  ;; enable erase-buffer command
  (put 'erase-buffer 'disabled nil)
 
-
-
- ;; Use C-= to select the innermost logical unit your cursor is on.
- ;; Keep hitting C-= to expand it to the next logical unit.
- ;; Protip: this goes really well with multiple cursors.
- (use-package expand-region
-   :commands er/expand-region
-   :bind ("C-=" . er/expand-region))
 
  ;; Remap join-line to M-j where it's easier to get to.
  ;; join-line will join the line you're on with the line above it
@@ -1139,423 +1649,46 @@
      (exchange-point-and-mark)))
  (global-set-key (kbd "C-M-<end>") 'duplicate-start-of-line-or-region)
 
- ;; A function for easily editing a file as root through TRAMP.
- (defun sudo-edit (&optional arg)
-   (interactive "p")
-   (if (or arg (not buffer-file-name))
-       (find-file (concat "/sudo:root@localhost:"
-                          (if (fboundp 'helm-read-file-name)
-                              (helm-read-file-name "File: ")
-                            (ido-read-file-name "File: "))))
-     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 ;; Causes entire elements (with children) to be treated as sexps.
 (setq nxml-sexp-element-flag t)
 ;; prog-mode should have auto-completion by default.
 
-
- (provide 'module-editing)
  #+END_SRC
-** Ext-window-nav
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-ext-window-nav.el
- (defun module/previous-window ()
-   (interactive)
-   (-let [current (selected-window)]
-     (cond
-      ((eq module/--last-window current)
-       (ace-select-window))
-
-      ((window-live-p module/--last-window)
-       (select-window module/--last-window))
-
-      (t
-       (ace-select-window)))
-     (setq module/--last-window current)))
-
- (defun module/select-window ()
-   (interactive)
-   (setq module/--last-window (selected-window))
-   (ace-select-window))
-
- (setq module/--last-window (selected-window))
-
- (global-set-key (kbd "C-x o") 'module/previous-window)
- (global-set-key (kbd "C-x C-o") 'module/select-window)
- (global-set-key (kbd "C-x M-o") 'ace-swap-window)
-
-
-
- (provide 'module-ext-window-nav)
- ;;; module-ext-window-nav.el ends here
- #+END_SRC
-** Flycheck
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-flycheck.el
- (require 'core-package)
-
- ;; Bind M-n and M-p to navigate to the next/previous errors.
- (global-set-key (kbd "M-n") 'next-error)
- (global-set-key (kbd "M-p") 'previous-error)
-
- ;; Install Flycheck.
- (use-package flycheck
+*** packages
+**** elmacro
+  #+BEGIN_SRC emacs-lisp
+ (use-package elmacro)
+  #+END_SRC
+**** avy
+ #+BEGIN_SRC emacs-lisp
+(use-package avy
    :config
-   ;; Start it automatically for all modes except ELisp mode,
-   ;; where the linter is just designed to make you mad.
-   (add-hook 'find-file-hook
-             (lambda ()
-               (when (not (equal 'emacs-lisp-mode major-mode))
-                 (flycheck-mode)))))
-
- ;; Turn the modeline red when Flycheck has errors.
- (use-package flycheck-color-mode-line
-   :config
-   (with-eval-after-load "flycheck"
-     (setq flycheck-highlighting-mode 'symbols)
-     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
-
-
- (with-eval-after-load "helm"
-   (use-package helm-flycheck
-     :bind (("C-c ! !" . helm-flycheck))))
-
- (provide 'module-flycheck)
+   (setq avy-background t)
+   (setq avy-style 'at-full))
  #+END_SRC
-** Fonts
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-fonts.el
- (require 'core-lib)
-
- (defun module-fonts/spec-to-list (spec)
-   (s-split "-" spec))
-
- (defun module-fonts/list-to-spec (spec)
-   (s-join "-" spec))
-
- (defun module-fonts/update-font-spec-size (spec increment)
-   (module-fonts/list-to-spec
-    (-update-at 7 (lambda (i) (number-to-string
-                               (+ (string-to-number i) increment)))
-                (module-fonts/spec-to-list spec))))
-
- (defun module-fonts/update-font-size (increment)
-   (set-frame-font
-    (module-fonts/update-font-spec-size (frame-parameter nil 'font) increment)))
-
- (global-set-key (kbd "C-M--") (lambda () (interactive)
-                                 (module-fonts/update-font-size -1)))
- (global-set-key (kbd "C-M-=") (lambda () (interactive)
-                                 (module-fonts/update-font-size 1)))
-
- (provide 'module-fonts)
- ;;; module-fonts.el ends here
+**** browse-kill-ring
+ #+BEGIN_SRC emacs-lisp
+(use-package browse-kill-ring)
+ (require 'browse-kill-ring)
+ (browse-kill-ring-default-keybindings)
+ (global-set-key (kbd "s-y") 'browse-kill-ring)
  #+END_SRC
-** General
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-general.el
- (set-terminal-coding-system 'utf-8)
- (set-keyboard-coding-system 'utf-8)
- (prefer-coding-system 'utf-8)
- (load-library "iso-transl")
-
- (load-file "~/.emacs.d/lisp/screencast-mode.el")
-
-
-(setq-default
- isearch-allow-scroll t                 ; Allow scrolling in an isearch session
- lazy-highlight-cleanup nil             ; Leave highlights after an isearch session
- lazy-highlight-initial-delay 0)        ; Start highlighting immediately
-
-
-(require 'vc-hooks)
-
-;; Always follow symlinks to files under source-control. dont ask.
-(setq vc-follow-symlinks t)
-;; Modifications related to whitespace management
-
-;; Disable tab indentation
-(setq-default indent-tabs-mode nil)
-
-;; Remove trailing whitespace before save.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-
-
-(setq
- auto-save-default nil
- backup-inhibited t
- confirm-nonexistent-file-or-buffer nil
- create-lockfiles nil
- mouse-wheel-progressive-speed nil)
-
-
-(define-key global-map [remap list-buffers] 'ibuffer)
-
-
- (use-package vlf)
- (use-package scratch)
-(use-package desktop-environment
-:init
-(desktop-environment-mode +1))
-
-(winner-mode +1)
-
-
- (use-package visual-fill-column
-   :commands visual-fill-column-mode
-   :config
-   (setq-default
-     visual-fill-column-center-text t
-     visual-fill-column-width
-     ;; take Emacs 26 line numbers into account
-     (+ (if (boundp 'display-line-numbers) 6 0)
-        fill-column)))
-
-(global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
-
- ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
-(autoload 'ibuffer "ibuffer")
-
-(fset 'yes-or-no-p 'y-or-n-p)
-
-
- ;; Emacs writes backup files to `filename~` by default. This is messy,
- ;; so let's tell it to write them to `~/.emacs.d/bak` instead.
- ;; If you have an accident, check this directory - you might get lucky.
- (setq backup-directory-alist
-       `(("." . ,(expand-file-name (concat dotfiles-dir ".bak")))))
-
- ;; Automatically save buffers before launching M-x compile and friends,
- ;; instead of asking you if you want to save.
- (setq compilation-ask-about-save nil)
-
- ;; Make the selection work like most people expect.
- (delete-selection-mode 1)
- (transient-mark-mode t)
-
-(global-set-key (kbd "DEL") 'backward-delete-char)
-
-;; Enable `downcase-region' and `upcase-region'
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-
-
- ;; Automatically update unmodified buffers whose files have changed.
- (global-auto-revert-mode 1)
-
- ;; If available, use `xdg-open' to open URLs.
- (when (core/is-exec "xdg-open")
-   (setq-default
-    browse-url-browser-function (quote browse-url-generic)
-    browse-url-generic-program "xdg-open"))
-
- ;; Make compilation buffers scroll to follow the output, but stop scrolling
- ;; at the first error.
- (setq compilation-scroll-output 'first-error)
-
-(setq-default uniquify-buffer-name-style 'forward)
-
-
- (provide 'module-general)
+**** super-save
+ #+BEGIN_SRC emacs-lisp
+(use-package super-save)
  #+END_SRC
-** Git
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-git.el
- (require 'core-package)
-
- ;; Invoke Magit by typing C-x g, and you can thank me later.
- ;; See http://magit.github.io/ for instructions.
- (use-package magit
-   :commands magit-status
-   :bind ("C-x g" . magit-status))
-
- ;; Use M-x gist-buffer or M-x gist-region to create a gist
- ;; directly from the current buffer or selection.
- (use-package gist)
-
-
- (provide 'module-git)
+**** editorconfig
+  #+BEGIN_SRC emacs-lisp
+(use-package editorconfig)
+  #+END_SRC
+**** expand-region
+ #+BEGIN_SRC emacs-lisp
+(use-package expand-region
+   :commands er/expand-region)
  #+END_SRC
-** Helm
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-helm.el
-   (use-package helm
-        :config
-      (require 'helm-config)
-      (require 'helm)
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-(define-key helm-map (kbd "C-z") 'helm-select-action)
-      ;; Activate Helm.
-      (helm-mode 1)
-      (with-eval-after-load "module-project"
-        (use-package helm-projectile
-          ;; A binding for using Helm to pick files using Projectile,
-          ;; and override the normal grep with a Projectile based grep.
-          :bind (("C-c C-f" . helm-projectile-find-file-dwim)
-                 ("C-x C-g" . helm-projectile-grep))
-          :config (helm-projectile-on)))
-      ;; Tell Helm to resize the selector as needed.
-      (helm-autoresize-mode 1)
-      ;; Make Helm look nice.
-      (setq-default helm-display-header-line nil
-                    helm-autoresize-min-height 10
-                    helm-autoresize-max-height 35
-                    helm-split-window-in-side-p t
-
-                    helm-M-x-fuzzy-match t
-                    helm-buffers-fuzzy-matching t
-                    helm-recentf-fuzzy-match t
-                    helm-apropos-fuzzy-match t)
-      (set-face-attribute 'helm-source-header nil :height 0.75)
-      ;; Replace common selectors with Helm versions.
-      :bind (("M-x" . helm-M-x)
-             ("C-x C-f" . helm-find-files)
-             ("C-x C-g" . helm-do-grep)
-             ("C-x b" . helm-buffers-list)
-             ("C-x c g" . helm-google-suggest)
-             ("C-t" . helm-imenu)
-             ("M-y" . helm-show-kill-ring)))
-
-    ;; Enrich isearch with Helm using the `C-S-s' binding.
-    ;; swiper-helm behaves subtly different from isearch, so let's not
-    ;; override the default binding.
-    (use-package swiper-helm
-      :bind (("C-s" . swiper-helm)))
-
-    ;; Enable fuzzy matching in Helm navigation.
-    (use-package helm-flx
-      :config
-      (with-eval-after-load "helm"
-        (require 'helm-flx)
-        (helm-flx-mode 1)))
-
-    ;; Set up a couple of tweaks from helm-ext.
-    (use-package helm-ext
-      :config
-      (helm-ext-ff-enable-skipping-dots t)
-      (helm-ext-ff-enable-auto-path-expansion t))
-
-    ;; Use Helm to complete with multiple matches in eshell.
-    (add-hook 'eshell-mode-hook
-              (lambda ()
-                (define-key eshell-mode-map [remap eshell-pcomplete] 'helm-esh-pcomplete)))
-
-
-
-
-
-    (provide 'module-helm)
- #+END_SRC
-** Help
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-help.el
- (require 'core-package)
-
- ;; which-key prompts you with available options when you type a partial
- ;; command sequence. Try it out: hit C-x and just wait for two seconds.
- (use-package which-key
-   :commands which-key-mode
-   :demand t
-   :config
-   (which-key-mode)
-   ;; Set the delay before which-key appears.
-   (setq-default which-key-idle-delay 0.0)
-   ;; which-key will truncate special keys by default, eg. SPC turns into
-   ;; an orange D. Turn this off to avoid confusion.
-   (setq-default which-key-special-keys nil)
-   ;; Hit C-h C-k to have which-key show you all top level key bindings.
-   :bind ("C-h C-k" . which-key-show-top-level)
-   :diminish which-key-mode)
-
- ;; Get an instant cheat sheet for your current major mode
- ;; with C-h C-m.
- (use-package discover-my-major
-   :commands (discover-my-major discover-my-mode)
-   :bind ("<f1>" . discover-my-major))
-
-  ;(add-hook 'org-mode-hook (lambda () (discover-my-major 'org-mode)))
-
-
-
-
- (provide 'module-help)
- #+END_SRC
-** Markdown
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-markdown.el
- (require 'core-package)
-
- ;; Install Markdown support.
- (use-package markdown-mode
-   :commands markdown-mode
-   :mode (("\\.markdown$" . markdown-mode)
-          ("\\.md$" . markdown-mode))
-   :config
-   (add-hook 'markdown-mode-hook 'visual-line-mode))
-
-
- (provide 'module-markdown)
- #+END_SRC
-** Navigation
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-navigation.el
- (setq scroll-error-top-bottom t)
-
- ;; Avy is a quick way to jump around your buffers.
- ;; https://github.com/abo-abo/avy
- (use-package avy
-   :demand t
-   :bind (("C-;" . avy-goto-word-1)
-          ("C-:" . avy-goto-char))
-   :config
-   (with-eval-after-load "isearch"
-     (define-key isearch-mode-map (kbd "C-;") 'avy-isearch)))
-
- ;; Smart home key.
- (defun smart-beginning-of-line ()
-   "Move point to first non-whitespace character or beginning-of-line."
-   (interactive "^")
-   (let ((oldpos (point)))
-     (back-to-indentation)
-     (and (= oldpos (point))
-          (beginning-of-line))))
- (global-set-key (kbd "<home>") 'smart-beginning-of-line)
- (global-set-key (kbd "C-a") 'smart-beginning-of-line)
-
- ;; Consider CamelCase chunks as words when navigating.
- (global-subword-mode 1)
-
- ;; Enhance C-x o when more than two windows are open.
- (use-package ace-window
-   :bind (("C-x o" . ace-window)
-          ("C-x C-o" . ace-swap-window))
-   :config
-  (ace-window-display-mode)
-  (setq aw-dispatch-always t))
-
-
-
- ;; Use C-x M-p to kill the buffer in the other window, revealing
- ;; the next buffer in the stack.
- (global-set-key
-  (kbd "C-x M-p")
-  (lambda () (interactive)
-    (save-excursion
-      (other-window 1)
-      (quit-window))))
-
- ;; Display incremental search stats in the modeline.
- (use-package anzu
-   :demand t
-   :config
-   (global-anzu-mode 1)
-   ;; Anzu provides a version of `query-replace' and friends which give visual
-   ;; feedback when composing regexps. Let's replace the regular versions.
-   :bind(("C-%" . anzu-query-replace-at-cursor)
-         ("M-%" . anzu-query-replace)
-         ("C-M-%" . anzu-query-replace-regexp))
-   :diminish anzu-mode)
-
-
-
- (provide 'module-navigation)
- #+END_SRC
-** Org-mode
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-orgmode.el
- (require 'core-package)
-
+**** Org-mode
+   #+BEGIN_SRC emacs-lisp
  (use-package org
    :ensure org-plus-contrib
    :config
@@ -1565,16 +1698,9 @@
    (add-hook
     'org-mode-hook
     (lambda ()
-      (visual-line-mode 1)))
-   ;; Fancy bullet rendering.
-   (use-package org-bullets
-     :config
-     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+      (visual-line-mode 1))))
    ;; Insert links from clipboard.
-   (use-package org-cliplink
-     :config
-     (with-eval-after-load "org"
-       (define-key org-mode-map (kbd "C-x p i") 'org-cliplink))))
+   (use-package org-cliplink)
 
  (use-package org-download
  :init
@@ -1600,848 +1726,47 @@
    (setq org-brain-visualize-default-choices 'all)
    (setq org-brain-title-max-length 12))
 
-
+;; Ignore org on ELPA, if possible
 
  (provide 'module-orgmode)
- #+END_SRC
-** Snippets
- #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/modules/module-snippets.el
- (require 'core-package)
+   #+END_SRC
+**** Flycheck
+   #+BEGIN_SRC emacs-lisp
+ (global-set-key (kbd "M-n") 'next-error)
+ (global-set-key (kbd "M-p") 'previous-error)
 
- ;; The s.el package contains a lot of functions useful in snippets.
- (use-package s)
-
- ;; Install yasnippet and make it available globally.
- ;; Read about it here: http://capitaomorte.github.io/yasnippet/
- (use-package yasnippet
-   ;;:commands yas-global-mode
+ (use-package flycheck
    :config
-   (yas-global-mode 1)
-   :diminish yas-minor-mode)
-
- (provide 'module-snippets)
- ;;; module-snippets.el ends here
- #+END_SRC
-* Screencasts
-** screencast-mode
-#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/lisp/screencast-mode.el
-  (defconst screencast-message-buffer-name "*Screencast Messages*"
-    "The name of the buffer to put messages from the screencast in")
-
-  (defconst screencast-version 1.1 "The version number of the screencast-mode")
-
-  (defconst screencast-speed-relation-speech-type 18.0
-    "When this is correctly adjusted, speech and typing should end
-  at the same time. Lower values means faster speech.")
-  ;;;; BEGIN USER VARIABLES
-  (defvar screencast-use-message-buffer t "Should the message buffer be used at all?")
-
-  (defvar screencast-pause-length 2 "The length of a pause ('p) in the screencast")
-
-  (defvar screencast-pause-char-length 0.12
-    "The time between each typed character in the function `screencast-insert-with-delay'")
-
-  (defvar screencast-pause-command-length 3
-    "The time between the announcement of the function call, and the call itself.")
-
-  (defvar screencast-speech nil "If non-nil, slowly typed strings are read aloud")
-
-  (defvar screencast-speed 1.2 "How fast the screencast should be. Higher values equals higher speed. This can not be changed _during_ the screencast.")
-  ;;;; BEGIN PRODUCER VARIABLES
-  ;; these variables should be changed as needed by the producer
-
-  (defvar screencast-dont-print-list '(
-                                       progn
-                                        let
-                                        flet
-                                        save-excursion
-                                        save-window-excursion
-                                        i
-                                        screencast-producer-insert-with-delay
-                                        screencast-producer-set-last-command
-                                        screencast-producer-set-last-char
-                                        screencast-producer-new-buffer
-                                        screencast-producer-show-region
-                                        screencast-producer-blink-regions)
-    "A list of lists of function names which aren't printed as
-    being evaluated in the messages, this includes all producer
-    functions by default")
-
-  (defvar screencast-producer-blink-time 0.5
-    "The time a blink lasts.")
-
-  ;; variables which can be read during run-time to obtain information about the
-  ;; current screencast
-  (defvar screencast-producer-nopause nil
-    "Variable to be used for producer functions if they are using
-   pauses, they should deactivate the pause if this variable is non-nil.")
-
-  (defvar screencast-producer-command-buffer nil
-    "Variable to be used for producer functions if they are using
-   need the current command-buffer.")
-
-  (defvar screencast-producer-step-number 0
-    "Variable to be used for producer functions if they need to
-  know the current step number.
-  This is a _COPY_ of the value the screencast uses!")
-
-  (defvar screencast-producer-beginat 0
-    "Variable to be used for producer functions if they need to
-    know where the screencast is supposed to be using pauses at")
-  ;;;; END PRODUCER VARIABLES
-
-
-  ;;;; BEGIN MODE
-  (defvar screencast-mode-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "RET") 'screencast-goto-step)
-      map)
-    "Keymap for `screencast-mode'."
-    )
-
-  (define-derived-mode screencast-mode nil "screencast"
-    "Major mode for viewing screencasts."
-    (org-mode)
-    (auto-fill-mode 1)
-    )
-  ;;;; END MODE
-
-  ;;;; BEGIN PRODUCER FUNCTIONS
-  (defun screencast-producer-insert-with-delay (string)
-    "Screencast producer function. _i_nserts STRING with a delay between each character.
-  See `screencast-insert-with-delay' for more details."
-    (let ((screencast-speech nil))
-      (screencast-insert-with-delay string screencast-producer-nopause)))
-
-  (defalias 'i 'screencast-producer-insert-with-delay
-    "Short name for `screencast-producer-insert-with-delay'.
-  This is chosen as it improves readability a lot in the screencast-source.")
-
-  (defun screencast-producer-set-last-command (f last)
-    "Sets the last-command to LAST before evaluating F.
-  Also prints the info about F, like it would have done normally."
-    (screencast-producer-show-command (car f))
-    (eval-with-last f last)
-    )
-
-  (defun eval-with-last (f last)
-    (eval (list 'progn
-                ;; wtf? that's the only way it works (lines can be permuted!)
-                '(setq last-command last)
-                '(setq this-command last)
-                f)))
-
-  (defun screencast-producer-set-last-char (char f)
-    "Sets the last-command to CHAR before evaluating F.
-  Also prints the info about F, like it would have done normally."
-    (screencast-producer-show-command (car f))
-    (eval (list 'progn
-                '(setq last-command-char (string-to-char char))
-                f)))
-
-  (defun screencast-producer-show-command (command)
-    "Shows the COMMAND, and how it can be called in the message-buffer."
-    (pop-to-buffer (get-buffer screencast-message-buffer-name))
-    (screencast-show-command command
-                             screencast-producer-step-number
-                             screencast-producer-command-buffer)
-    (pop-to-buffer (get-buffer screencast-producer-command-buffer)))
-
-  (defun screencast-producer-new-buffer (list command-buffer-name)
-    "Screencast producer function. Creates an new screencast with
-   COMMAND-BUFFER-NAME as the command-buffer.  The message-buffer
-   remains the same.  Once the inner screencast ends, the original
-   command-buffer regains its status.
-
-
-  IMPORTANT:
-
-  You are responsible for killing the `COMMAND-BUFFER'
-  before the outermost screencast ends, otherwise you'll receive
-  the modified buffer the next time you run the outermost
-  screencast."
-    ;; we want to start an 'inner screencast', but the current buffer is the
-    ;; command-buffer, and the expected starting buffer is the
-    ;; screencast-message-buffer
-    (if screencast-message-buffer
-        (pop-to-buffer (get-buffer screencast-message-buffer-name))
-      )
-    (screencast-internal list
-                         (get-buffer command-buffer-name)
-                         screencast-producer-beginat)
-    )
-
-  (defun screencast-producer-show-region (beg end)
-    "Marks the currently active region as if transient mark mode was on."
-    (unless screencast-producer-nopause
-      (let ((overlay (make-overlay beg end)))
-        (overlay-put overlay 'face (cons beg end))
-        ;; unless there's a LOT of regions, the blinks will be synchronous
-        (run-with-timer screencast-pause-length nil 'delete-overlay overlay)
-        )
-      (sit-for screencast-pause-length)
-      )
-    )
-
-  (defun screencast-producer-blink-regions (regions)
-    "The REGIONS will blink.
-  A region is a pair: (beg . end)."
-    (unless screencast-producer-nopause
-      (dotimes (n 5)
-        (dolist (region regions)
-          (let ((overlay (make-overlay (car region) (cdr region))))
-            (overlay-put overlay 'face 'region)
-            ;; unless there's a LOT of regions, the blinks will be synchronous
-            (run-with-timer screencast-producer-blink-time nil 'delete-overlay overlay))
-          )
-        (sit-for (* 2 screencast-producer-blink-time))
-        )))
-
-  ;;;; END PRODUCER FUNCTIONS
-  ;;;; BEGIN CORE
-  (defun make-region-clickable (beg end action &optional key)
-    "Makes the chosen region clickable, executing chosen action.
-  Default key is [mouse-1]."
-    (let ((map (make-sparse-keymap))
-          (keyc (if key
-                    key
-                  [mouse-1]))
-          )
-      (define-key map keyc action)
-      (put-text-property
-       beg
-       end
-       'keymap map))
-    )
-
-  (defun screencast-fontify-step-region ()
-    "Fontifies regions with step-references.
-  To be called immediately after functions which put step-numbers
-  in the message-buffer. Will fontify from the beginning of the
-  line with the step number to the end of the buffer."
-    (save-excursion
-      (goto-char (point-max))
-      (let ((beg (search-backward-regexp "^Step [[:digit:]]+:" (point-min))))
-        (screencast-put-shadow-and-make-clickable beg (point-max))
-        )))
-
-  (defun screencast-put-shadow-and-make-clickable (beg end)
-    "The region between BEG and END becomes shadowed and clickable.
-  `screencast-goto-step' is evalled when clicked"
-    (add-text-properties beg (- end 0)
-                         (list
-                          'face 'shadow
-                          'mouse-face 'highlight
-                          'help-echo "mouse-1: continue from this step"
-                          ))
-    (make-region-clickable beg (- end 0) 'screencast-goto-step))
-
-  (defun screencast-get-step ()
-    "Returns the step-number of a step-reference region.
-  If not in step-reference region, returns nil"
-
-    (if
-        ;; check if we are at a step-reference region
-        (save-excursion
-          (goto-char (line-end-position))
-          (or
-           ;; first line
-           (search-backward-regexp "^Step [[:digit:]]+:" (line-beginning-position) t)
-           ;; second line
-           (search-backward-regexp "^  Callable with:" (line-beginning-position) t)))
-        ;; get the step number
-        (save-excursion
-          (search-backward-regexp "^Step \\([[:digit:]]+\\):")
-          (let ((beg (match-beginning 1))
-                (end (match-end 1)))
-            (string-to-number
-             (buffer-substring-no-properties  beg end))))
-      ;; not in step-reference region
-      nil))
-
-  (defun repeat-string (s n)
-    (apply 'concat (make-list n s)))
-
-  (defun screencast-make-break (nopause)
-    (screencast-newline-only-once)
-    (newline)
-    (screencast-line)
-    (newline)
-    (screencast-pause-maybe nopause)
-    (screencast-pause-maybe nopause)
-    )
-
-  (defun screencast-pause-maybe (nopause &optional length)
-    "Pauses the program, unless NOPAUSE is non-nil.
-      If length is nil, a default pause LENGTH is used."
-    (unless nopause
-      (let ((l (if length
-                   length
-                 screencast-pause-length)))
-        (sit-for l))))
-
-  (defun n-first (n list)
-    "The n first elements of a list."
-    (loop for x in list repeat n collect x))
-
-  (defun buffer-recreate (buffer-name)
-    "Kills the buffer with BUFFER-NAME, and recreates it."
-    (let ((buffer (get-buffer buffer-name)))
-      (when buffer
-        (when (buffer-file-name buffer)
-          (save-excursion
-            (set-buffer buffer)
-            (unless (let ((start (substring-no-properties buffer-name 0 1)))
-                      (or (string= start " ") (string= start "*")))
-              (save-buffer)))
-          (kill-buffer buffer-name)))
-      (get-buffer-create buffer-name))
-    )
-  (defun screencast-goto-step (&optional arg)
-    "Restarts the screencast at the chosen ARG step. Default is the first step."
-    (interactive "p")
-    (let ((step (if (not (= 1 arg))
-                    arg
-                  (screencast-get-step)))
-          ;; bug? using (point), standing at point max gives nil values!
-          (list (get-text-property (point-min) 'screencast-list))
-          (name (get-text-property (point-min) 'screencast-command-buffer-name)))
-      ;;     (print step)
-      ;;     (print list)
-      ;;     (print name)
-      (screencast list name
-                  -1 ; we just ran the screencast, so version should be no problem
-                  (if step
-                      (- step 1)    ; the command just before!
-
-                    0))
-      ))
-
-  (defun screencast-newline-only-once ()
-    "Inserts a newline at point if, and only if the current line is nonempty."
-    (unless (= (line-beginning-position) (line-end-position))
-      (newline))
-    )
-
-  (defun screencast-make-region-clickable (beg end action &optional key)
-    "Makes the chosen region clickable, executing chosen action.
-  Default key is [mouse-1]."
-    (let ((map (make-sparse-keymap))
-          (keyc (if key
-                    key
-                  [mouse-1]))
-          )
-      (define-key map keyc action)
-      (put-text-property
-       beg
-       end
-       'keymap map))
-    )
-
-  (defun screencast-show-command (com step command-buffer)
-    "Inserts the STEP number and key-binding for a command, COM."
-    (screencast-newline-only-once)
-    (insert "Step " (number-to-string step) ": `" (symbol-name com) "'")
-    (newline)
-    (insert "  Callable with: ")
-    (insert (where-is-return com command-buffer))
-    (screencast-fontify-step-region)
-    (newline)
-    )
-
-  (defun screencast-line (&optional length)
-    (let ((l (if length
-                 length
-               25)))
-      (screencast-newline-only-once)
-      (insert (repeat-string "-" l))
-      (center-line)
-      (newline)
-      ))
-
-  (defun screencast-header ()
-    (screencast-newline-only-once)
-    (newline)
-    (screencast-line 50)
-    (newline))
-
-  (defun screencast-speech-start (string nopause)
-    "Starts the speech-synthesizer with STRING, unless NOPAUSE is nonnil.
-  Also requires `screencast-speech' to be non-nil.
-  The speech speed depends on the typing speed (`screencast-speed-relation-speech-type')."
-    (when (and (not nopause) screencast-speech)
-      (let* ((duration (concat
-                        "-b \"(Parameter.set 'Duration_Stretch "
-                        (number-to-string (* screencast-pause-char-length
-                                             screencast-speed-relation-speech-type)) ")\""))
-             (tosay (replace-regexp-in-string "'" "'\"'\"'" string))
-             (say (concat "-b '(SayText \"" tosay "\")'"))
-             )
-        (save-window-excursion
-          (shell-command
-           (concat "festival " duration " " say "&"))
-          ))))
-
-  (defun screencast-speech-wait-for (nopause)
-    "Blocks until the speech synthesizer is done speaking."
-    (when (and (not nopause) screencast-speech)
-      (shell-command "while [ `pgrep festival` ] ; do sleep 0.1; done;")
-      (sit-for 0.1))                      ; needed
-    )
-  (defun screencast-insert-string-with-delay (string &optional nopause)
-    (let ((string (screencast-strip-newlines-and-normalize-whitespace string)))
-      (screencast-speech-start string nopause)
-      (let ((l (string-to-list string)))
-        (dolist (c l)
-          (insert c)
-          ;; simple filling. If the char position equals fill-column. The
-          ;; whole word is moved to the next line.
-          (when (and (= (- (line-end-position) (line-beginning-position)) fill-column))
-            (search-backward " ")
-            (insert "\n ") ; two space indentation as the previous space is moved too
-            (end-of-line)  ; ?
-            )
-          (screencast-pause-maybe nopause screencast-pause-char-length)))
-      (screencast-speech-wait-for nopause)
-      )
-    )
-
-  (defun screencast-insert-with-delay (to-insert &optional nopause)
-    "Inserts STRINGS with a delay between each character.
-  If NOPAUSE is non-nil, the delay will be 0.
-
-  The pause between each character is given by `screencast-pause-char-length'."
-    (cond
-     ((eq nil to-insert))
-     ((symbolp to-insert)
-      (screencast-insert-special-symbol to-insert))
-     ((stringp to-insert)
-      (screencast-insert-string-with-delay to-insert nopause))
-     ((listp to-insert)
-      (progn
-        (screencast-insert-with-delay (car to-insert) nopause)
-        (screencast-insert-with-delay (cdr to-insert) nopause)
-        ))
-     )
-    )
-
-
-
-  (defun screencast-strip-newlines-and-normalize-whitespace (string)
-    "Replaces all newlines and tabs in STRING by a single
-  whitespace, also collapses multiple whitespaces."
-    (replace-regexp-in-string "[ ]+" " " (replace-regexp-in-string "\n" " " string)))
-
-  (defalias 'screencast 'screencast-producer-screencast "Renaming for simplicity")
-
-  (defun screencast-producer-screencast (list command-buffer-name
-                                              version &optional beginat init)
-    "Prints and evaluates a list, LIST, of strings and functions in a tempo humans can follow.
-  The strings in LIST is printed to the screencast-message-buffer.
-  Functions are evaluated in the buffer named COMMAND-BUFFER-NAME.
-  VERSION is the version of screencast-mode the screencast is
-  written for, older versions of screencast-mode might not support
-  everything in newer screencasts.
-  The first BEGINAT elements of the list will be done without
-  delays.
-  INIT is a list of functions to be evaluated in the message-buffer
-  prior to the first message"
-    (when (> version screencast-version)
-      (error
-       (concat "The version of the screencast (" (number-to-string
-                                                  version) ") is newer than the version of the screencast-mode
-  itself (" (number-to-string screencast-version) "). You might still be able
-  to run the screencast successfully though, just change the
-  screencasts version number to try it out.")))
-
-
-    ;; preparations:
-    (let* (
-           ;; speed adjustments
-           (screencast-pause-length (/ screencast-pause-length
-                                       screencast-speed))
-           (screencast-pause-char-length (/
-                                          screencast-pause-char-length
-                                          screencast-speed))
-           (screencast-pause-command-length (/
-                                             screencast-pause-command-length
-                                             screencast-speed))
-           ;; buffers
-           (message-buffer (if screencast-use-message-buffer (buffer-recreate screencast-message-buffer-name)))
-           (command-buffer (if (or (not screencast-use-message-buffer)
-                                   (string= command-buffer-name
-                                            screencast-message-buffer-name)
-                                   message-buffer)
-                               (buffer-recreate command-buffer-name)))
-           ;; numbers
-           (screencast-step-number 0)
-           (beginat (if beginat
-                        beginat
-                      0)))
-      (delete-other-windows)
-      (if screencast-use-message-buffer
-          (progn (split-window-horizontally)
-                 (switch-to-buffer message-buffer)
-                 (pop-to-buffer message-buffer)
-                 )
-        (switch-to-buffer command-buffer)
-        (pop-to-buffer command-buffer)
-        )
-      (display-buffer command-buffer)
-      (screencast-mode)
-      (toggle-read-only 0)
-      ;; evaluate all the functions of init
-      (dolist (f init)
-        (eval f))
-
-      ;; show
-      (screencast-internal list command-buffer beginat)
-      ;; save the arguments in the buffer
-      (add-text-properties (point-min) (point-max)
-                           (list 'screencast-list list
-                                 'screencast-command-buffer-name command-buffer-name))
-      (toggle-read-only 1)
-      )
-    )
-  (defun screencast-insert-special-symbol (c)
-    (cond
-     ((eq 's c)                     ; step
-      (screencast-newline-only-once)
-      (insert "Step " (number-to-string screencast-step-number) ":")
-      (screencast-fontify-step-region)
-      )
-     ((eq 'l c)                     ; line
-      (screencast-line))
-     ((eq 'n c)                     ; newline
-      (newline))
-     ((eq 'p c)                     ; pause
-      (screencast-pause-maybe nopause))
-     ((eq 'b c)                     ; break
-      (screencast-make-break nopause)
-      )
-     (t
-      (error (concat "Screencast-internal encountered an error: Unknown symbol: " (symbol-name c)))))
-    )
-  (defun screencast-internal (list command-buffer beginat)
-    "The internal version of screencast, refer to the documentation string
-      there."
-    ;; producer variables
-    (setq screencast-producer-command-buffer command-buffer)
-    (setq screencast-producer-beginat beginat)
-    ;; make sure we are visiting the file in case it is needed (e.g. compile!)
-    (save-excursion
-      (set-buffer command-buffer)
-      (unless (buffer-file-name)
-        (set-visited-file-name (buffer-name))
-        ))
-    ;; for each element in the list
-    (dolist (c list)
-      (let ((nopause
-             (if (>= screencast-step-number beginat)
-                 nil
-               t))
-            )
-        ;; producer variables
-        (setq screencast-producer-nopause nopause)
-        (setq screencast-producer-step-number screencast-step-number)
-        (cond
-         ((symbolp c)
-          ;; special symbols
-          (if screencast-use-message-buffer
-              (screencast-insert-special-symbol c)
-            )
-          )
-         ((listp c)
-          ;; function
-          (progn
-            (unless (member (car c) screencast-dont-print-list) ; these need no print
-              (if screencast-use-message-buffer
-                  (screencast-show-command (car c) screencast-step-number command-buffer)
-                )
-              )
-            (unless nopause
-              (screencast-pause-maybe nopause screencast-pause-command-length) ; pause
-              )
-            (if (member (car c) '(let flet))
-                (progn
-                  ;; we want the environment - but also to print the commands!
-                  (eval (list (car c)     ; the members above
-                              (cadr c)    ;the lets of flets
-                              '(screencast-internal (cddr c) command-buffer beginat))) ;the rest
-                  )
-              ;; evaluate standard
-              (progn
-                ;; save excursion style which allows for inner screencasts
-                (pop-to-buffer command-buffer)
-                (eval c)
-                (if screencast-use-message-buffer
-                    (pop-to-buffer screencast-message-buffer-name)
-                  )
-                )
-              )
-            (if screencast-use-message-buffer
-                (pop-to-buffer screencast-message-buffer-name) ; needed to regain real focus!
-              )
-            ))
-         ((stringp c)
-          ;; it's a string - instert it.
-          (if screencast-use-message-buffer
-              (screencast-insert-with-delay c nopause)
-            ))
-         (t
-          (error (concat "I don't know what to do with element:" c)))
-         )
-        (setq screencast-step-number (+ 1 screencast-step-number)) ; inc the step number
-        )
-      )
-    )
-
-  (defun where-is-return (definition buffer)
-    "A modification of where-is, which returns the message-string instead of printing it.
-    Also skips the removes name from the output.
-    BUFFER is the buffer to call where-is in."
-    (save-excursion
-      (set-buffer buffer)
-      (let ((func (indirect-function definition))
-            (defs nil)
-            (return-string ""))
-        ;; In DEFS, find all symbols that are aliases for DEFINITION.
-        (mapatoms (lambda (symbol)
-                    (and (fboundp symbol)
-                         (not (eq symbol definition))
-                         (eq func (condition-case ()
-                                      (indirect-function symbol)
-                                    (error symbol)))
-                         (push symbol defs))))
-        ;; Look at all the symbols--first DEFINITION,
-        ;; then its aliases.
-        (dolist (symbol (cons definition defs))
-          (let* ((remapped (command-remapping symbol))
-                 (keys (where-is-internal
-                        symbol overriding-local-map nil nil remapped))
-                 (keys (mapconcat 'key-description keys ", "))
-                 string)
-            (setq string
-                  (if t
-                      (if (> (length keys) 0)
-                          (if remapped
-                              (format "%s (%s) (remapped from %s)"
-                                      keys remapped symbol)
-                            (format "%s" keys))
-                        (format "M-x %s RET" symbol))
-                    (if (> (length keys) 0)
-                        (if remapped
-                            (format "%s is remapped to %s which is on %s"
-                                    symbol remapped keys)
-                          (format "%s is on %s" symbol keys))
-                      ;; If this is the command the user asked about,
-                      ;; and it is not on any key, say so.
-                      ;; For other symbols, its aliases, say nothing
-                      ;; about them unless they are on keys.
-                      (if (eq symbol definition)
-                          (format "%s is not on any key" symbol)))))
-            (when string
-              (unless (eq symbol definition)
-                (setq return-string (concat return-string ";\n its alias "))) ;
-              (setq return-string (concat return-string string)))))
-        return-string)))
-  ;;;; END CORE
-
-  ;;;; BEGIN DOCUMENTATION
-  (defconst screencast-screencast-text-producer
-    '(
-      "Hello, this is the screencast for creating your own
-      screencasts."  n
-      "If you create a list (first argument) of strings, each
-      string will be typed to the message buffer (this buffer), at
-      a human-readable pace."  n
-      "If you put a 'p in the list, a pause will be inserted. "  p
-      p p p p "See?" p p
-      l
-      "(The above line was inserted instantly with the symbol 'l)"
-      n
-      "(Blank lines can be inserted using the 'n symbol, newlines
-      in strings are removed)" n n n
-      "All of the above is combined in the symbol 'b, which creates
-      a break in the screencast. This could be used between two
-      different sections for instance."  b
-      "You can also put functions in the list, these will be
-      evaluated in the command-buffer (second argument)."  n
-      "The function is written as a list, with the function name
-      first, and the arguments after that, e.g. '(backward-char
-      2)."  n n p
-      "Each time a function is evaluated, a message is displayed in
-      the message buffer, using the where-is function."  n
-      "In addition to this a step-number is displayed, this
-      step-number corresponds to the functions position in the
-      list."  n
-      "Let's try out some functions:" n
-      "((insert \"THIS IS AN INSERTION\n\") will be evaluated)" p
-      (insert "THIS IS AN INSERTION\n")
-      "You can call the special function `screencast-producer-insert-with-delay', aliased to `i' to insert with delay in the command-buffer."n
-      (i
-       "this is also an insertion, but it is done at typing speed")
-      "Hmm.." p p "let's delete the line we just typed in the
-      command buffer [[(kill-whole-line 1)]]"
-      (kill-whole-line 1)
-      "Notice the keybindings which are displayed."  b
-      "The fourth (optional) argument given to the screencast
-      function is the step-number to start using pauses, and output
-      to the message buffer at, e.g. it is a fast-forward. Which is
-      _very_ nice when producing a screencast."  n
-      "These step-numbers can also be printed separately in the
-      message-buffer using the 's symbol in the list."  n s n
-      "See?"  b
-      "Once you have finished a screencast and want it published,
-      you can record it as a video (.ogv) using
-      `screencast-record'."n
-      "As a part of the recording - the
-      font-size (`screencast-record-font') is changed, as well as
-      the fill-column variable (`screencast-record-fill-column')
-      for improved readability on a video."n
-      "As a consequence, you should _never_ use fill-paragraph and
-      the like, to get a nicely formatted source-file."n
-      "But the Emacs community will benefit the most if you publish
-      the screencast file itself - so please do!"n
-      "You can publish it at
-      http://www.emacswiki.org/emacs/ScreencastSources" b
-      "This screencast should cover the basic options for creating
-      a screencast, and can be seen in the constant
-      `screencast-screencast-text-producer'."n
-      "A screencast covering the more advanced functions of
-      screencast is available in the function
-      `screencast-screencast-producer-advanced'."  b
-      "Happy screencasting!"  )
-    "The text the screencast-screencast-producer is based upon")
-
-  (defconst screencast-screencast-text-user '(
-                                              "Hello, welcome to the screencast for viewing screencasts in
-      screencast mode."n
-      "Screencasts are like movies, they type some explanatory
-      text (like this), and executes functions in order to show you
-      the capabilities of different tools in Emacs."n
-      "Once a screencast has finished, you can move the cursor to
-      an executed function and press RET or MOUSE-1 to review the
-      screencast from that step."n
-      "Alternatively you can use the numeric prefix argument to
-      pinpoint the step to begin at."n
-      "If no prefix argument is given, and point isn't at an
-      executed function, the screencast is restarted from the first
-      step."  ))
-
-  (defconst screencast-screencast-text-producer-advanced
-    '(
-      "This screencast covers the advanced functions of screencast-mode."n
-      "Please read the documentation for the functions as well."n
-      "Regarding the functions and variables in this file:"n
-      "You, as a producer, are supposed to be using the functions starting with `screencast-producer-' (and `screencast' itself ofcourse), they are tailored for ease of use. The others are for internal use - and there's no guarantee they are stable throughout versions."
-      b
-      "It is possible to use multiple command-buffers:"
-      (screencast-producer-new-buffer
-       '((i "I'm a new command-buffer"))
-       "new-command-buffer")
-      (progn (kill-buffer "new-command-buffer"))
-      "It is done via the function `screencast-producer-new-buffer' which takes a list and a buffer - almost like the screencast function itself. "
-      b
-      "If you don't want to document everything you do, for instance moving the cursor, you can put the functions you want to \"hide\" inside a `progn'."
-      b
-      "If you need temporary variables or functions (for instance when you need to override a function which uses the mini-buffer), you can just put in a `let' or `flet'"
-      b
-      "If you need to modify the last-command-char (for self-insert-commands) or the last-command (for continued killing) there's also support for that:"n
-      "Use `screencast-producer-set-last-char'  or `screencast-producer-set-last-command'"
-      "The text the screencast-screencast-producer-advanced is based upon"))
-
-  (defun screencast-screencast-producer-advanced(&optional arg)
-    "Displays the screencast for creating advanced screencasts."
-    (interactive "P")
-    (apply (if arg
-               'screencast-record
-             'screencast)
-           screencast-screencast-text-producer-advanced "screencast-screencast-producer" 1.1 ()))
-
-  (defun screencast-screencast-producer(&optional arg)
-    "Displays the screencast for creating screencasts."
-    (interactive "P")
-    (apply (if arg
-               'screencast-record
-             'screencast)
-           screencast-screencast-text-producer "screencast-screencast-producer" 1 ()))
-
-  (defun screencast-screencast-user(&optional arg)
-    "Displays the screencast for using screencasts."
-    (interactive "P")
-    (apply (if arg
-               'screencast-record
-             'screencast)
-           screencast-screencast-text-user "screencast-screencast-user" 1 ()))
-  ;;;; END DOCUMENTATION
-  (provide 'screencast)
-
-  ;;; screencast.el ends here
-
-#+END_SRC
-
-** org-download
-#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/screencasts/demo-org-download.el
-  (require 'screencast)
-
-  (defun elmacro-org-download ()
-    (insert screencast-outline-mode-example-text)
-    (goto-char (point-min))
-    (outline-next-heading)
-    (forward-line)
-    (setq org-startup-with-inline-images t)
-    (setq random-image "https://loremflickr.com/600/400/star-wars")
-    (org-download-image random-image))
-
-
-  (defconst demo-org-download
-    '("* Org-Download" n
-      "Allows you to drag and drop images in org-mode."
-
-      l
-      n
-
-  "1. An image inside your browser that you can drag to Emacs." n
-  "2. An image on your file system that you can drag to Emacs." n
-  "3. An image taking using a screenshot tool." n
-
-  n
-
-  l
-
-  "For a local or remote image use: [[elisp:org-download-yank][org-download-yank]]" n
-
-  n
-
-  "For an image taken using a screenshot tool use: [[elisp:org-download-screenshot][org-download-screenshot]]" n
-
-  (progn
-        (org-mode)
-      (elmacro-org-download)
-      )
-
-  n
-
-  "[[https://github.com/DynamicMetaFlow/.emacs.d/issues/new][Questions?]]" n
-
-  n
-
-  "[[https://github.com/abo-abo/org-download][Visit the project]]" n
-
-  ))
-  (defconst screencast-outline-mode-example-text
-    "* Random image\n")
-
-  (defun demo-org-download (&optional arg)
-    (interactive "P")
-    (apply (if arg
-               'screencast-record
-             'screencast)
-           demo-org-download
-           "org-download"
-           1
-           ()
-           )
-    )
-#+END_SRC
+   ;; Start it automatically for all modes except ELisp mode,
+   (add-hook 'find-file-hook
+             (lambda ()
+               (when (not (equal 'emacs-lisp-mode major-mode))
+                 (flycheck-mode)))))
+
+ ;; Turn the modeline red when Flycheck has errors.
+ (use-package flycheck-color-mode-line
+   :config
+   (with-eval-after-load "flycheck"
+     (setq flycheck-highlighting-mode 'symbols)
+     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
+
+
+ (provide 'module-flycheck)
+   #+END_SRC
+**** Markdown
+   #+BEGIN_SRC emacs-lisp
+
+
+ ;; Install Markdown support.
+ (use-package markdown-mode
+   :commands markdown-mode
+   :mode (("\\.markdown$" . markdown-mode)
+          ("\\.md$" . markdown-mode))
+   :config
+   (add-hook 'markdown-mode-hook 'visual-line-mode))
+
+(use-package ox-gfm)
+
+
+ (provide 'module-markdown)
+   #+END_SRC
