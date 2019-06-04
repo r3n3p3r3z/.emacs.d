@@ -292,6 +292,10 @@ compilation."
   :ensure t)
  #+END_SRC
 
+**** request
+ #+BEGIN_SRC emacs-lisp
+(use-package request :ensure t)
+ #+END_SRC
 ** Linux
 *** config
  #+BEGIN_SRC emacs-lisp
@@ -366,7 +370,7 @@ compilation."
 
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 
-(global-set-key (kbd "s-w") 'kill-this-buffer)
+(global-set-key (kbd "C-x K") 'kill-this-buffer)
 
 (setq delete-by-moving-to-trash t)
 
@@ -401,6 +405,10 @@ compilation."
             (define-key (current-local-map) (kbd "s-k") 'recompile)))
 
  #+END_SRC
+
+ #+results:
+ | lambda | nil | (define-key (current-local-map) (kbd s-K) 'compile) | (define-key (current-local-map) (kbd s-k) 'recompile) |
+
 *** DISABLED packages
 **** DISABLED exec-path-from-shell
  #+BEGIN_SRC emacs-lisp
@@ -545,8 +553,8 @@ compilation."
 (use-package better-defaults)
 
 
-(setq mouse-autoselect-window nil
-      focus-follows-mouse nil)
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
 
 
  #+END_SRC
@@ -572,7 +580,7 @@ compilation."
       (advice-add fn :around #'my/*disable-all-the-icons-in-tty)))
 
  #+END_SRC
-**** doom-modeline
+**** DISABLED doom-modeline
  #+BEGIN_SRC emacs-lisp
 (use-package doom-modeline
   :init
@@ -764,6 +772,8 @@ compilation."
 
 (setq-default uniquify-buffer-name-style 'forward)
 
+(global-set-key "\C-C\C-e" 'eval-buffer)
+
 
 (global-unset-key [(control z)])
 (global-unset-key [(control x)(control z)])
@@ -824,9 +834,9 @@ compilation."
 
 **** desktop-environment
   #+BEGIN_SRC emacs-lisp
-(use-package desktop-environment
-:init
-(desktop-environment-mode +1))
+(use-package desktop-environment)
+;:init
+;(desktop-environment-mode +1))
   #+END_SRC
 
 **** visual-fill-column
@@ -910,16 +920,16 @@ compilation."
   (after-init . ivy-mode)
   :diminish ivy-mode
   :bind
-  (("C-c C-r" . ivy-resume)
+  (
    ("M-x" . counsel-M-x)
+   ("C-x x" . counsel-M-x)
    ("<execute>" . counsel-M-x)
-   ("C-c i" . counsel-imenu)
+;   ("C-c i" . counsel-imenu)
    ("C-x b" . counsel-switch-buffer)
    ("C-x B" . counsel-switch-buffer-other-window)
    ("C-x k" . kill-buffer)
    ("C-x C-f" . counsel-find-file)
    ("C-x l" . counsel-locate)
-   ("C-c j" . counsel-git)
    :map help-map
    ("f" . counsel-describe-function)
    ("v" . counsel-describe-variable)
@@ -1419,6 +1429,13 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
    :init
    (beacon-mode 1))
  #+END_SRC
+**** stripe-buffer
+#+BEGIN_SRC emacs-lisp
+(use-package stripe-buffer
+   :commands stripe-buffer-mode
+   :init (add-hook 'dired-mode-hook #'stripe-buffer-mode))
+
+#+END_SRC
 **** dired-k
    #+BEGIN_SRC emacs-lisp
  (setq global-auto-revert-non-file-buffers t)
@@ -1492,12 +1509,58 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
 (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
 
     #+END_SRC
-**** stripe-buffer
-#+BEGIN_SRC emacs-lisp
-(use-package stripe-buffer
-   :commands stripe-buffer-mode
-   :init (add-hook 'dired-mode-hook #'stripe-buffer-mode))
+**** dired-hide-dotfiles
+ #+BEGIN_SRC emacs-lisp
+ (use-package dired-hide-dotfiles
+ :config
+ (defun my-dired-mode-hook ()
+   "My `dired' mode hook."
+   ;; To hide dot-files by default
+   (dired-hide-dotfiles-mode)
 
+   ;; To toggle hiding
+   (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+
+ (add-hook 'dired-mode-hook #'my-dired-mode-hook))
+#+END_SRC
+**** dired-imenu
+#+BEGIN_SRC emacs-lisp
+(use-package dired-imenu :ensure t)
+#+END_SRC
+**** dired-rsync
+ #+BEGIN_SRC emacs-lisp
+(use-package dired-rsync
+  :config
+  (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
+ #+END_SRC
+
+**** dired-hack-utils
+#+BEGIN_SRC emacs-lisp
+(use-package dired-hacks-utils)
+#+END_SRC
+**** dired-filter
+#+BEGIN_SRC emacs-lisp
+(use-package dired-filter)
+#+END_SRC
+**** dired-avfs
+#+BEGIN_SRC emacs-lisp
+(use-package dired-avfs)
+#+END_SRC
+**** dired-open
+#+BEGIN_SRC emacs-lisp
+(use-package dired-open)
+#+END_SRC
+**** dired-narrow
+#+BEGIN_SRC emacs-lisp
+(use-package dired-narrow)
+#+END_SRC
+**** dired-subtree
+#+BEGIN_SRC emacs-lisp
+(use-package dired-subtree)
+#+END_SRC
+**** dired-collapse
+#+BEGIN_SRC emacs-lisp
+(use-package dired-collapse)
 #+END_SRC
 ** Editing
 *** config
