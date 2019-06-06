@@ -7,16 +7,16 @@
 #+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
 #+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
 
-#+PROPERTY: header-args :tangle config.el
+#+PROPERTY: header-args :results silent :tangle config.el
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+HTML_HEAD_EXTRA: <style>div#content { max-width: 2000px; }</style>
 :END:
 #+TITLE: Emacs Configuration
-#+TODO: ACTIVE | DISABLED
 
-* Core
-** Package
- #+BEGIN_SRC emacs-lisp
+* TODO Emacs Configuration
+** Core
+*** Package
+  #+BEGIN_SRC emacs-lisp
  ;; `(online?)` is a function that tries to detect whether you are online.
  ;; We want to refresh our package list on Emacs start if we are.
  (require 'cl)
@@ -74,10 +74,10 @@
  ;; instead of expecting you to do it manually.
  (setq use-package-always-ensure t)
 
-   #+END_SRC
-** Libraries
-*** config
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+*** Libraries
+**** config
+  #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'cl-lib))
 
  (defun core/font-lock-replace-symbol (mode reg sym)
@@ -237,79 +237,79 @@ compilation."
   `add-hook!'."
     `(add-hook! :remove ,@args))
 
- #+END_SRC
-*** packages
-**** async
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+**** packages
+***** async
+  #+BEGIN_SRC emacs-lisp
 (use-package async :demand t
     :config
     (dired-async-mode 1))
- #+END_SRC
-**** subr-x
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** subr-x
+  #+BEGIN_SRC emacs-lisp
 (use-package subr-x :demand t :ensure nil)
 
- #+END_SRC
+  #+END_SRC
 
-**** dash
- #+BEGIN_SRC emacs-lisp
+***** dash
+  #+BEGIN_SRC emacs-lisp
 (use-package dash
   :ensure t
   :config
   (dash-enable-font-lock))
 (use-package dash-functional
   :ensure t)
- #+END_SRC
+  #+END_SRC
 
-**** f
- #+BEGIN_SRC emacs-lisp
+***** f
+  #+BEGIN_SRC emacs-lisp
 (use-package f
   :ensure t)
- #+END_SRC
+  #+END_SRC
 
-**** s
-  #+BEGIN_SRC emacs-lisp
+***** s
+   #+BEGIN_SRC emacs-lisp
 (use-package s
   :ensure t)
-  #+END_SRC
+   #+END_SRC
 
-**** ht
-  #+BEGIN_SRC emacs-lisp
+***** ht
+   #+BEGIN_SRC emacs-lisp
 (use-package ht
   :ensure t)
-  #+END_SRC
+   #+END_SRC
 
-**** a
- #+begin_src emacs-lisp
+***** a
+  #+begin_src emacs-lisp
 (require 'let-alist)
 (use-package a
   :ensure t)
- #+end_src
+  #+end_src
 
-**** persistent-soft
- #+BEGIN_SRC emacs-lisp
+***** persistent-soft
+  #+BEGIN_SRC emacs-lisp
 (use-package persistent-soft
   :ensure t)
- #+END_SRC
-
-**** request
- #+BEGIN_SRC emacs-lisp
-(use-package request :ensure t)
- #+END_SRC
-** Linux
-*** config
- #+BEGIN_SRC emacs-lisp
-(setq x-gtk-use-system-tooltips nil)
   #+END_SRC
-*** packages
-**** exec-path-from-shell
- #+BEGIN_SRC emacs-lisp
+
+***** request
+  #+BEGIN_SRC emacs-lisp
+(use-package request :ensure t)
+  #+END_SRC
+*** Linux
+**** config
+  #+BEGIN_SRC emacs-lisp
+(setq x-gtk-use-system-tooltips nil)
+   #+END_SRC
+**** packages
+***** exec-path-from-shell
+  #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
 :config
 (exec-path-from-shell-initialize))
- #+END_SRC
-**** counsel
-  #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** counsel
+   #+BEGIN_SRC emacs-lisp
   (use-package counsel
     :config
     (push (concat (getenv "HOME") "/.local/share/applications/") counsel-linux-apps-directories)
@@ -323,11 +323,11 @@ compilation."
      (setq counsel-linux-app-format-function #'my/counsel-linux-app-format-function))
 
 
-  #+END_SRC
+   #+END_SRC
 
-** DISABLED macOS
-*** DISABLED config
-  #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-macos.el
+*** DISABLED macOS
+**** DISABLED config
+   #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/core/core-macos.el
  (setq ns-function-modifier 'hyper)
 
  (defun user-swap-meta-and-super ()
@@ -404,35 +404,57 @@ compilation."
             (define-key (current-local-map) (kbd "s-K") 'compile)
             (define-key (current-local-map) (kbd "s-k") 'recompile)))
 
- #+END_SRC
+(defun my/open-finder-at (path)
+  "Open Finder app with the given PATH."
+  (let* ((finder (executable-find "open"))
+         (command (format "%s %s" finder path)))
+    (shell-command command)))
 
- #+results:
- | lambda | nil | (define-key (current-local-map) (kbd s-K) 'compile) | (define-key (current-local-map) (kbd s-k) 'recompile) |
+(defun my/open-project-in-finder ()
+  "Open current project in Finder app."
+  (interactive)
+  (if (projectile-project-p)
+      (my/open-finder-at (projectile-project-root))
+    (message "There is no active project.")))
 
-*** DISABLED packages
-**** DISABLED exec-path-from-shell
- #+BEGIN_SRC emacs-lisp
+(defun my/open-current-file-in-finder ()
+  "Open current file in Finder."
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (if file
+        (my/open-finder-at (file-name-directory file))
+      (message "Buffer has not been saved yet!"))))
+
+
+  #+END_SRC
+
+  #+results:
+  | lambda | nil | (define-key (current-local-map) (kbd s-K) 'compile) | (define-key (current-local-map) (kbd s-k) 'recompile) |
+
+**** DISABLED packages
+***** DISABLED exec-path-from-shell
+  #+BEGIN_SRC emacs-lisp
 (use-package exec-path-from-shell
 :config
 (exec-path-from-shell-initialize))
- #+END_SRC
+  #+END_SRC
 
-**** DISABLED pbcopy
- #+BEGIN_SRC emacs-lisp
+***** DISABLED pbcopy
+  #+BEGIN_SRC emacs-lisp
 (use-package pbcopy
   :ensure t)
- #+END_SRC
-**** DISABLED Set-path
-   #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** DISABLED Set-path
+    #+BEGIN_SRC emacs-lisp
  (paradox-require 'exec-path-from-shell)
 
  (when (memq window-system '(x mac ns))
    (exec-path-from-shell-initialize))
-   #+END_SRC
-* Modules
-** Appearance
-*** config
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+** Modules
+*** Appearance
+**** config
+  #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil
                          :family "Source Code Pro"
                          :height 100
@@ -546,10 +568,10 @@ compilation."
    ring-bell-function #'ignore         ; don't beep
    visible-bell nil)                   ; don't blink
 
-    #+END_SRC
-*** packages
-**** better-defaults
- #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+**** packages
+***** better-defaults
+  #+BEGIN_SRC emacs-lisp
 (use-package better-defaults)
 
 
@@ -557,9 +579,9 @@ compilation."
       focus-follows-mouse t)
 
 
- #+END_SRC
-**** all-the-icons
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** all-the-icons
+  #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons)
 
 (use-package all-the-icons-ivy
@@ -579,15 +601,15 @@ compilation."
                   all-the-icons-wicon all-the-icons-alltheicon))
       (advice-add fn :around #'my/*disable-all-the-icons-in-tty)))
 
- #+END_SRC
-**** DISABLED doom-modeline
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** DISABLED doom-modeline
+  #+BEGIN_SRC emacs-lisp
 (use-package doom-modeline
   :init
   (doom-modeline-mode 1))
- #+END_SRC
-**** doom-themes
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** doom-themes
+  #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
   :config
   :init
@@ -605,16 +627,16 @@ compilation."
 
 (load-theme 'doom-one)
 
- #+END_SRC
-**** hlinum
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** hlinum
+  #+BEGIN_SRC emacs-lisp
  ;; Highlight the line number of the current line.
  (use-package hlinum
    :config
    (hlinum-activate))
- #+END_SRC
-**** diminish
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** diminish
+  #+BEGIN_SRC emacs-lisp
  ;; Unclutter the modeline
  (use-package diminish)
 
@@ -629,10 +651,10 @@ compilation."
  (eval-after-load "cider" '(diminish 'cider-mode))
  (eval-after-load "smartparens" '(diminish 'smartparens-mode))
 
- #+END_SRC
-** General
-*** config
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+*** General
+**** config
+  #+BEGIN_SRC emacs-lisp
  (setq savehist-file (concat dotfiles-cache-dir "savehist")
        history-length 500
        savehist-save-minibuffer-history t
@@ -795,10 +817,10 @@ compilation."
   (global-unset-key (kbd (format "M-%d" n)))
   )
 
-  #+END_SRC
-*** packages
-**** recentf
- #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+**** packages
+***** recentf
+  #+BEGIN_SRC emacs-lisp
 (use-package recentf
   :demand t
   :config
@@ -807,40 +829,40 @@ compilation."
       recentf-max-saved-items 300)
   (recentf-mode))
 
- #+END_SRC
+  #+END_SRC
 
-**** vlf
- #+BEGIN_SRC emacs-lisp
+***** vlf
+  #+BEGIN_SRC emacs-lisp
 (use-package vlf)
- #+END_SRC
-**** scratch
-   #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** scratch
+    #+BEGIN_SRC emacs-lisp
 (use-package scratch)
-   #+END_SRC
-**** persistent-scratch
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** persistent-scratch
+  #+BEGIN_SRC emacs-lisp
 (use-package persistent-scratch
 :init
 (persistent-scratch-setup-default))
- #+END_SRC
-**** unkillable-scratch
-   #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** unkillable-scratch
+    #+BEGIN_SRC emacs-lisp
 (use-package unkillable-scratch
   :ensure t
   :config
   (unkillable-scratch t)
   (setq unkillable-scratch-do-not-reset-scratch-buffer t))
-   #+END_SRC
+    #+END_SRC
 
-**** desktop-environment
-  #+BEGIN_SRC emacs-lisp
+***** desktop-environment
+   #+BEGIN_SRC emacs-lisp
 (use-package desktop-environment)
 ;:init
 ;(desktop-environment-mode +1))
-  #+END_SRC
+   #+END_SRC
 
-**** visual-fill-column
- #+BEGIN_SRC emacs-lisp
+***** visual-fill-column
+  #+BEGIN_SRC emacs-lisp
 (use-package visual-fill-column
    :commands visual-fill-column-mode
    :config
@@ -850,9 +872,9 @@ compilation."
      ;; take Emacs 26 line numbers into account
      (+ (if (boundp 'display-line-numbers) 6 0)
         fill-column)))
- #+END_SRC
-**** company
-   #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** company
+    #+BEGIN_SRC emacs-lisp
    (use-package company
      :demand t
      :commands company-mode
@@ -890,10 +912,10 @@ compilation."
        :commands company-try-hard)
 
    )
-   #+END_SRC
+    #+END_SRC
 
-**** ivy
-  #+BEGIN_SRC emacs-lisp
+***** ivy
+   #+BEGIN_SRC emacs-lisp
 (use-package ivy
    :config
   (setq ivy-height 15                                  ; slightly longer ivy completions list
@@ -1181,9 +1203,9 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
 
 
 (provide 'module-ivy)
-  #+END_SRC
-**** yasnippets
-   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** yasnippets
+    #+BEGIN_SRC emacs-lisp
  (use-package yasnippet
    ;;:commands yas-global-mode
    :config
@@ -1196,9 +1218,9 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
 (use-package auto-yasnippet
 :config
 (require 'auto-yasnippet))
-   #+END_SRC
-**** Git
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** Git
+    #+BEGIN_SRC emacs-lisp
  (use-package magit
    :commands magit-status
    :bind ("C-x g" . magit-status))
@@ -1208,13 +1230,13 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
  (use-package git-timemachine)
 
 
-   #+END_SRC
-**** el-patch
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** el-patch
+    #+BEGIN_SRC emacs-lisp
 (use-package el-patch)
-   #+END_SRC
-**** Dashboard
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** Dashboard
+    #+BEGIN_SRC emacs-lisp
  (use-package dashboard
    :init
    ;(dashboard-setup-startup-hook)
@@ -1322,11 +1344,11 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
    (interactive)
    (ignore-errors (goto-char (previous-button (point))))))
 
-   #+END_SRC
+    #+END_SRC
 
-** Navigation
-*** config
- #+BEGIN_SRC emacs-lisp
+*** Navigation
+**** config
+  #+BEGIN_SRC emacs-lisp
 (setq scroll-error-top-bottom t)
 
 (defun smart-beginning-of-line ()
@@ -1350,10 +1372,10 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
    (save-excursion
      (other-window 1)
      (quit-window))))
- #+END_SRC
-*** packages
-**** avy
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+**** packages
+***** avy
+  #+BEGIN_SRC emacs-lisp
 (use-package avy
   :demand t
   :bind (("C-;" . avy-goto-word-1)
@@ -1361,9 +1383,9 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
   :config
   (with-eval-after-load "isearch"
     (define-key isearch-mode-map (kbd "C-;") 'avy-isearch)))
- #+END_SRC
-**** anzu
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** anzu
+  #+BEGIN_SRC emacs-lisp
 (use-package anzu
   :demand t
   :config
@@ -1374,9 +1396,9 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
         ("M-%" . anzu-query-replace)
         ("C-M-%" . anzu-query-replace-regexp))
   :diminish anzu-mode)
- #+END_SRC
-**** ace-window
-   #+BEGIN_SRC emacs-lisp :tangle
+  #+END_SRC
+***** ace-window
+    #+BEGIN_SRC emacs-lisp :tangle
 (use-package ace-window
   :config
   (setq aw-scope 'frame))
@@ -1407,37 +1429,37 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
  (global-set-key (kbd "C-x \\") 'ace-swap-window)
 
 
-   #+END_SRC
-**** windmove
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** windmove
+  #+BEGIN_SRC emacs-lisp
 (use-package windmove)
+  #+END_SRC
+
+***** buffer-move
+ #+BEGIN_SRC emacs-lisp
+(use-package buffer-move)
  #+END_SRC
 
-**** buffer-move
-#+BEGIN_SRC emacs-lisp
-(use-package buffer-move)
-#+END_SRC
-
-**** transpose-frame
-#+BEGIN_SRC emacs-lisp
-(use-package transpose-frame)
-#+END_SRC
-
-**** beacon
+***** transpose-frame
  #+BEGIN_SRC emacs-lisp
+(use-package transpose-frame)
+ #+END_SRC
+
+***** beacon
+  #+BEGIN_SRC emacs-lisp
 (use-package beacon
    :init
    (beacon-mode 1))
- #+END_SRC
-**** stripe-buffer
-#+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** stripe-buffer
+ #+BEGIN_SRC emacs-lisp
 (use-package stripe-buffer
    :commands stripe-buffer-mode
    :init (add-hook 'dired-mode-hook #'stripe-buffer-mode))
 
-#+END_SRC
-**** dired-k
-   #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-k
+    #+BEGIN_SRC emacs-lisp
  (setq global-auto-revert-non-file-buffers t)
  (setq auto-revert-verbose nil)
 
@@ -1508,9 +1530,9 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
 (setq wdired-use-dired-vertical-movement 'sometimes)
 (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
 
-    #+END_SRC
-**** dired-hide-dotfiles
- #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+***** dired-hide-dotfiles
+  #+BEGIN_SRC emacs-lisp
  (use-package dired-hide-dotfiles
  :config
  (defun my-dired-mode-hook ()
@@ -1522,49 +1544,49 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
    (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
 
  (add-hook 'dired-mode-hook #'my-dired-mode-hook))
-#+END_SRC
-**** dired-imenu
-#+BEGIN_SRC emacs-lisp
-(use-package dired-imenu :ensure t)
-#+END_SRC
-**** dired-rsync
+ #+END_SRC
+***** dired-imenu
  #+BEGIN_SRC emacs-lisp
+(use-package dired-imenu :ensure t)
+ #+END_SRC
+***** dired-rsync
+  #+BEGIN_SRC emacs-lisp
 (use-package dired-rsync
   :config
   (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
- #+END_SRC
+  #+END_SRC
 
-**** dired-hack-utils
-#+BEGIN_SRC emacs-lisp
+***** dired-hack-utils
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-hacks-utils)
-#+END_SRC
-**** dired-filter
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-filter
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-filter)
-#+END_SRC
-**** dired-avfs
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-avfs
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-avfs)
-#+END_SRC
-**** dired-open
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-open
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-open)
-#+END_SRC
-**** dired-narrow
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-narrow
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-narrow)
-#+END_SRC
-**** dired-subtree
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-subtree
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-subtree)
-#+END_SRC
-**** dired-collapse
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** dired-collapse
+ #+BEGIN_SRC emacs-lisp
 (use-package dired-collapse)
-#+END_SRC
-** Editing
-*** config
- #+BEGIN_SRC emacs-lisp :tangle
+ #+END_SRC
+*** Editing
+**** config
+  #+BEGIN_SRC emacs-lisp :tangle
 (setq bookmark-save-flag 1) ;; save after every change
 
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
@@ -1711,42 +1733,42 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
 (setq nxml-sexp-element-flag t)
 ;; prog-mode should have auto-completion by default.
 
- #+END_SRC
-*** packages
-**** elmacro
-  #+BEGIN_SRC emacs-lisp
- (use-package elmacro)
   #+END_SRC
-**** avy
- #+BEGIN_SRC emacs-lisp
+**** packages
+***** elmacro
+   #+BEGIN_SRC emacs-lisp
+ (use-package elmacro)
+   #+END_SRC
+***** avy
+  #+BEGIN_SRC emacs-lisp
 (use-package avy
    :config
    (setq avy-background t)
    (setq avy-style 'at-full))
- #+END_SRC
-**** browse-kill-ring
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** browse-kill-ring
+  #+BEGIN_SRC emacs-lisp
 (use-package browse-kill-ring)
  (require 'browse-kill-ring)
  (browse-kill-ring-default-keybindings)
  (global-set-key (kbd "s-y") 'browse-kill-ring)
- #+END_SRC
-**** super-save
- #+BEGIN_SRC emacs-lisp
-(use-package super-save)
- #+END_SRC
-**** editorconfig
-  #+BEGIN_SRC emacs-lisp
-(use-package editorconfig)
   #+END_SRC
-**** expand-region
- #+BEGIN_SRC emacs-lisp
+***** super-save
+  #+BEGIN_SRC emacs-lisp
+(use-package super-save)
+  #+END_SRC
+***** editorconfig
+   #+BEGIN_SRC emacs-lisp
+(use-package editorconfig)
+   #+END_SRC
+***** expand-region
+  #+BEGIN_SRC emacs-lisp
 (use-package expand-region
    :commands er/expand-region)
- #+END_SRC
-**** Org-mode
-***** org
-     #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** Org-mode
+****** org
+      #+BEGIN_SRC emacs-lisp
  (use-package org
    :ensure org-plus-contrib
    :config
@@ -1757,42 +1779,42 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
     'org-mode-hook
     (lambda ()
       (visual-line-mode 1))))
-      #+END_SRC
-***** org-cliplink
-#+BEGIN_SRC emacs-lisp
+       #+END_SRC
+****** org-cliplink
+ #+BEGIN_SRC emacs-lisp
 (use-package org-cliplink)
-#+END_SRC
-***** org-download
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** org-download
+ #+BEGIN_SRC emacs-lisp
  (use-package org-download
  :init
  (setq org-download-method 'attach)
  (setq org-image-actual-width 600))
 
-#+END_SRC
-***** org-journal
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** org-journal
+ #+BEGIN_SRC emacs-lisp
 (use-package org-journal
    :init
    (setq org-journal-file-format "%Y-%m-%d.org"))
-#+END_SRC
-***** org-noter
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** org-noter
+ #+BEGIN_SRC emacs-lisp
  (use-package org-noter)
-#+END_SRC
-***** org-pomodoro
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** org-pomodoro
+ #+BEGIN_SRC emacs-lisp
  (use-package org-pomodoro)
-#+END_SRC
-***** org-web-tools
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** org-web-tools
+ #+BEGIN_SRC emacs-lisp
  (use-package org-web-tools
  :init
  (setq org-web-tools-attach-archive-retry 15))
 
-#+END_SRC
-***** org-brain
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** org-brain
+ #+BEGIN_SRC emacs-lisp
  (use-package org-brain
    :config
    (setq org-id-track-globally t)
@@ -1800,9 +1822,9 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
    (setq org-brain-visualize-default-choices 'all)
    (setq org-brain-title-max-length 12))
 
-#+END_SRC
-**** Flycheck
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** Flycheck
+ #+BEGIN_SRC emacs-lisp
 (use-package flycheck
    :config
  (global-set-key (kbd "M-n") 'next-error)
@@ -1813,17 +1835,17 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
                (when (not (equal 'emacs-lisp-mode major-mode))
                  (flycheck-mode)))))
 
-#+END_SRC
-***** flycheck-color-mode-line
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** flycheck-color-mode-line
+ #+BEGIN_SRC emacs-lisp
 (use-package flycheck-color-mode-line
    :config
    (with-eval-after-load "flycheck"
      (setq flycheck-highlighting-mode 'symbols)
      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
-#+END_SRC
-**** Markdown
-   #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** Markdown
+    #+BEGIN_SRC emacs-lisp
  ;; Install Markdown support.
  (use-package markdown-mode
    :commands markdown-mode
@@ -1831,20 +1853,20 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
           ("\\.md$" . markdown-mode))
    :config
    (add-hook 'markdown-mode-hook 'visual-line-mode))
-   #+END_SRC
-***** ox-gfm
-#+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** ox-gfm
+ #+BEGIN_SRC emacs-lisp
 (use-package ox-gfm)
-#+END_SRC
-**** smartparens
-  #+BEGIN_SRC emacs-lisp
-(use-package smartparens)
-  #+END_SRC
-
-** Help
-*** packages
-**** which-key
+ #+END_SRC
+***** smartparens
    #+BEGIN_SRC emacs-lisp
+(use-package smartparens)
+   #+END_SRC
+
+*** Help
+**** packages
+***** which-key
+    #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :demand t
   :bind ("C-h C-k" . which-key-show-top-level)
@@ -1860,14 +1882,17 @@ search current file. See `+ivy-task-tags' to customize what this searches for."
   (which-key-setup-side-window-bottom)
   (which-key-mode)
   :diminish which-key-mode)
-   #+END_SRC
-**** discover-my-major
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** discover-my-major
+  #+BEGIN_SRC emacs-lisp
 (use-package discover-my-major
   :commands (discover-my-major discover-my-mode)
   :bind ("<f1>" . discover-my-major))
- #+END_SRC
-**** hydra
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** hydra
+  #+BEGIN_SRC emacs-lisp
 (use-package hydra)
- #+END_SRC
+  #+END_SRC
+* TODO Projects
+* Resources
+** [[https://emacs.stackexchange.com/questions/13583/whats-the-difference-between-a-buffer-a-file-a-window-and-a-frame][What's the difference between a buffer, a file, a window, and a frame?]]
