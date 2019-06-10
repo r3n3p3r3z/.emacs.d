@@ -11,3 +11,5 @@
 !config.org
 !compile.el
 !Makefile
+!init.el
+!early-init.el

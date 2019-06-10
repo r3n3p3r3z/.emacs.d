@@ -620,12 +620,6 @@ compilation."
       (advice-add fn :around #'my/*disable-all-the-icons-in-tty)))
 
 #+END_SRC
-*** DISABLED doom-modeline
-#+BEGIN_SRC emacs-lisp
-(use-package doom-modeline
-  :init
-  (doom-modeline-mode 1))
-#+END_SRC
 *** telephone-line
  #+BEGIN_SRC emacs-lisp
   (use-package telephone-line
@@ -693,22 +687,20 @@ compilation."
 #+END_SRC
 *** doom-themes
 #+BEGIN_SRC emacs-lisp
-(use-package doom-themes
-  :config
-  :init
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (use-package doom-themes
+    :config
+    :init
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    (doom-themes-neotree-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
 
-(load-theme 'doom-one)
+  (load-theme 'doom-one)
 
 #+END_SRC
 *** hlinum
@@ -1461,6 +1453,10 @@ compilation."
 
   #+END_SRC
 
+*** super-save
+#+BEGIN_SRC emacs-lisp
+(use-package super-save)
+#+END_SRC
 ** Navigation
 *** config
  #+BEGIN_SRC emacs-lisp
@@ -1909,6 +1905,7 @@ compilation."
 ;; prog-mode should have auto-completion by default.
 
  #+END_SRC
+
 *** elmacro
  #+BEGIN_SRC emacs-lisp
  (use-package elmacro)
@@ -1926,10 +1923,6 @@ compilation."
  (require 'browse-kill-ring)
  (browse-kill-ring-default-keybindings)
  (global-set-key (kbd "s-y") 'browse-kill-ring)
-#+END_SRC
-*** super-save
-#+BEGIN_SRC emacs-lisp
-(use-package super-save)
 #+END_SRC
 *** expand-region
 #+BEGIN_SRC emacs-lisp
