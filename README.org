@@ -1,3 +1,5 @@
+https://dynamicmetaflow.github.io/.emacs.d/
+
 * Introduction
 
 1. Back up your existing emacs configuration and clone this repository
