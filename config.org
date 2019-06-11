@@ -180,6 +180,18 @@ compilation."
                  ((symbolp ,hook)
                   (add-hook ,hook #',fn ,append)))))))
 
+  (defun doom-enlist (exp)
+    "Return EXP wrapped in a list, or as-is if already a list."
+    (if (listp exp) exp (list exp)))
+
+  (defun doom-unquote (exp)
+    "Return EXP unquoted."
+    (while (memq (car-safe exp) '(quote function))
+      (setq exp (cadr exp)))
+    exp)
+
+
+
   (defmacro add-hook! (&rest args)
     "A convenience macro for `add-hook'. Takes, in order:
 
@@ -879,7 +891,6 @@ compilation."
 *** company
   #+BEGIN_SRC emacs-lisp
    (use-package company
-     :commands company-mode
      :config
      ;; Enable company-mode globally.
      (global-company-mode)
@@ -956,13 +967,33 @@ compilation."
 **** ivy-rich
  #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
-  :init
-(ivy-rich-mode +1)
   :config
+(setq ivy-rich-display-transformers-list
+  '(counsel-find-file
+    (:columns
+     ((ivy-read-file-transformer)
+      (ivy-rich-counsel-find-file-truename (:face font-lock-doc-face))))
+    counsel-M-x
+    (:columns
+     ((counsel-M-x-transformer (:width 40))
+      (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))
+    counsel-describe-function
+    (:columns
+     ((counsel-describe-function-transformer (:width 40))
+      (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))
+    counsel-describe-variable
+    (:columns
+     ((counsel-describe-variable-transformer (:width 40))
+      (ivy-rich-counsel-variable-docstring (:face font-lock-doc-face))))
+    counsel-recentf
+    (:columns
+     ((ivy-rich-candidate (:width 0.8))
+      (ivy-rich-file-last-modified-time (:face font-lock-comment-face))))))
 
-(setq ivy-rich-path-style 'abbrev))
+(setq ivy-rich-path-style 'abbrev)
 
-
+  (ivy-rich-mode +1)
+)
  #+END_SRC
 **** ivy-xref
  #+BEGIN_SRC emacs-lisp
@@ -989,6 +1020,8 @@ compilation."
    ("C-x x" . counsel-M-x)
    ("<execute>" . counsel-M-x)
    ("C-x i" . counsel-imenu)
+   ("C-h f" . counsel-describe-function)
+   ("C-h v" . counsel-describe-variable)
    ("C-x b" . ivy-switch-buffer)
    ("C-x B" . counsel-switch-buffer-other-window)
    ("C-x k" . kill-buffer)
