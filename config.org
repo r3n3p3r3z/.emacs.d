@@ -2,14 +2,15 @@
 #+HTML_HEAD: <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 #+HTML_HEAD: <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 #+HTML_HEAD: <link href="css/style.css" rel="stylesheet" type="text/css" />
+#+HTML_HEAD_EXTRA: <style>div#content { max-width: 2000px; }</style>
+
+#+EXPORT_FILE_NAME: index.html
+#+EXPORT_EXCLUDE_TAGS: noexport
 
 #+PROPERTY: header-args :results silent :tangle config.el
-#+EXPORT_EXCLUDE_TAGS: noexport
-#+HTML_HEAD_EXTRA: <style>div#content { max-width: 2000px; }</style>
-#+SEQ_TODO: TODO NEXT ACTIVE | DISABLED
-#+EXPORT_FILE_NAME: index.html
 :END:
 #+TITLE: Emacs Configuration
+#+SEQ_TODO: TODO NEXT ACTIVE | DISABLED
 
 * Core
 ** Package
