@@ -11,6 +11,7 @@
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+HTML_HEAD_EXTRA: <style>div#content { max-width: 2000px; }</style>
 #+SEQ_TODO: TODO NEXT ACTIVE | DISABLED
+#+EXPORT_FILE_NAME: index.html
 :END:
 #+TITLE: Emacs Configuration
 
