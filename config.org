@@ -459,7 +459,7 @@ compilation."
    (exec-path-from-shell-initialize))
    #+END_SRC
 * Modules
-** Appearance
+** appearance
 *** config
  #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil
@@ -657,7 +657,7 @@ compilation."
  (eval-after-load "smartparens" '(diminish 'smartparens-mode))
 
 #+END_SRC
-** General
+** general
 *** config
  #+BEGIN_SRC emacs-lisp
  (setq savehist-file (concat dotfiles-cache-dir "savehist")
@@ -1103,7 +1103,7 @@ compilation."
 #+BEGIN_SRC emacs-lisp
 (use-package super-save )
 #+END_SRC
-** Navigation
+** navigation
 *** config
  #+BEGIN_SRC emacs-lisp
 (setq scroll-error-top-bottom t)
@@ -1333,7 +1333,7 @@ compilation."
  #+BEGIN_SRC emacs-lisp
 (use-package dired-collapse)
  #+END_SRC
-** Editing
+** editing
 *** config
  #+BEGIN_SRC emacs-lisp :tangle
 (setq bookmark-save-flag 1) ;; save after every change
