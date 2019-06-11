@@ -1591,7 +1591,7 @@ compilation."
    :init
    (setq org-journal-file-format "%Y-%m-%d.org"))
  #+END_SRC
-* reference
+* Reference
 ** Define context-aware keys in Emacs
    :PROPERTIES:
    :ID:       d4f4f43b-cee1-4fb3-a153-46b6ee06a70f
