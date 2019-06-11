@@ -300,16 +300,17 @@ compilation."
  #+END_SRC
 ** Linux
   #+BEGIN_SRC emacs-lisp
-(if (eq system-type 'gnu/linux)
-
-    (use-package gpastel)
+    (use-package gpastel
+    :if (eq system-type 'gnu/linux))
 
     (use-package exec-path-from-shell
-    :config
+      :if (eq system-type 'gnu/linux)
+      :config
     (exec-path-from-shell-initialize))
 
     (use-package counsel
-    :config
+      :if (eq system-type 'gnu/linux)
+      :config
     (push (concat (getenv "HOME") "/.local/share/applications/") counsel-linux-apps-directories)
     (defun my/counsel-linux-app-format-function (name comment exec)
       "Default Linux application name formatter.
@@ -318,11 +319,9 @@ compilation."
       (format "% -45s %s"
               (propertize name 'face 'font-lock-builtin-face)
               (or comment "")))
-     (setq counsel-linux-app-format-function #'my/counsel-linux-app-format-function))
+     (setq counsel-linux-app-format-function #'my/counsel-linux-app-format-function)
 
-    (setq x-gtk-use-system-tooltips nil)
-
-  )
+    (setq x-gtk-use-system-tooltips nil))
 
 
 
@@ -331,6 +330,19 @@ compilation."
 
 ** macOS
   #+BEGIN_SRC emacs-lisp
+(if (eq system-type 'gnu/linux)
+(set-face-attribute 'default nil
+                         :family "Hack Nerd Font"
+                         :height 120
+                         :weight 'normal
+                         :width 'normal
+                         )
+     (set-face-attribute 'Info-quoted nil
+                         :slant 'Italic)
+     (set-face-attribute 'font-lock-string-face nil
+                         :slant 'Italic))
+
+
 (if (eq system-type 'darwin)
 
 (use-package exec-path-from-shell
@@ -1591,26 +1603,3 @@ compilation."
    :init
    (setq org-journal-file-format "%Y-%m-%d.org"))
  #+END_SRC
-* Reference
-** Define context-aware keys in Emacs
-   :PROPERTIES:
-   :ID:       d4f4f43b-cee1-4fb3-a153-46b6ee06a70f
-   :END:
-[[http://endlessparentheses.com/define-context-aware-keys-in-emacs.html][Define context-aware keys in Emacs · Endless Parentheses]]
-
-
-
- :RELATED:
- :END:
-
- :RESOURCES:
- :END:
-** EXWM and keychord
-   :PROPERTIES:
-   :CREATED:  <2019-05-29 Wed 11:21>
-   :ID:       760ddd05-c598-481e-9e09-5142a8821507
-   :END:
-   :LOGBOOK:
-   CLOCK: [2019-05-29 Wed 11:21]--[2019-05-29 Wed 11:22] =>  0:01
-   :END:
-[[https://github.com/eush77/dotfiles/blob/7b0d623b03d1884d26c2b2e873bd1e366e61cbbf/emacs/.emacs.d/config/config-exwm.el][dotfiles/config-exwm.el at 7b0d623b03d1884d26c2b2e873bd1e366e61cbbf · eush77/...]]
