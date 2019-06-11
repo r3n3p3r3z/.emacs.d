@@ -227,4 +227,3 @@ Note the weekly scope of the command's precision.")
 (message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) init-el-start-time)))
 
 (message "I'm ready to do thy bidding, Master %s!" current-user)
-)
