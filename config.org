@@ -466,13 +466,13 @@ compilation."
 
    #+END_SRC
 * Modules
-** appearance
+** Appearance
 *** config
  #+BEGIN_SRC emacs-lisp
 (if (eq system-type 'gnu/linux)
 (set-face-attribute 'default nil
                          :family "Source Code Pro"
-                         :height 100
+                         :height 110
                          :weight 'normal
                          :width 'normal
                          )
@@ -678,7 +678,7 @@ A minimal and modern mode-line
 :init
 (doom-modeline-mode +1))
  #+END_SRC
-** general
+** General
 *** config
  #+BEGIN_SRC emacs-lisp
  (setq savehist-file (concat dotfiles-cache-dir "savehist")
@@ -1165,7 +1165,7 @@ Modular text completion framework
  #+BEGIN_SRC emacs-lisp
 (use-package htmlize)
  #+END_SRC
-** navigation
+** Navigation
 *** config
  #+BEGIN_SRC emacs-lisp
 (setq scroll-error-top-bottom t)
@@ -1402,7 +1402,7 @@ Modular text completion framework
  #+BEGIN_SRC emacs-lisp
 (use-package dired-collapse)
  #+END_SRC
-** editing
+** Editing
 *** config
  #+BEGIN_SRC emacs-lisp :tangle
 (setq bookmark-save-flag 1) ;; save after every change
@@ -1597,7 +1597,7 @@ Modular text completion framework
               (unless (eq ibuffer-sorting-mode 'alphabetic)
                 (ibuffer-do-sort-by-alphabetic)))))
    #+END_SRC
-** help
+** Help
 *** which-key
   #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -1621,7 +1621,7 @@ Modular text completion framework
   :commands (discover-my-major discover-my-mode)
   :bind ("<f1>" . discover-my-major))
  #+END_SRC
-** org
+** Org
   #+BEGIN_SRC emacs-lisp
  (use-package org
    :ensure org-plus-contrib
