@@ -472,7 +472,7 @@ compilation."
 (if (eq system-type 'gnu/linux)
 (set-face-attribute 'default nil
                          :family "Source Code Pro"
-                         :height 110
+                         :height 105
                          :weight 'normal
                          :width 'normal
                          )
@@ -953,7 +953,8 @@ Modular text completion framework
    )
   #+END_SRC
 
-*** historian
+*** [[https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a][historian]]
+Persistently store selected minibuffer candidates
  #+BEGIN_SRC emacs-lisp
 (use-package historian
 :commands (historian)
@@ -961,7 +962,8 @@ Modular text completion framework
 )
 
  #+END_SRC
-*** ivy
+*** [[https://github.com/abo-abo/swiper][ivy]]
+Incremental Vertical completion
 **** setup
   #+BEGIN_SRC emacs-lisp
 (use-package ivy
@@ -984,12 +986,14 @@ Modular text completion framework
 
 )
  #+END_SRC
-**** ivy-historian
+**** [[https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a][ivy-historian]]
+Persistently store selected minibuffer candidates
  #+BEGIN_SRC emacs-lisp
 (use-package ivy-historian
 :commands (ivy-historian))
  #+END_SRC
-**** ivy-rich
+**** [[https://github.com/Yevgnen/ivy-rich/tree/f6bfa293c6df0b43cc411876b665816ec3f03d08][ivy-rich]]
+More friendly display transformer for ivy.
  #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
   :config
@@ -1020,20 +1024,23 @@ Modular text completion framework
   (ivy-rich-mode +1)
 )
  #+END_SRC
-**** ivy-xref
+**** [[https://github.com/alexmurray/ivy-xref/tree/1a35fc0f070388701b05b0a455cbe262e924d547][ivy-xref]]
+Ivy interface for xref results
  #+BEGIN_SRC emacs-lisp
 (use-package ivy-xref
   :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
  #+END_SRC
-*** smex
+*** [[https://github.com/nonsequitur/smex][smex]]
  #+BEGIN_SRC emacs-lisp
+M-x interface with Ido-style fuzzy matching.
 (use-package smex
   :config
 (setq smex-save-file (concat dotfiles-cache-dir "/smex-items"))
 (smex-initialize))
 
  #+END_SRC
-*** counsel
+*** [[https://github.com/abo-abo/swiper/][counsel]]
+Various completion functions using Ivy
  #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :hook
@@ -1076,7 +1083,7 @@ Modular text completion framework
    '(("I" insert "insert")))
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur))
  #+END_SRC
-*** swiper
+*** [[https://github.com/abo-abo/swiper/tree/b528f0f3aaa86a40fdec06bdb06c603ce1418bcb][swiper]]
  #+BEGIN_SRC emacs-lisp
 (use-package swiper
   :commands swiper
@@ -1094,7 +1101,8 @@ Modular text completion framework
    "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
 
  #+END_SRC
-*** yasnippets
+*** [[https://github.com/joaotavora/yasnippet/tree/e45e3de357fbd4289fcfa3dd26aaa7be357fb0b8][yasnippet]]
+Yet another snippet extension for Emacs.
   #+BEGIN_SRC emacs-lisp
  (use-package yasnippet
    :commands (yas-insert-snippet)
@@ -1114,46 +1122,57 @@ Modular text completion framework
 :config
 (require 'auto-yasnippet))
  #+END_SRC
-*** grep
-**** wgrep
- #+BEGIN_SRC emacs-lisp
+*** [[https://github.com/mhayashi1120/Emacs-wgrep/tree/379afd89ebd76f63842c8589127d66096a8bb595][wgrep]]
+Writable grep buffer and apply the changes to files
+#+BEGIN_SRC emacs-lisp
 (use-package wgrep
   :commands
   wgrep-change-to-wgrep-mode
   ivy-wgrep-change-to-wgrep-mode)
 
- #+END_SRC
-**** deadgrep
- #+BEGIN_SRC emacs-lisp
+#+END_SRC
+*** [[https://github.com/Wilfred/deadgrep/tree/caeb37b8d6ab83f0eba353d6bbb29678190d4419][deadgrep]]
+fast, friendly searching with ripgrep
+#+BEGIN_SRC emacs-lisp
 (use-package deadgrep
   :commands deadgrep
   :bind* (("M-s" . deadgrep)))
- #+END_SRC
-*** git
-  #+BEGIN_SRC emacs-lisp
- (use-package magit
+#+END_SRC
+*** [[https://github.com/magit/magit/tree/0984d77fbdae0fe85b38dd27036318212b9a1e5d][magit]]
+Magit is an interface to the version control system Git,
+implemented as an Emacs package
+   #+BEGIN_SRC emacs-lisp
+(use-package magit
    :commands magit-status
    :bind ("C-x g" . magit-status))
-
-
+ #+END_SRC
+*** [[https://melpa.org/#/gist][gist]]
+Emacs integration for gist.github.com
+ #+BEGIN_SRC emacs-lisp
  (use-package gist
    :commands gist-mode)
-
+ #+END_SRC
+*** [[https://gitlab.com/pidu/git-timemachine/tree/b97f93d66cffcd69281346845d3a1e32197eda29][git-timemachine]]
+Walk through git revisions of a file
+ #+BEGIN_SRC emacs-lisp
  (use-package git-timemachine
 :commands git-timemachine)
+ #+END_SRC
 
-
-  #+END_SRC
-*** super-save
+   #+END_SRC
+*** [[https://github.com/bbatsov/super-save/tree/2a905b8bdfc93bee16e2d62a61c6211bbe009331][super-save]]
+Auto-save buffers, based on your activity.
  #+BEGIN_SRC emacs-lisp
 (use-package super-save)
  #+END_SRC
-*** crux
+*** [[https://github.com/bbatsov/crux/tree/308f17d914e2cd79cbc809de66d02b03ceb82859][crux]]
+A Collection of Ridiculously Useful eXtensions
  #+BEGIN_SRC emacs-lisp
 (use-package crux
 :defer 0.1)
  #+END_SRC
-*** keyfreq
+*** [[https://github.com/dacap/keyfreq/tree/9c665c8c219d18866403897936427bb408e3d6b9][keyfreq]]
+track command frequencies
  #+BEGIN_SRC emacs-lisp
   (use-package keyfreq
   :if (eq system-type 'gnu/linux)
@@ -1161,7 +1180,8 @@ Modular text completion framework
   (keyfreq-mode +1))
 
  #+END_SRC
-*** htmlize
+*** [[https://github.com/hniksic/emacs-htmlize/tree/8db0aa6aab77475a732b7363f0d57bd3933c18fd][htmlize]]
+Convert buffer text and decorations to HTML.
  #+BEGIN_SRC emacs-lisp
 (use-package htmlize)
  #+END_SRC
@@ -1657,3 +1677,12 @@ Modular text completion framework
    :init
    (setq org-journal-file-format "%Y-%m-%d.org"))
  #+END_SRC
+*** [[https://github.com/snosov1/toc-org][org-toc]]
+toc-org helps you to have an up-to-date table of contents in org files without exporting.
+#+BEGIN_SRC emacs-lisp
+(use-package toc-org
+:ensure t
+:config
+(add-hook 'org-mode-hook 'toc-org-mode)
+)
+#+END_SRC
