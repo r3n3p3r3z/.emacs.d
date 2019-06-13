@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-06-13 Thu 10:03 -->
+<!-- 2019-06-13 Thu 16:29 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Emacs Configuration</title>
@@ -193,9 +193,12 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<link href="css/htmlize.css" rel="stylesheet" type="text/css" />
+<link href="css/readtheorg.css" rel="stylesheet" type="text/css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery.stickytableheaders.js"></script>
+<script type="text/javascript" src="js/readtheorg.js"></script>
 <style>div#content { max-width: 2000px; }</style>
 <script type="text/javascript">
 /*
@@ -251,98 +254,103 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org0af68fc">1. Core</a>
+<li><a href="#org869416c">1. Core</a>
 <ul>
-<li><a href="#org69168f3">1.1. Package</a></li>
-<li><a href="#orga934ea7">1.2. Libraries</a>
+<li><a href="#org6bf567c">1.1. Package</a></li>
+<li><a href="#orgdc1c221">1.2. Libraries</a>
 <ul>
-<li><a href="#orgc8a117b">1.2.1. config</a></li>
-<li><a href="#org9cfa1b2">1.2.2. packages</a></li>
+<li><a href="#orgaa13c1d">1.2.1. config</a></li>
+<li><a href="#org055acef">1.2.2. packages</a></li>
 </ul>
 </li>
-<li><a href="#org0aa8469">1.3. Linux</a></li>
-<li><a href="#org09837ec">1.4. macOS</a></li>
+<li><a href="#org6c3b973">1.3. Linux</a></li>
+<li><a href="#org17f5dc3">1.4. macOS</a></li>
 </ul>
 </li>
-<li><a href="#org877036c">2. Modules</a>
+<li><a href="#org86710f4">2. Modules</a>
 <ul>
-<li><a href="#org7ca718f">2.1. Appearance</a>
+<li><a href="#org798f297">2.1. Appearance</a>
 <ul>
-<li><a href="#org16938d6">2.1.1. config</a></li>
-<li><a href="#org14c2c30">2.1.2. better-defaults</a></li>
-<li><a href="#org6c7ab4c">2.1.3. all-the-icons</a></li>
-<li><a href="#orgb8bde17">2.1.4. hlinum</a></li>
-<li><a href="#org67e01f8">2.1.5. doom-themes</a></li>
-<li><a href="#org429dabb">2.1.6. doom-modeline</a></li>
+<li><a href="#org66d6b0d">2.1.1. config</a></li>
+<li><a href="#org5f30ac2">2.1.2. better-defaults</a></li>
+<li><a href="#orgc91b2d9">2.1.3. all-the-icons</a></li>
+<li><a href="#org63a7842">2.1.4. all-the-icons-ivy</a></li>
+<li><a href="#orgabcfc1e">2.1.5. hlinum</a></li>
+<li><a href="#orgc25c8d6">2.1.6. doom-themes</a></li>
+<li><a href="#org63be3f1">2.1.7. doom-modeline</a></li>
 </ul>
 </li>
-<li><a href="#orgd678b6e">2.2. General</a>
+<li><a href="#orgf318f0d">2.2. General</a>
 <ul>
-<li><a href="#orga571766">2.2.1. config</a></li>
-<li><a href="#org0cc6890">2.2.2. recentf</a></li>
-<li><a href="#orgab6f34a">2.2.3. vlf</a></li>
-<li><a href="#org919b4f9">2.2.4. scratch</a></li>
-<li><a href="#org71e5b0f">2.2.5. persistent-scratch</a></li>
-<li><a href="#org7043bec">2.2.6. unkillable-scratch</a></li>
-<li><a href="#orgcf863a8">2.2.7. desktop-environment</a></li>
-<li><a href="#org5d3b88c">2.2.8. visual-fill-column</a></li>
-<li><a href="#orgbb7fa6b">2.2.9. company</a></li>
-<li><a href="#org186d11d">2.2.10. historian</a></li>
-<li><a href="#orga5e1744">2.2.11. ivy</a></li>
-<li><a href="#org515f416">2.2.12. ivy-historian</a></li>
-<li><a href="#org6499de5">2.2.13. ivy-rich</a></li>
-<li><a href="#orgf76d657">2.2.14. ivy-xref</a></li>
-<li><a href="#org9dc331a">2.2.15. smex</a></li>
-<li><a href="#org76b48d0">2.2.16. counsel</a></li>
-<li><a href="#orgecbe2f9">2.2.17. swiper</a></li>
-<li><a href="#org1d54991">2.2.18. yasnippet</a></li>
-<li><a href="#org0da41e0">2.2.19. wgrep</a></li>
-<li><a href="#org8b2d280">2.2.20. deadgrep</a></li>
-<li><a href="#org80df495">2.2.21. magit</a></li>
-<li><a href="#orgde3cc99">2.2.22. gist</a></li>
-<li><a href="#orga209034">2.2.23. git-timemachine</a></li>
-<li><a href="#orgf7b90a3">2.2.24. super-save</a></li>
-<li><a href="#orgd6ed4e0">2.2.25. crux</a></li>
-<li><a href="#org8f6926c">2.2.26. keyfreq</a></li>
-<li><a href="#org179f1ae">2.2.27. htmlize</a></li>
+<li><a href="#orgb329479">2.2.1. config</a></li>
+<li><a href="#orgdeb21ae">2.2.2. recentf</a></li>
+<li><a href="#orga2bbdc7">2.2.3. vlf</a></li>
+<li><a href="#orge05ecbf">2.2.4. scratch</a></li>
+<li><a href="#org04ee95e">2.2.5. persistent-scratch</a></li>
+<li><a href="#orgd721925">2.2.6. unkillable-scratch</a></li>
+<li><a href="#org27a3d1f">2.2.7. desktop-environment</a></li>
+<li><a href="#org06ef407">2.2.8. visual-fill-column</a></li>
+<li><a href="#orgc04adfd">2.2.9. company</a></li>
+<li><a href="#org1283291">2.2.10. historian</a></li>
+<li><a href="#org68b4fc2">2.2.11. ivy</a></li>
+<li><a href="#orgd525b5c">2.2.12. ivy-historian</a></li>
+<li><a href="#org9c73fca">2.2.13. ivy-rich</a></li>
+<li><a href="#org44bd17d">2.2.14. ivy-xref</a></li>
+<li><a href="#orgebce296">2.2.15. smex</a></li>
+<li><a href="#org4294db9">2.2.16. counsel</a></li>
+<li><a href="#orgf0fde06">2.2.17. swiper</a></li>
+<li><a href="#org3ec83d9">2.2.18. yasnippet</a></li>
+<li><a href="#org2033aad">2.2.19. yasnippet-snippets</a></li>
+<li><a href="#org37637be">2.2.20. auto-yasnippet</a></li>
+<li><a href="#org0f79114">2.2.21. wgrep</a></li>
+<li><a href="#org4d1e5d8">2.2.22. deadgrep</a></li>
+<li><a href="#orgfdb1ed6">2.2.23. magit</a></li>
+<li><a href="#orge9c061a">2.2.24. gist</a></li>
+<li><a href="#orge4f12f3">2.2.25. git-timemachine</a></li>
+<li><a href="#org0f377fc">2.2.26. super-save</a></li>
+<li><a href="#orgaab6b2a">2.2.27. crux</a></li>
+<li><a href="#org79cc168">2.2.28. keyfreq</a></li>
+<li><a href="#org695a51f">2.2.29. htmlize</a></li>
 </ul>
 </li>
-<li><a href="#orged792f6">2.3. Navigation</a>
+<li><a href="#orgb6528dc">2.3. Navigation</a>
 <ul>
-<li><a href="#orgbad7755">2.3.1. config</a></li>
-<li><a href="#org08cd9e0">2.3.2. avy</a></li>
-<li><a href="#org9e0271d">2.3.3. anzu</a></li>
-<li><a href="#org23f83a9">2.3.4. ace-window</a></li>
-<li><a href="#orgf9288f3">2.3.5. windmove</a></li>
-<li><a href="#orgac64964">2.3.6. buffer-move</a></li>
-<li><a href="#org9a85899">2.3.7. transpose-frame</a></li>
-<li><a href="#orgff5ff45">2.3.8. beacon</a></li>
-<li><a href="#org66ac67a">2.3.9. dired</a></li>
+<li><a href="#org29390e5">2.3.1. config</a></li>
+<li><a href="#org7a996ca">2.3.2. avy</a></li>
+<li><a href="#orga2b0a7b">2.3.3. anzu</a></li>
+<li><a href="#orgef7c138">2.3.4. ace-window</a></li>
+<li><a href="#org9734e7d">2.3.5. windmove</a></li>
+<li><a href="#orgbcd6c79">2.3.6. buffer-move</a></li>
+<li><a href="#org7872502">2.3.7. transpose-frame</a></li>
+<li><a href="#org6923f3a">2.3.8. beacon</a></li>
+<li><a href="#orgb4ae0be">2.3.9. dired</a></li>
 </ul>
 </li>
-<li><a href="#org43f9ff1">2.4. Editing</a>
+<li><a href="#org6f25b86">2.4. Editing</a>
 <ul>
-<li><a href="#org5b37c50">2.4.1. config</a></li>
-<li><a href="#org4f0c6de">2.4.2. browse-kill-ring</a></li>
-<li><a href="#org7379055">2.4.3. markdown-mode</a></li>
-<li><a href="#org02c2855">2.4.4. flycheck</a></li>
-<li><a href="#orge09feaf">2.4.5. expand-region</a></li>
-<li><a href="#orgd96c586">2.4.6. smartparens</a></li>
-<li><a href="#org7730b34">2.4.7. projectile</a></li>
+<li><a href="#org2d7db63">2.4.1. config</a></li>
+<li><a href="#org1b58a5f">2.4.2. browse-kill-ring</a></li>
+<li><a href="#org1cff35d">2.4.3. markdown-mode</a></li>
+<li><a href="#orgfac254c">2.4.4. flycheck</a></li>
+<li><a href="#org846e51d">2.4.5. expand-region</a></li>
+<li><a href="#orga9b8770">2.4.6. smartparens</a></li>
+<li><a href="#org81e6caf">2.4.7. projectile</a></li>
+<li><a href="#org8025dde">2.4.8. counsel-projectile</a></li>
+<li><a href="#org3b7d30f">2.4.9. ibuffer-projectile</a></li>
 </ul>
 </li>
-<li><a href="#orgd7ccc31">2.5. Help</a>
+<li><a href="#org92a2c8e">2.5. Help</a>
 <ul>
-<li><a href="#orgc5df166">2.5.1. which-key</a></li>
-<li><a href="#orgff8ab6a">2.5.2. discover-my-major</a></li>
+<li><a href="#org0c44673">2.5.1. which-key</a></li>
+<li><a href="#org7472ed0">2.5.2. discover-my-major</a></li>
 </ul>
 </li>
-<li><a href="#orgffcf40e">2.6. Org</a>
+<li><a href="#org2759cc1">2.6. Org</a>
 <ul>
-<li><a href="#org508dbc4">2.6.1. org-cliplink</a></li>
-<li><a href="#org38393e8">2.6.2. org-download</a></li>
-<li><a href="#org7df0903">2.6.3. org-journal</a></li>
-<li><a href="#org0eba719">2.6.4. org-toc</a></li>
+<li><a href="#org92cee85">2.6.1. org-cliplink</a></li>
+<li><a href="#org40a59cd">2.6.2. org-download</a></li>
+<li><a href="#orgd26995b">2.6.3. org-journal</a></li>
+<li><a href="#orgd3ac3f1">2.6.4. toc-org</a></li>
 </ul>
 </li>
 </ul>
@@ -351,18 +359,18 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org0af68fc" class="outline-2">
-<h2 id="org0af68fc"><span class="section-number-2">1</span> Core</h2>
+<div id="outline-container-org869416c" class="outline-2">
+<h2 id="org869416c"><span class="section-number-2">1</span> Core</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org69168f3" class="outline-3">
-<h3 id="org69168f3"><span class="section-number-3">1.1</span> Package</h3>
+<div id="outline-container-org6bf567c" class="outline-3">
+<h3 id="org6bf567c"><span class="section-number-3">1.1</span> Package</h3>
 <div class="outline-text-3" id="text-1-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">`(online?)` is a function that tries to detect whether you are online.</span>
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">We want to refresh our package list on Emacs start if we are.</span>
  (<span style="color: #859900;">require</span> '<span style="color: #6c71c4;">cl</span>)
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">online?</span> ()
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">online?</span> ()
    (<span style="color: #859900;">if</span> (<span style="color: #859900;">and</span> (functionp 'network-interface-list)
             (network-interface-list))
        (some (<span style="color: #859900;">lambda</span> (iface) (<span style="color: #859900;">unless</span> (equal <span style="color: #2aa198;">"lo"</span> (car iface))
@@ -421,73 +429,73 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
-<div id="outline-container-orga934ea7" class="outline-3">
-<h3 id="orga934ea7"><span class="section-number-3">1.2</span> Libraries</h3>
+<div id="outline-container-orgdc1c221" class="outline-3">
+<h3 id="orgdc1c221"><span class="section-number-3">1.2</span> Libraries</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgc8a117b" class="outline-4">
-<h4 id="orgc8a117b"><span class="section-number-4">1.2.1</span> config</h4>
+<div id="outline-container-orgaa13c1d" class="outline-4">
+<h4 id="orgaa13c1d"><span class="section-number-4">1.2.1</span> config</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">eval-when-compile</span> (<span style="color: #859900;">require</span> '<span style="color: #6c71c4;">cl-lib</span>))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/font-lock-replace-symbol</span> (mode reg sym)
-   <span style="color: #35a69c;">"Given a major mode `</span><span style="color: #6c71c4;">mode</span><span style="color: #35a69c;">', replace the regular expression `</span><span style="color: #6c71c4;">reg</span><span style="color: #35a69c;">' with</span>
-<span style="color: #35a69c;"> the symbol `</span><span style="color: #6c71c4;">sym</span><span style="color: #35a69c;">' when rendering."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/font-lock-replace-symbol</span> (mode reg sym)
+   <span style="color: #35a69c; font-style: italic;">"Given a major mode `</span><span style="color: #6c71c4; font-style: italic;">mode</span><span style="color: #35a69c; font-style: italic;">', replace the regular expression `</span><span style="color: #6c71c4; font-style: italic;">reg</span><span style="color: #35a69c; font-style: italic;">' with</span>
+<span style="color: #35a69c; font-style: italic;"> the symbol `</span><span style="color: #6c71c4; font-style: italic;">sym</span><span style="color: #35a69c; font-style: italic;">' when rendering."</span>
    (font-lock-add-keywords
     mode `((,reg
             (0 (<span style="color: #859900;">progn</span> (compose-region (match-beginning 1) (match-end 1)
                                       ,sym 'decompose-region)))))))
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/exec</span> (command)
-   <span style="color: #35a69c;">"Run a shell command and return its output as a string, whitespace trimmed."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/exec</span> (command)
+   <span style="color: #35a69c; font-style: italic;">"Run a shell command and return its output as a string, whitespace trimmed."</span>
    (s-trim (shell-command-to-string command)))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/exec-with-rc</span> (command <span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
-   <span style="color: #35a69c;">"Run a shell command and return a list containing two values: its return</span>
-<span style="color: #35a69c;"> code and its whitespace trimmed output."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/exec-with-rc</span> (command <span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
+   <span style="color: #35a69c; font-style: italic;">"Run a shell command and return a list containing two values: its return</span>
+<span style="color: #35a69c; font-style: italic;"> code and its whitespace trimmed output."</span>
    (<span style="color: #859900;">with-temp-buffer</span>
      (list (apply 'call-process command nil (current-buffer) nil args)
            (s-trim (buffer-string)))))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/is-exec</span> (command)
-   <span style="color: #35a69c;">"Returns true if `</span><span style="color: #6c71c4;">command</span><span style="color: #35a69c;">' is an executable on the system search path."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/is-exec</span> (command)
+   <span style="color: #35a69c; font-style: italic;">"Returns true if `</span><span style="color: #6c71c4; font-style: italic;">command</span><span style="color: #35a69c; font-style: italic;">' is an executable on the system search path."</span>
    (f-executable? (s-trim (shell-command-to-string (s-concat <span style="color: #2aa198;">"which "</span> command)))))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/resolve-exec</span> (command)
-   <span style="color: #35a69c;">"If `</span><span style="color: #6c71c4;">command</span><span style="color: #35a69c;">' is an executable on the system search path, return its absolute path.</span>
-<span style="color: #35a69c;"> Otherwise, return nil."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/resolve-exec</span> (command)
+   <span style="color: #35a69c; font-style: italic;">"If `</span><span style="color: #6c71c4; font-style: italic;">command</span><span style="color: #35a69c; font-style: italic;">' is an executable on the system search path, return its absolute path.</span>
+<span style="color: #35a69c; font-style: italic;"> Otherwise, return nil."</span>
    (<span style="color: #859900;">-let</span> [path (s-trim (shell-command-to-string (s-concat <span style="color: #2aa198;">"which "</span> command)))]
      (<span style="color: #859900;">when</span> (f-executable? path) path)))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/exec-if-exec</span> (command args)
-   <span style="color: #35a69c;">"If `</span><span style="color: #6c71c4;">command</span><span style="color: #35a69c;">' satisfies `</span><span style="color: #6c71c4;">core/is-exec</span><span style="color: #35a69c;">', run it with `</span><span style="color: #6c71c4;">args</span><span style="color: #35a69c;">' and return its</span>
-<span style="color: #35a69c;"> output as per `</span><span style="color: #6c71c4;">core/exec</span><span style="color: #35a69c;">'. Otherwise, return nil."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/exec-if-exec</span> (command args)
+   <span style="color: #35a69c; font-style: italic;">"If `</span><span style="color: #6c71c4; font-style: italic;">command</span><span style="color: #35a69c; font-style: italic;">' satisfies `</span><span style="color: #6c71c4; font-style: italic;">core/is-exec</span><span style="color: #35a69c; font-style: italic;">', run it with `</span><span style="color: #6c71c4; font-style: italic;">args</span><span style="color: #35a69c; font-style: italic;">' and return its</span>
+<span style="color: #35a69c; font-style: italic;"> output as per `</span><span style="color: #6c71c4; font-style: italic;">core/exec</span><span style="color: #35a69c; font-style: italic;">'. Otherwise, return nil."</span>
    (<span style="color: #859900;">when</span> (core/is-exec command) (core/exec (s-concat command <span style="color: #2aa198;">" "</span> args))))
 
 
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/getent</span> (user)
-   <span style="color: #35a69c;">"Get the /etc/passwd entry for the user `</span><span style="color: #6c71c4;">user</span><span style="color: #35a69c;">' as a list of strings,</span>
-<span style="color: #35a69c;"> or nil if there is no such user. Empty fields will be represented as nil,</span>
-<span style="color: #35a69c;"> as opposed to empty strings."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/getent</span> (user)
+   <span style="color: #35a69c; font-style: italic;">"Get the /etc/passwd entry for the user `</span><span style="color: #6c71c4; font-style: italic;">user</span><span style="color: #35a69c; font-style: italic;">' as a list of strings,</span>
+<span style="color: #35a69c; font-style: italic;"> or nil if there is no such user. Empty fields will be represented as nil,</span>
+<span style="color: #35a69c; font-style: italic;"> as opposed to empty strings."</span>
    (<span style="color: #859900;">-let</span> [ent (core/exec (s-concat <span style="color: #2aa198;">"getent passwd "</span> user))]
      (<span style="color: #859900;">when</span> (not (s-blank? ent))
        (<span style="color: #859900;">-map</span> (<span style="color: #859900;">lambda</span> (i) (<span style="color: #859900;">if</span> (s-blank? i) nil i))
              (s-split <span style="color: #2aa198;">":"</span> ent)))))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/user-full-name</span> ()
-   <span style="color: #35a69c;">"Guess the user's full name. Returns nil if no likely name could be found."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/user-full-name</span> ()
+   <span style="color: #35a69c; font-style: italic;">"Guess the user's full name. Returns nil if no likely name could be found."</span>
    (<span style="color: #859900;">or</span> (core/exec-if-exec <span style="color: #2aa198;">"git"</span> <span style="color: #2aa198;">"config --get user.name"</span>)
        (elt (core/getent (getenv <span style="color: #2aa198;">"USER"</span>)) 4)))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">core/user-email</span> ()
-   <span style="color: #35a69c;">"Guess the user's email address. Returns nil if none could be found."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">core/user-email</span> ()
+   <span style="color: #35a69c; font-style: italic;">"Guess the user's email address. Returns nil if none could be found."</span>
    (<span style="color: #859900;">or</span> (core/exec-if-exec <span style="color: #2aa198;">"git"</span> <span style="color: #2aa198;">"config --get user.email"</span>)
        (getenv <span style="color: #2aa198;">"EMAIL"</span>)))
 
-(<span style="color: #859900;">defmacro</span> <span style="color: #b58900; font-weight: bold;">after!</span> (feature <span style="color: #b58900; font-style: italic;">&amp;rest</span> forms)
-  <span style="color: #35a69c;">"A smart wrapper around `</span><span style="color: #6c71c4;">with-eval-after-load</span><span style="color: #35a69c;">'. Supresses warnings during</span>
-<span style="color: #35a69c;">compilation."</span>
+(<span style="color: #859900;">defmacro</span> <span style="color: #b58900;">after!</span> (feature <span style="color: #b58900; font-style: italic;">&amp;rest</span> forms)
+  <span style="color: #35a69c; font-style: italic;">"A smart wrapper around `</span><span style="color: #6c71c4; font-style: italic;">with-eval-after-load</span><span style="color: #35a69c; font-style: italic;">'. Supresses warnings during</span>
+<span style="color: #35a69c; font-style: italic;">compilation."</span>
   (<span style="color: #859900;">declare</span> (indent defun) (debug t))
   `(,(<span style="color: #859900;">if</span> (<span style="color: #859900;">or</span> (not (<span style="color: #859900;">bound-and-true-p</span> byte-compile-current-file))
              (<span style="color: #859900;">if</span> (symbolp feature)
@@ -500,7 +508,7 @@ for the JavaScript code in this tag.
 
   (<span style="color: #859900;">eval-and-compile</span>
 
-    (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/resolve-hook-forms</span> (hooks)
+    (<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/resolve-hook-forms</span> (hooks)
       (<span style="color: #859900;">cl-loop</span> with quoted-p = (eq (car-safe hooks) 'quote)
                for hook in (doom-enlist (doom-unquote hooks))
                if (eq (car-safe hook) 'quote)
@@ -510,13 +518,13 @@ for the JavaScript code in this tag.
                else collect (intern (format <span style="color: #2aa198;">"%s-hook"</span> (symbol-name hook)))))
 
     (<span style="color: #859900;">defvar</span> <span style="color: #268bd2;">my/transient-counter</span> 0)
-    (<span style="color: #859900;">defmacro</span> <span style="color: #b58900; font-weight: bold;">add-transient-hook!</span> (hook <span style="color: #b58900; font-style: italic;">&amp;rest</span> forms)
-      <span style="color: #35a69c;">"Attaches transient forms to a HOOK.</span>
+    (<span style="color: #859900;">defmacro</span> <span style="color: #b58900;">add-transient-hook!</span> (hook <span style="color: #b58900; font-style: italic;">&amp;rest</span> forms)
+      <span style="color: #35a69c; font-style: italic;">"Attaches transient forms to a HOOK.</span>
 
-<span style="color: #35a69c;">    HOOK can be a quoted hook or a sharp-quoted function (which will be advised).</span>
+<span style="color: #35a69c; font-style: italic;">    HOOK can be a quoted hook or a sharp-quoted function (which will be advised).</span>
 
-<span style="color: #35a69c;">    These forms will be evaluated once when that function/hook is first invoked,</span>
-<span style="color: #35a69c;">    then it detaches itself."</span>
+<span style="color: #35a69c; font-style: italic;">    These forms will be evaluated once when that function/hook is first invoked,</span>
+<span style="color: #35a69c; font-style: italic;">    then it detaches itself."</span>
       (<span style="color: #859900;">declare</span> (indent 1))
       (<span style="color: #859900;">let</span> ((append (eq (car forms) <span style="color: #d33682; font-style: italic;">:after</span>))
             (fn (intern (format <span style="color: #2aa198;">"my/transient-hook-%s"</span> (<span style="color: #859900;">cl-incf</span> my/transient-counter)))))
@@ -532,40 +540,40 @@ for the JavaScript code in this tag.
                  ((symbolp ,hook)
                   (add-hook ,hook #',fn ,append)))))))
 
-  (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">doom-enlist</span> (exp)
-    <span style="color: #35a69c;">"Return EXP wrapped in a list, or as-is if already a list."</span>
+  (<span style="color: #859900;">defun</span> <span style="color: #b58900;">doom-enlist</span> (exp)
+    <span style="color: #35a69c; font-style: italic;">"Return EXP wrapped in a list, or as-is if already a list."</span>
     (<span style="color: #859900;">if</span> (listp exp) exp (list exp)))
 
-  (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">doom-unquote</span> (exp)
-    <span style="color: #35a69c;">"Return EXP unquoted."</span>
+  (<span style="color: #859900;">defun</span> <span style="color: #b58900;">doom-unquote</span> (exp)
+    <span style="color: #35a69c; font-style: italic;">"Return EXP unquoted."</span>
     (<span style="color: #859900;">while</span> (memq (car-safe exp) '(<span style="color: #859900;">quote</span> function))
       (<span style="color: #859900;">setq</span> exp (cadr exp)))
     exp)
 
 
 
-  (<span style="color: #859900;">defmacro</span> <span style="color: #b58900; font-weight: bold;">add-hook!</span> (<span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
-    <span style="color: #35a69c;">"A convenience macro for `</span><span style="color: #6c71c4;">add-hook</span><span style="color: #35a69c;">'. Takes, in order:</span>
+  (<span style="color: #859900;">defmacro</span> <span style="color: #b58900;">add-hook!</span> (<span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
+    <span style="color: #35a69c; font-style: italic;">"A convenience macro for `</span><span style="color: #6c71c4; font-style: italic;">add-hook</span><span style="color: #35a69c; font-style: italic;">'. Takes, in order:</span>
 
-<span style="color: #35a69c;">    1. Optional properties :local and/or :append, which will make the hook</span>
-<span style="color: #35a69c;">       buffer-local or append to the list of hooks (respectively),</span>
-<span style="color: #35a69c;">    2. The hooks: either an unquoted major mode, an unquoted list of major-modes,</span>
-<span style="color: #35a69c;">       a quoted hook variable or a quoted list of hook variables. If unquoted, the</span>
-<span style="color: #35a69c;">       hooks will be resolved by appending -hook to each symbol.</span>
-<span style="color: #35a69c;">    3. A function, list of functions, or body forms to be wrapped in a lambda.</span>
+<span style="color: #35a69c; font-style: italic;">    1. Optional properties :local and/or :append, which will make the hook</span>
+<span style="color: #35a69c; font-style: italic;">       buffer-local or append to the list of hooks (respectively),</span>
+<span style="color: #35a69c; font-style: italic;">    2. The hooks: either an unquoted major mode, an unquoted list of major-modes,</span>
+<span style="color: #35a69c; font-style: italic;">       a quoted hook variable or a quoted list of hook variables. If unquoted, the</span>
+<span style="color: #35a69c; font-style: italic;">       hooks will be resolved by appending -hook to each symbol.</span>
+<span style="color: #35a69c; font-style: italic;">    3. A function, list of functions, or body forms to be wrapped in a lambda.</span>
 
-<span style="color: #35a69c;">  Examples:</span>
-<span style="color: #35a69c;">      (add-hook! 'some-mode-hook 'enable-something)</span>
-<span style="color: #35a69c;">      (add-hook! some-mode '(enable-something and-another))</span>
-<span style="color: #35a69c;">      (add-hook! '(one-mode-hook second-mode-hook) 'enable-something)</span>
-<span style="color: #35a69c;">      (add-hook! (one-mode second-mode) 'enable-something)</span>
-<span style="color: #35a69c;">      (add-hook! :append (one-mode second-mode) 'enable-something)</span>
-<span style="color: #35a69c;">      (add-hook! :local (one-mode second-mode) 'enable-something)</span>
-<span style="color: #35a69c;">      (add-hook! (one-mode second-mode) (setq v 5) (setq a 2))</span>
-<span style="color: #35a69c;">      (add-hook! :append :local (one-mode second-mode) (setq v 5) (setq a 2))</span>
+<span style="color: #35a69c; font-style: italic;">  Examples:</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! 'some-mode-hook 'enable-something)</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! some-mode '(enable-something and-another))</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! '(one-mode-hook second-mode-hook) 'enable-something)</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! (one-mode second-mode) 'enable-something)</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! :append (one-mode second-mode) 'enable-something)</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! :local (one-mode second-mode) 'enable-something)</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! (one-mode second-mode) (setq v 5) (setq a 2))</span>
+<span style="color: #35a69c; font-style: italic;">      (add-hook! :append :local (one-mode second-mode) (setq v 5) (setq a 2))</span>
 
-<span style="color: #35a69c;">  Body forms can access the hook's arguments through the let-bound variable</span>
-<span style="color: #35a69c;">  `</span><span style="color: #6c71c4;">args</span><span style="color: #35a69c;">'."</span>
+<span style="color: #35a69c; font-style: italic;">  Body forms can access the hook's arguments through the let-bound variable</span>
+<span style="color: #35a69c; font-style: italic;">  `</span><span style="color: #6c71c4; font-style: italic;">args</span><span style="color: #35a69c; font-style: italic;">'."</span>
     (<span style="color: #859900;">declare</span> (indent defun) (debug t))
     (<span style="color: #859900;">let</span> ((hook-fn 'add-hook)
           append-p local-p)
@@ -595,21 +603,21 @@ for the JavaScript code in this tag.
                   forms)))
         `(<span style="color: #859900;">progn</span> ,@(nreverse forms)))))
 
-  (<span style="color: #859900;">defmacro</span> <span style="color: #b58900; font-weight: bold;">remove-hook!</span> (<span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
-    <span style="color: #35a69c;">"Convenience macro for `</span><span style="color: #6c71c4;">remove-hook</span><span style="color: #35a69c;">'. Takes the same arguments as</span>
-<span style="color: #35a69c;">  `</span><span style="color: #6c71c4;">add-hook!</span><span style="color: #35a69c;">'."</span>
+  (<span style="color: #859900;">defmacro</span> <span style="color: #b58900;">remove-hook!</span> (<span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
+    <span style="color: #35a69c; font-style: italic;">"Convenience macro for `</span><span style="color: #6c71c4; font-style: italic;">remove-hook</span><span style="color: #35a69c; font-style: italic;">'. Takes the same arguments as</span>
+<span style="color: #35a69c; font-style: italic;">  `</span><span style="color: #6c71c4; font-style: italic;">add-hook!</span><span style="color: #35a69c; font-style: italic;">'."</span>
     `(<span style="color: #859900;">add-hook!</span> <span style="color: #d33682; font-style: italic;">:remove</span> ,@args))
 
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org9cfa1b2" class="outline-4">
-<h4 id="org9cfa1b2"><span class="section-number-4">1.2.2</span> packages</h4>
+<div id="outline-container-org055acef" class="outline-4">
+<h4 id="org055acef"><span class="section-number-4">1.2.2</span> packages</h4>
 <div class="outline-text-4" id="text-1-2-2">
 </div>
 <ol class="org-ol">
-<li><a id="org3b40503"></a>async<br />
+<li><a id="orgf87ae87"></a>async<br />
 <div class="outline-text-5" id="text-1-2-2-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">async</span> <span style="color: #d33682; font-style: italic;">:demand</span> t
@@ -619,7 +627,7 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </li>
-<li><a id="orgac2310b"></a>subr-x<br />
+<li><a id="orgdd929c6"></a>subr-x<br />
 <div class="outline-text-5" id="text-1-2-2-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">subr-x</span> <span style="color: #d33682; font-style: italic;">:demand</span> t <span style="color: #d33682; font-style: italic;">:ensure</span> nil)
@@ -629,7 +637,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="org916f0bd"></a>dash<br />
+<li><a id="org0d7e313"></a>dash<br />
 <div class="outline-text-5" id="text-1-2-2-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dash</span>
@@ -643,7 +651,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="org91e78da"></a>f<br />
+<li><a id="org40a7dcb"></a>f<br />
 <div class="outline-text-5" id="text-1-2-2-4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">f</span>
@@ -653,7 +661,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="org6410ba5"></a>s<br />
+<li><a id="org538d680"></a>s<br />
 <div class="outline-text-5" id="text-1-2-2-5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">s</span>
@@ -663,7 +671,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="org311eaf9"></a>ht<br />
+<li><a id="orgba08ba6"></a>ht<br />
 <div class="outline-text-5" id="text-1-2-2-6">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">ht</span>
@@ -673,7 +681,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="orgc9091fb"></a>a<br />
+<li><a id="org18619c3"></a>a<br />
 <div class="outline-text-5" id="text-1-2-2-7">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">require</span> '<span style="color: #6c71c4;">let-alist</span>)
@@ -684,7 +692,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="orge1c31e0"></a>persistent-soft<br />
+<li><a id="org791cc42"></a>persistent-soft<br />
 <div class="outline-text-5" id="text-1-2-2-8">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">persistent-soft</span>
@@ -694,7 +702,7 @@ for the JavaScript code in this tag.
 </div>
 </li>
 
-<li><a id="org71cb9db"></a>request<br />
+<li><a id="orgad4c477"></a>request<br />
 <div class="outline-text-5" id="text-1-2-2-9">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">request</span> <span style="color: #d33682; font-style: italic;">:ensure</span> t)
@@ -705,8 +713,8 @@ for the JavaScript code in this tag.
 </ol>
 </div>
 </div>
-<div id="outline-container-org0aa8469" class="outline-3">
-<h3 id="org0aa8469"><span class="section-number-3">1.3</span> Linux</h3>
+<div id="outline-container-org6c3b973" class="outline-3">
+<h3 id="org6c3b973"><span class="section-number-3">1.3</span> Linux</h3>
 <div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">    (<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">gpastel</span>
@@ -721,10 +729,10 @@ for the JavaScript code in this tag.
       <span style="color: #d33682; font-style: italic;">:if</span> (eq system-type 'gnu/linux)
       <span style="color: #d33682; font-style: italic;">:config</span>
     (<span style="color: #859900;">push</span> (concat (getenv <span style="color: #2aa198;">"HOME"</span>) <span style="color: #2aa198;">"/.local/share/applications/"</span>) counsel-linux-apps-directories)
-    (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/counsel-linux-app-format-function</span> (name comment exec)
-      <span style="color: #35a69c;">"Default Linux application name formatter.</span>
-<span style="color: #35a69c;">   NAME is the name of the application, COMMENT its comment and EXEC</span>
-<span style="color: #35a69c;">   the command to launch it."</span>
+    (<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/counsel-linux-app-format-function</span> (name comment exec)
+      <span style="color: #35a69c; font-style: italic;">"Default Linux application name formatter.</span>
+<span style="color: #35a69c; font-style: italic;">   NAME is the name of the application, COMMENT its comment and EXEC</span>
+<span style="color: #35a69c; font-style: italic;">   the command to launch it."</span>
       (format <span style="color: #2aa198;">"% -45s %s"</span>
               (propertize name 'face 'font-lock-builtin-face)
               (<span style="color: #859900;">or</span> comment <span style="color: #2aa198;">""</span>)))
@@ -740,8 +748,8 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org09837ec" class="outline-3">
-<h3 id="org09837ec"><span class="section-number-3">1.4</span> macOS</h3>
+<div id="outline-container-org17f5dc3" class="outline-3">
+<h3 id="org17f5dc3"><span class="section-number-3">1.4</span> macOS</h3>
 <div class="outline-text-3" id="text-1-4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">if</span> (eq system-type 'gnu/linux)
@@ -770,10 +778,10 @@ for the JavaScript code in this tag.
 
  (<span style="color: #859900;">setq</span> ns-function-modifier 'hyper)
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">user-swap-meta-and-super</span> ()
-   <span style="color: #35a69c;">"Swap the mapping of Meta and Super.</span>
-<span style="color: #35a69c;"> Very useful for people using their Mac with a</span>
-<span style="color: #35a69c;"> Windows external keyboard from time to time."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">user-swap-meta-and-super</span> ()
+   <span style="color: #35a69c; font-style: italic;">"Swap the mapping of Meta and Super.</span>
+<span style="color: #35a69c; font-style: italic;"> Very useful for people using their Mac with a</span>
+<span style="color: #35a69c; font-style: italic;"> Windows external keyboard from time to time."</span>
    (<span style="color: #859900;">interactive</span>)
    (<span style="color: #859900;">if</span> (eq mac-command-modifier 'super)
        (<span style="color: #859900;">progn</span>
@@ -844,21 +852,21 @@ for the JavaScript code in this tag.
             (define-key (current-local-map) (kbd <span style="color: #2aa198;">"s-K"</span>) 'compile)
             (define-key (current-local-map) (kbd <span style="color: #2aa198;">"s-k"</span>) 'recompile)))
 
-(<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/open-finder-at</span> (path)
-  <span style="color: #35a69c;">"Open Finder app with the given PATH."</span>
+(<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/open-finder-at</span> (path)
+  <span style="color: #35a69c; font-style: italic;">"Open Finder app with the given PATH."</span>
   (<span style="color: #859900;">let*</span> ((finder (executable-find <span style="color: #2aa198;">"open"</span>))
          (command (format <span style="color: #2aa198;">"%s %s"</span> finder path)))
     (shell-command command)))
 
-(<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/open-project-in-finder</span> ()
-  <span style="color: #35a69c;">"Open current project in Finder app."</span>
+(<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/open-project-in-finder</span> ()
+  <span style="color: #35a69c; font-style: italic;">"Open current project in Finder app."</span>
   (<span style="color: #859900;">interactive</span>)
   (<span style="color: #859900;">if</span> (projectile-project-p)
       (my/open-finder-at (projectile-project-root))
     (message <span style="color: #2aa198;">"There is no active project."</span>)))
 
-(<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/open-current-file-in-finder</span> ()
-  <span style="color: #35a69c;">"Open current file in Finder."</span>
+(<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/open-current-file-in-finder</span> ()
+  <span style="color: #35a69c; font-style: italic;">"Open current file in Finder."</span>
   (<span style="color: #859900;">interactive</span>)
   (<span style="color: #859900;">let</span> ((file (buffer-file-name)))
     (<span style="color: #859900;">if</span> file
@@ -874,16 +882,16 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
-<div id="outline-container-org877036c" class="outline-2">
-<h2 id="org877036c"><span class="section-number-2">2</span> Modules</h2>
+<div id="outline-container-org86710f4" class="outline-2">
+<h2 id="org86710f4"><span class="section-number-2">2</span> Modules</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org7ca718f" class="outline-3">
-<h3 id="org7ca718f"><span class="section-number-3">2.1</span> Appearance</h3>
+<div id="outline-container-org798f297" class="outline-3">
+<h3 id="org798f297"><span class="section-number-3">2.1</span> Appearance</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org16938d6" class="outline-4">
-<h4 id="org16938d6"><span class="section-number-4">2.1.1</span> config</h4>
+<div id="outline-container-org66d6b0d" class="outline-4">
+<h4 id="org66d6b0d"><span class="section-number-4">2.1.1</span> config</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">if</span> (eq system-type 'gnu/linux)
@@ -911,19 +919,19 @@ for the JavaScript code in this tag.
                          <span style="color: #d33682; font-style: italic;">:slant</span> 'Italic))
 
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">module-fonts/spec-to-list</span> (spec)
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">module-fonts/spec-to-list</span> (spec)
    (s-split <span style="color: #2aa198;">"-"</span> spec))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">module-fonts/list-to-spec</span> (spec)
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">module-fonts/list-to-spec</span> (spec)
    (s-join <span style="color: #2aa198;">"-"</span> spec))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">module-fonts/update-font-spec-size</span> (spec increment)
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">module-fonts/update-font-spec-size</span> (spec increment)
    (module-fonts/list-to-spec
     (<span style="color: #859900;">-update-at</span> 7 (<span style="color: #859900;">lambda</span> (i) (number-to-string
                                (+ (string-to-number i) increment)))
                 (module-fonts/spec-to-list spec))))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">module-fonts/update-font-size</span> (increment)
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">module-fonts/update-font-size</span> (increment)
    (set-frame-font
     (module-fonts/update-font-spec-size (frame-parameter nil 'font) increment)))
 
@@ -959,7 +967,7 @@ for the JavaScript code in this tag.
        '(term-mode slime-repl-mode magit-status-mode help-mode nrepl-mode
                    mu4e-main-mode mu4e-headers-mode mu4e-view-mode
                    mu4e-compose-mode))
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">linum-on</span> ()
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">linum-on</span> ()
    (<span style="color: #859900;">unless</span> (<span style="color: #859900;">or</span> (minibufferp) (member major-mode linum-disabled-modes))
      (linum-mode 1)))
 
@@ -968,7 +976,7 @@ for the JavaScript code in this tag.
 
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">Handle ANSI colours in compile buffer output.</span>
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">From https://gist.github.com/jwiegley/8ae7145ba5ce64250a05</span>
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">compilation-ansi-color-process-output</span> ()
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">compilation-ansi-color-process-output</span> ()
    (ansi-color-process-output nil)
    (set (make-local-variable 'comint-last-output-start)
         (point-marker)))
@@ -1017,10 +1025,11 @@ for the JavaScript code in this tag.
 </div>
 </div>
 </div>
-<div id="outline-container-org14c2c30" class="outline-4">
-<h4 id="org14c2c30"><span class="section-number-4">2.1.2</span> <a href="https://github.com/technomancy/better-defaults/tree/0937ac9a813632c48d114cf959768cda9676db3a">better-defaults</a></h4>
+<div id="outline-container-org5f30ac2" class="outline-4">
+<h4 id="org5f30ac2"><span class="section-number-4">2.1.2</span> better-defaults</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
+<a href="https://github.com/technomancy/better-defaults/tree/0937ac9a813632c48d114cf959768cda9676db3a">Link</a>
 Fixes weird emacs quirks and poor defaults.
 </p>
 <div class="org-src-container">
@@ -1032,10 +1041,11 @@ Fixes weird emacs quirks and poor defaults.
 </div>
 </div>
 </div>
-<div id="outline-container-org6c7ab4c" class="outline-4">
-<h4 id="org6c7ab4c"><span class="section-number-4">2.1.3</span> <a href="https://github.com/domtronn/all-the-icons.el">all-the-icons</a></h4>
+<div id="outline-container-orgc91b2d9" class="outline-4">
+<h4 id="orgc91b2d9"><span class="section-number-4">2.1.3</span> all-the-icons</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
+    <a href="https://github.com/domtronn/all-the-icons.el">Link</a>
 This package is a utility for using and formatting various Icon
 fonts within Emacs.  Icon Fonts allow you to propertize and format
 icons the same way you would normal text.
@@ -1054,15 +1064,17 @@ Currently, this package provides an interface to the following Icon Fonts
 AllTheIcons,           a custom Icon Font maintained as part of this package
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">all-the-icons</span> )
+<pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">all-the-icons</span>)
 </pre>
 </div></li>
 </ul>
 </div>
-<ol class="org-ol">
-<li><a id="org35e8ee1"></a><a href="https://github.com/asok/all-the-icons-ivy">all-the-icons-ivy</a><br />
-<div class="outline-text-5" id="text-2-1-3-1">
+</div>
+<div id="outline-container-org63a7842" class="outline-4">
+<h4 id="org63a7842"><span class="section-number-4">2.1.4</span> all-the-icons-ivy</h4>
+<div class="outline-text-4" id="text-2-1-4">
 <p>
+<a href="https://github.com/asok/all-the-icons-ivy">Link</a>
 Shows icons while using ivy and counsel
 </p>
 <div class="org-src-container">
@@ -1070,7 +1082,7 @@ Shows icons while using ivy and counsel
   <span style="color: #d33682; font-style: italic;">:ensure</span> t
   <span style="color: #d33682; font-style: italic;">:config</span>
  (all-the-icons-ivy-setup)
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/*disable-all-the-icons-in-tty</span> (orig-fn <span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/*disable-all-the-icons-in-tty</span> (orig-fn <span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
      (<span style="color: #859900;">when</span> (display-graphic-p)
        (apply orig-fn args)))
 
@@ -1085,13 +1097,13 @@ Shows icons while using ivy and counsel
 </pre>
 </div>
 </div>
-</li>
-</ol>
 </div>
-<div id="outline-container-orgb8bde17" class="outline-4">
-<h4 id="orgb8bde17"><span class="section-number-4">2.1.4</span> <a href="https://github.com/tom-tan/hlinum-mode">hlinum</a></h4>
-<div class="outline-text-4" id="text-2-1-4">
+
+<div id="outline-container-orgabcfc1e" class="outline-4">
+<h4 id="orgabcfc1e"><span class="section-number-4">2.1.5</span> hlinum</h4>
+<div class="outline-text-4" id="text-2-1-5">
 <p>
+<a href="https://github.com/tom-tan/hlinum-mode">Link</a>
 linum-mode highlights the current line number
 </p>
 <div class="org-src-container">
@@ -1103,10 +1115,11 @@ linum-mode highlights the current line number
 </div>
 </div>
 </div>
-<div id="outline-container-org67e01f8" class="outline-4">
-<h4 id="org67e01f8"><span class="section-number-4">2.1.5</span> <a href="https://github.com/hlissner/emacs-doom-themes">doom-themes</a></h4>
-<div class="outline-text-4" id="text-2-1-5">
+<div id="outline-container-orgc25c8d6" class="outline-4">
+<h4 id="orgc25c8d6"><span class="section-number-4">2.1.6</span> doom-themes</h4>
+<div class="outline-text-4" id="text-2-1-6">
 <p>
+<a href="https://github.com/hlissner/emacs-doom-themes">Link</a>
 an opinionated pack of modern color-themes
 </p>
 <div class="org-src-container">
@@ -1133,10 +1146,11 @@ an opinionated pack of modern color-themes
 </div>
 </div>
 </div>
-<div id="outline-container-org429dabb" class="outline-4">
-<h4 id="org429dabb"><span class="section-number-4">2.1.6</span> <a href="https://github.com/seagle0128/doom-modeline/tree/6293c63924732f4b5592a8ca580192df2504c159">doom-modeline</a></h4>
-<div class="outline-text-4" id="text-2-1-6">
+<div id="outline-container-org63be3f1" class="outline-4">
+<h4 id="org63be3f1"><span class="section-number-4">2.1.7</span> doom-modeline</h4>
+<div class="outline-text-4" id="text-2-1-7">
 <p>
+<a href="https://github.com/seagle0128/doom-modeline/tree/6293c63924732f4b5592a8ca580192df2504c159">Link</a>
 A minimal and modern mode-line
 </p>
 <div class="org-src-container">
@@ -1148,12 +1162,12 @@ A minimal and modern mode-line
 </div>
 </div>
 </div>
-<div id="outline-container-orgd678b6e" class="outline-3">
-<h3 id="orgd678b6e"><span class="section-number-3">2.2</span> General</h3>
+<div id="outline-container-orgf318f0d" class="outline-3">
+<h3 id="orgf318f0d"><span class="section-number-3">2.2</span> General</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orga571766" class="outline-4">
-<h4 id="orga571766"><span class="section-number-4">2.2.1</span> config</h4>
+<div id="outline-container-orgb329479" class="outline-4">
+<h4 id="orgb329479"><span class="section-number-4">2.2.1</span> config</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> (<span style="color: #859900;">setq</span> savehist-file (concat dotfiles-cache-dir <span style="color: #2aa198;">"savehist"</span>)
@@ -1322,19 +1336,19 @@ A minimal and modern mode-line
 </div>
 </div>
 </div>
-<div id="outline-container-org0cc6890" class="outline-4">
-<h4 id="org0cc6890"><span class="section-number-4">2.2.2</span> <a href="https://www.emacswiki.org/emacs/RecentFiles">recentf</a></h4>
+<div id="outline-container-orgdeb21ae" class="outline-4">
+<h4 id="orgdeb21ae"><span class="section-number-4">2.2.2</span> recentf</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
+<a href="https://www.emacswiki.org/emacs/RecentFiles">Link</a>
 Recentf is a minor mode that builds a list of recently opened files. This list is is automatically saved across sessions on exiting Emacs - you can then access this list through a command or the menu.
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">recentf</span>
-
   <span style="color: #d33682; font-style: italic;">:config</span>
   (<span style="color: #859900;">setq</span> recentf-save-file (concat dotfiles-etc-dir <span style="color: #2aa198;">"recentf"</span>)
       recentf-max-menu-items 0
-      recentf-max-saved-items 300)
+      recentf-max-saved-items 100)
   (recentf-mode))
 
 </pre>
@@ -1342,39 +1356,40 @@ Recentf is a minor mode that builds a list of recently opened files. This list i
 </div>
 </div>
 
-<div id="outline-container-orgab6f34a" class="outline-4">
-<h4 id="orgab6f34a"><span class="section-number-4">2.2.3</span> <a href="https://github.com/m00natic/vlfi">vlf</a></h4>
+<div id="outline-container-orga2bbdc7" class="outline-4">
+<h4 id="orga2bbdc7"><span class="section-number-4">2.2.3</span> vlf</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
+<a href="https://github.com/m00natic/vlfi">Link</a>
 This vlf command visits part of large file without loading it entirely.  The buffer uses VLF mode, which provides several commands for moving around, searching, comparing and editing selected part of file. To have it offered when opening large files
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">vlf</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> (vlf)
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> (vlf))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org919b4f9" class="outline-4">
-<h4 id="org919b4f9"><span class="section-number-4">2.2.4</span> <a href="https://github.com/ieure/scratch-el">scratch</a></h4>
+<div id="outline-container-orge05ecbf" class="outline-4">
+<h4 id="orge05ecbf"><span class="section-number-4">2.2.4</span> scratch</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <p>
+<a href="https://github.com/ieure/scratch-el">Link</a>
 Scratch is an extension to Emacs that enables one to create scratch buffers that are in the same mode as the current buffer.
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">scratch</span>
 <span style="color: #d33682; font-style: italic;">:commands</span>
-(scratch)
-)
+(scratch))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org71e5b0f" class="outline-4">
-<h4 id="org71e5b0f"><span class="section-number-4">2.2.5</span> <a href="https://github.com/Fanael/persistent-scratch/tree/71371a7ce9846754276350fd577dc7543eb52878">persistent-scratch</a></h4>
+<div id="outline-container-org04ee95e" class="outline-4">
+<h4 id="org04ee95e"><span class="section-number-4">2.2.5</span> persistent-scratch</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <p>
+<a href="https://github.com/Fanael/persistent-scratch/tree/71371a7ce9846754276350fd577dc7543eb52878">Link</a>
 Preserve the scratch buffer across Emacs sessions
 </p>
 <div class="org-src-container">
@@ -1385,10 +1400,11 @@ Preserve the scratch buffer across Emacs sessions
 </div>
 </div>
 </div>
-<div id="outline-container-org7043bec" class="outline-4">
-<h4 id="org7043bec"><span class="section-number-4">2.2.6</span> <a href="https://github.com/EricCrosson/unkillable-scratch/tree/b24c2a760529833f230c14cb02ff6e7ec92288ab">unkillable-scratch</a></h4>
+<div id="outline-container-orgd721925" class="outline-4">
+<h4 id="orgd721925"><span class="section-number-4">2.2.6</span> unkillable-scratch</h4>
 <div class="outline-text-4" id="text-2-2-6">
 <p>
+<a href="https://github.com/EricCrosson/unkillable-scratch/tree/b24c2a760529833f230c14cb02ff6e7ec92288ab">Link</a>
 Disallow the \*scratch\* buffer from being killed
 </p>
 <div class="org-src-container">
@@ -1401,11 +1417,11 @@ Disallow the \*scratch\* buffer from being killed
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgcf863a8" class="outline-4">
-<h4 id="orgcf863a8"><span class="section-number-4">2.2.7</span> <a href="https://github.com/DamienCassou/desktop-environment">desktop-environment</a></h4>
+<div id="outline-container-org27a3d1f" class="outline-4">
+<h4 id="org27a3d1f"><span class="section-number-4">2.2.7</span> desktop-environment</h4>
 <div class="outline-text-4" id="text-2-2-7">
 <p>
+<a href="https://github.com/DamienCassou/desktop-environment">Link</a>
 With desktop-environment, you can control the brightness and volume
 as well as take screenshots and lock your screen.
 </p>
@@ -1416,16 +1432,15 @@ as well as take screenshots and lock your screen.
   (<span style="color: #859900;">progn</span>
     (<span style="color: #859900;">unbind-key</span> <span style="color: #2aa198;">"s-l"</span> desktop-environment-mode-map)
     (desktop-environment-mode)))
-
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org5d3b88c" class="outline-4">
-<h4 id="org5d3b88c"><span class="section-number-4">2.2.8</span> <a href="https://github.com/joostkremers/visual-fill-column/tree/772d4b25ba19f57409cd03524be0f5bfdc2e8da1">visual-fill-column</a></h4>
+<div id="outline-container-org06ef407" class="outline-4">
+<h4 id="org06ef407"><span class="section-number-4">2.2.8</span> visual-fill-column</h4>
 <div class="outline-text-4" id="text-2-2-8">
 <p>
+<a href="https://github.com/joostkremers/visual-fill-column/tree/772d4b25ba19f57409cd03524be0f5bfdc2e8da1">Link</a>
 Instead of wrapping lines at the window edge, which
 is the standard behaviour of `visual-line-mode', it wraps lines at
 `fill-column'.  If `fill-column' is too large for the window, the text is
@@ -1445,10 +1460,11 @@ wrapped at the window edge.
 </div>
 </div>
 </div>
-<div id="outline-container-orgbb7fa6b" class="outline-4">
-<h4 id="orgbb7fa6b"><span class="section-number-4">2.2.9</span> <a href="https://github.com/company-mode/company-mode">company</a></h4>
+<div id="outline-container-orgc04adfd" class="outline-4">
+<h4 id="orgc04adfd"><span class="section-number-4">2.2.9</span> company</h4>
 <div class="outline-text-4" id="text-2-2-9">
 <p>
+<a href="https://github.com/company-mode/company-mode">Link</a>
 Modular text completion framework
 </p>
 <div class="org-src-container">
@@ -1468,7 +1484,7 @@ Modular text completion framework
            company-dabbrev-ignore-case nil)
      <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">Sort completion candidates that already occur in the current</span>
      <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">buffer at the top of the candidate list.</span>
-     (<span style="color: #859900;">setq</span> company-transformers '(company-sort-by-occurrence))
+     (<span style="color: #859900;">setq</span> company-transformers '(company-sort-by-occurrence)))
      <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">Show documentation where available for selected completion</span>
      <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">after a short delay.</span>
 
@@ -1486,39 +1502,33 @@ Modular text completion framework
      <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">sources if the active source isn't being very forthcoming.</span>
      (<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">company-try-hard</span>
        <span style="color: #d33682; font-style: italic;">:commands</span> company-try-hard)
-
-   )
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org186d11d" class="outline-4">
-<h4 id="org186d11d"><span class="section-number-4">2.2.10</span> <a href="https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a">historian</a></h4>
+<div id="outline-container-org1283291" class="outline-4">
+<h4 id="org1283291"><span class="section-number-4">2.2.10</span> historian</h4>
 <div class="outline-text-4" id="text-2-2-10">
 <p>
+<a href="https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a">Link</a>
 Persistently store selected minibuffer candidates
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">historian</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> (historian)
-
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> (historian))
 
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orga5e1744" class="outline-4">
-<h4 id="orga5e1744"><span class="section-number-4">2.2.11</span> <a href="https://github.com/abo-abo/swiper">ivy</a></h4>
+<div id="outline-container-org68b4fc2" class="outline-4">
+<h4 id="org68b4fc2"><span class="section-number-4">2.2.11</span> ivy</h4>
 <div class="outline-text-4" id="text-2-2-11">
 <p>
+<a href="https://github.com/abo-abo/swiper">Link</a>
 Incremental Vertical completion
 </p>
-</div>
-<ol class="org-ol">
-<li><a id="org70451e3"></a>setup<br />
-<div class="outline-text-5" id="text-2-2-11-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">ivy</span>
    <span style="color: #d33682; font-style: italic;">:config</span>
@@ -1529,26 +1539,22 @@ Incremental Vertical completion
         smex-completion-method 'ivy                    <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">use ivy for smex</span>
         ivy-initial-inputs-alist nil                   <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">don't use ^ as initial input</span>
         ivy-format-function #'ivy-format-function-line <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">highlight til EOL</span>
-        ivy-use-virtual-buffers nil                    <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">dont' show recent files in switch-buffer</span>
+        ivy-use-virtual-buffers t                      <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">dont' show recent files in switch-buffer</span>
         ivy-virtual-abbreviate 'full                   <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">show full path if showing virtual buffer</span>
         ivy-magic-slash-non-match-action nil           <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">disable magic slash on non-match</span>
         ivy-on-del-error-function nil                  <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">don't quit minibuffer on delete-error</span>
         ivy-use-selectable-prompt t)                   <span style="color: #96A7A9; font-style: italic;">; </span><span style="color: #96A7A9; font-style: italic;">allow input prompt value to be selectable</span>
 
-  (<span style="color: #859900;">after!</span> magit     (<span style="color: #859900;">setq</span> magit-completing-read-function #'ivy-completing-read))
-
-
-)
+  (<span style="color: #859900;">after!</span> magit     (<span style="color: #859900;">setq</span> magit-completing-read-function #'ivy-completing-read)))
 </pre>
 </div>
 </div>
-</li>
-</ol>
 </div>
-<div id="outline-container-org515f416" class="outline-4">
-<h4 id="org515f416"><span class="section-number-4">2.2.12</span> <a href="https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a">ivy-historian</a></h4>
+<div id="outline-container-orgd525b5c" class="outline-4">
+<h4 id="orgd525b5c"><span class="section-number-4">2.2.12</span> ivy-historian</h4>
 <div class="outline-text-4" id="text-2-2-12">
 <p>
+<a href="https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a">Link</a>
 Persistently store selected minibuffer candidates
 </p>
 <div class="org-src-container">
@@ -1558,10 +1564,11 @@ Persistently store selected minibuffer candidates
 </div>
 </div>
 </div>
-<div id="outline-container-org6499de5" class="outline-4">
-<h4 id="org6499de5"><span class="section-number-4">2.2.13</span> <a href="https://github.com/Yevgnen/ivy-rich/tree/f6bfa293c6df0b43cc411876b665816ec3f03d08">ivy-rich</a></h4>
+<div id="outline-container-org9c73fca" class="outline-4">
+<h4 id="org9c73fca"><span class="section-number-4">2.2.13</span> ivy-rich</h4>
 <div class="outline-text-4" id="text-2-2-13">
 <p>
+<a href="https://github.com/Yevgnen/ivy-rich/tree/f6bfa293c6df0b43cc411876b665816ec3f03d08">Link</a>
 More friendly display transformer for ivy.
 </p>
 <div class="org-src-container">
@@ -1591,16 +1598,16 @@ More friendly display transformer for ivy.
 
 (<span style="color: #859900;">setq</span> ivy-rich-path-style 'abbrev)
 
-  (ivy-rich-mode +1)
-)
+  (ivy-rich-mode +1))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf76d657" class="outline-4">
-<h4 id="orgf76d657"><span class="section-number-4">2.2.14</span> <a href="https://github.com/alexmurray/ivy-xref/tree/1a35fc0f070388701b05b0a455cbe262e924d547">ivy-xref</a></h4>
+<div id="outline-container-org44bd17d" class="outline-4">
+<h4 id="org44bd17d"><span class="section-number-4">2.2.14</span> ivy-xref</h4>
 <div class="outline-text-4" id="text-2-2-14">
 <p>
+<a href="https://github.com/alexmurray/ivy-xref/tree/1a35fc0f070388701b05b0a455cbe262e924d547">Link</a>
 Ivy interface for xref results
 </p>
 <div class="org-src-container">
@@ -1610,12 +1617,15 @@ Ivy interface for xref results
 </div>
 </div>
 </div>
-<div id="outline-container-org9dc331a" class="outline-4">
-<h4 id="org9dc331a"><span class="section-number-4">2.2.15</span> <a href="https://github.com/nonsequitur/smex">smex</a></h4>
+<div id="outline-container-orgebce296" class="outline-4">
+<h4 id="orgebce296"><span class="section-number-4">2.2.15</span> smex</h4>
 <div class="outline-text-4" id="text-2-2-15">
+<p>
+<a href="https://github.com/nonsequitur/smex">Link</a>
+M-x interface with Ido-style fuzzy matching.
+</p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">M-x interface with Ido-style fuzzy matching.
-(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">smex</span>
+<pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">smex</span>
   <span style="color: #d33682; font-style: italic;">:config</span>
 (<span style="color: #859900;">setq</span> smex-save-file (concat dotfiles-cache-dir <span style="color: #2aa198;">"/smex-items"</span>))
 (smex-initialize))
@@ -1624,10 +1634,11 @@ Ivy interface for xref results
 </div>
 </div>
 </div>
-<div id="outline-container-org76b48d0" class="outline-4">
-<h4 id="org76b48d0"><span class="section-number-4">2.2.16</span> <a href="https://github.com/abo-abo/swiper/">counsel</a></h4>
+<div id="outline-container-org4294db9" class="outline-4">
+<h4 id="org4294db9"><span class="section-number-4">2.2.16</span> counsel</h4>
 <div class="outline-text-4" id="text-2-2-16">
 <p>
+<a href="https://github.com/abo-abo/swiper/">Link</a>
 Various completion functions using Ivy
 </p>
 <div class="org-src-container">
@@ -1663,7 +1674,7 @@ Various completion functions using Ivy
      (swiper . ivy--regex-plus)
      (t . ivy--regex-fuzzy)))
   <span style="color: #d33682; font-style: italic;">:config</span>
-  (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my/counsel-switch-buffer-other-window</span> ()
+  (<span style="color: #859900;">defun</span> <span style="color: #b58900;">my/counsel-switch-buffer-other-window</span> ()
     (<span style="color: #859900;">interactive</span>)
     (ace-window nil)
     (counsel-switch-buffer))
@@ -1675,10 +1686,11 @@ Various completion functions using Ivy
 </div>
 </div>
 </div>
-<div id="outline-container-orgecbe2f9" class="outline-4">
-<h4 id="orgecbe2f9"><span class="section-number-4">2.2.17</span> <a href="https://github.com/abo-abo/swiper/tree/b528f0f3aaa86a40fdec06bdb06c603ce1418bcb">swiper</a></h4>
+<div id="outline-container-orgf0fde06" class="outline-4">
+<h4 id="orgf0fde06"><span class="section-number-4">2.2.17</span> swiper</h4>
 <div class="outline-text-4" id="text-2-2-17">
 <p>
+<a href="https://github.com/abo-abo/swiper/tree/b528f0f3aaa86a40fdec06bdb06c603ce1418bcb">Link</a>
 This package gives an overview of the current regex search
 candidates.  The search regex can be split into groups with a
 space.  Each group is highlighted with a different face.
@@ -1703,10 +1715,11 @@ space.  Each group is highlighted with a different face.
 </div>
 </div>
 </div>
-<div id="outline-container-org1d54991" class="outline-4">
-<h4 id="org1d54991"><span class="section-number-4">2.2.18</span> <a href="https://github.com/joaotavora/yasnippet/tree/e45e3de357fbd4289fcfa3dd26aaa7be357fb0b8">yasnippet</a></h4>
+<div id="outline-container-org3ec83d9" class="outline-4">
+<h4 id="org3ec83d9"><span class="section-number-4">2.2.18</span> yasnippet</h4>
 <div class="outline-text-4" id="text-2-2-18">
 <p>
+<a href="https://github.com/joaotavora/yasnippet/tree/e45e3de357fbd4289fcfa3dd26aaa7be357fb0b8">Link</a>
 Yet another snippet extension for Emacs.
 </p>
 <div class="org-src-container">
@@ -1717,20 +1730,29 @@ Yet another snippet extension for Emacs.
 </pre>
 </div>
 </div>
-<ol class="org-ol">
-<li><a id="orge0a055d"></a>yasnippet-snippets<br />
-<div class="outline-text-5" id="text-2-2-18-1">
+</div>
+<div id="outline-container-org2033aad" class="outline-4">
+<h4 id="org2033aad"><span class="section-number-4">2.2.19</span> yasnippet-snippets</h4>
+<div class="outline-text-4" id="text-2-2-19">
+<p>
+<a href="https://github.com/AndreaCrotti/yasnippet-snippets/tree/15e4b08f7484c049d6b043263c5e09bc73846e32">Link</a>
+Collection of yasnippet snippets
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">yasnippet-snippets</span>
 <span style="color: #d33682; font-style: italic;">:config</span>
 (<span style="color: #859900;">require</span> '<span style="color: #6c71c4;">yasnippet-snippets</span>))
-
 </pre>
 </div>
 </div>
-</li>
-<li><a id="org630b9ef"></a>auto-yasnippet<br />
-<div class="outline-text-5" id="text-2-2-18-2">
+</div>
+<div id="outline-container-org37637be" class="outline-4">
+<h4 id="org37637be"><span class="section-number-4">2.2.20</span> auto-yasnippet</h4>
+<div class="outline-text-4" id="text-2-2-20">
+<p>
+<a href="https://github.com/abo-abo/auto-yasnippet/tree/624b0d9711222073a2a3f2186e2605eb99fc83c9">Link</a>
+Quickly create disposable yasnippets
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">auto-yasnippet</span>
 <span style="color: #d33682; font-style: italic;">:config</span>
@@ -1738,13 +1760,12 @@ Yet another snippet extension for Emacs.
 </pre>
 </div>
 </div>
-</li>
-</ol>
 </div>
-<div id="outline-container-org0da41e0" class="outline-4">
-<h4 id="org0da41e0"><span class="section-number-4">2.2.19</span> <a href="https://github.com/mhayashi1120/Emacs-wgrep/tree/379afd89ebd76f63842c8589127d66096a8bb595">wgrep</a></h4>
-<div class="outline-text-4" id="text-2-2-19">
+<div id="outline-container-org0f79114" class="outline-4">
+<h4 id="org0f79114"><span class="section-number-4">2.2.21</span> wgrep</h4>
+<div class="outline-text-4" id="text-2-2-21">
 <p>
+<a href="https://github.com/mhayashi1120/Emacs-wgrep/tree/379afd89ebd76f63842c8589127d66096a8bb595">Link</a>
 Writable grep buffer and apply the changes to files
 </p>
 <div class="org-src-container">
@@ -1752,15 +1773,15 @@ Writable grep buffer and apply the changes to files
   <span style="color: #d33682; font-style: italic;">:commands</span>
   wgrep-change-to-wgrep-mode
   ivy-wgrep-change-to-wgrep-mode)
-
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8b2d280" class="outline-4">
-<h4 id="org8b2d280"><span class="section-number-4">2.2.20</span> <a href="https://github.com/Wilfred/deadgrep/tree/caeb37b8d6ab83f0eba353d6bbb29678190d4419">deadgrep</a></h4>
-<div class="outline-text-4" id="text-2-2-20">
+<div id="outline-container-org4d1e5d8" class="outline-4">
+<h4 id="org4d1e5d8"><span class="section-number-4">2.2.22</span> deadgrep</h4>
+<div class="outline-text-4" id="text-2-2-22">
 <p>
+<a href="https://github.com/Wilfred/deadgrep/tree/caeb37b8d6ab83f0eba353d6bbb29678190d4419">Link</a>
 fast, friendly searching with ripgrep
 </p>
 <div class="org-src-container">
@@ -1771,10 +1792,11 @@ fast, friendly searching with ripgrep
 </div>
 </div>
 </div>
-<div id="outline-container-org80df495" class="outline-4">
-<h4 id="org80df495"><span class="section-number-4">2.2.21</span> <a href="https://github.com/magit/magit/tree/0984d77fbdae0fe85b38dd27036318212b9a1e5d">magit</a></h4>
-<div class="outline-text-4" id="text-2-2-21">
+<div id="outline-container-orgfdb1ed6" class="outline-4">
+<h4 id="orgfdb1ed6"><span class="section-number-4">2.2.23</span> magit</h4>
+<div class="outline-text-4" id="text-2-2-23">
 <p>
+<a href="https://github.com/magit/magit/tree/0984d77fbdae0fe85b38dd27036318212b9a1e5d">Link</a>
 Magit is an interface to the version control system Git,
 implemented as an Emacs package
 </p>
@@ -1786,10 +1808,11 @@ implemented as an Emacs package
 </div>
 </div>
 </div>
-<div id="outline-container-orgde3cc99" class="outline-4">
-<h4 id="orgde3cc99"><span class="section-number-4">2.2.22</span> <a href="https://melpa.org/#/gist">gist</a></h4>
-<div class="outline-text-4" id="text-2-2-22">
+<div id="outline-container-orge9c061a" class="outline-4">
+<h4 id="orge9c061a"><span class="section-number-4">2.2.24</span> gist</h4>
+<div class="outline-text-4" id="text-2-2-24">
 <p>
+<a href="https://melpa.org/#/gist">Link</a>
 Emacs integration for gist.github.com
 </p>
 <div class="org-src-container">
@@ -1799,10 +1822,11 @@ Emacs integration for gist.github.com
 </div>
 </div>
 </div>
-<div id="outline-container-orga209034" class="outline-4">
-<h4 id="orga209034"><span class="section-number-4">2.2.23</span> <a href="https://gitlab.com/pidu/git-timemachine/tree/b97f93d66cffcd69281346845d3a1e32197eda29">git-timemachine</a></h4>
-<div class="outline-text-4" id="text-2-2-23">
+<div id="outline-container-orge4f12f3" class="outline-4">
+<h4 id="orge4f12f3"><span class="section-number-4">2.2.25</span> git-timemachine</h4>
+<div class="outline-text-4" id="text-2-2-25">
 <p>
+<a href="https://gitlab.com/pidu/git-timemachine/tree/b97f93d66cffcd69281346845d3a1e32197eda29">Link</a>
 Walk through git revisions of a file
 </p>
 <div class="org-src-container">
@@ -1816,10 +1840,11 @@ Walk through git revisions of a file
 </p>
 </div>
 </div>
-<div id="outline-container-orgf7b90a3" class="outline-4">
-<h4 id="orgf7b90a3"><span class="section-number-4">2.2.24</span> <a href="https://github.com/bbatsov/super-save/tree/2a905b8bdfc93bee16e2d62a61c6211bbe009331">super-save</a></h4>
-<div class="outline-text-4" id="text-2-2-24">
+<div id="outline-container-org0f377fc" class="outline-4">
+<h4 id="org0f377fc"><span class="section-number-4">2.2.26</span> super-save</h4>
+<div class="outline-text-4" id="text-2-2-26">
 <p>
+<a href="https://github.com/bbatsov/super-save/tree/2a905b8bdfc93bee16e2d62a61c6211bbe009331">Link</a>
 Auto-save buffers, based on your activity.
 </p>
 <div class="org-src-container">
@@ -1828,10 +1853,11 @@ Auto-save buffers, based on your activity.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd6ed4e0" class="outline-4">
-<h4 id="orgd6ed4e0"><span class="section-number-4">2.2.25</span> <a href="https://github.com/bbatsov/crux/tree/308f17d914e2cd79cbc809de66d02b03ceb82859">crux</a></h4>
-<div class="outline-text-4" id="text-2-2-25">
+<div id="outline-container-orgaab6b2a" class="outline-4">
+<h4 id="orgaab6b2a"><span class="section-number-4">2.2.27</span> crux</h4>
+<div class="outline-text-4" id="text-2-2-27">
 <p>
+<a href="https://github.com/bbatsov/crux/tree/308f17d914e2cd79cbc809de66d02b03ceb82859">Link</a>
 A Collection of Ridiculously Useful eXtensions
 </p>
 <div class="org-src-container">
@@ -1841,10 +1867,11 @@ A Collection of Ridiculously Useful eXtensions
 </div>
 </div>
 </div>
-<div id="outline-container-org8f6926c" class="outline-4">
-<h4 id="org8f6926c"><span class="section-number-4">2.2.26</span> <a href="https://github.com/dacap/keyfreq/tree/9c665c8c219d18866403897936427bb408e3d6b9">keyfreq</a></h4>
-<div class="outline-text-4" id="text-2-2-26">
+<div id="outline-container-org79cc168" class="outline-4">
+<h4 id="org79cc168"><span class="section-number-4">2.2.28</span> keyfreq</h4>
+<div class="outline-text-4" id="text-2-2-28">
 <p>
+<a href="https://github.com/dacap/keyfreq/tree/9c665c8c219d18866403897936427bb408e3d6b9">Link</a>
 track command frequencies
 </p>
 <div class="org-src-container">
@@ -1857,10 +1884,11 @@ track command frequencies
 </div>
 </div>
 </div>
-<div id="outline-container-org179f1ae" class="outline-4">
-<h4 id="org179f1ae"><span class="section-number-4">2.2.27</span> <a href="https://github.com/hniksic/emacs-htmlize/tree/8db0aa6aab77475a732b7363f0d57bd3933c18fd">htmlize</a></h4>
-<div class="outline-text-4" id="text-2-2-27">
+<div id="outline-container-org695a51f" class="outline-4">
+<h4 id="org695a51f"><span class="section-number-4">2.2.29</span> htmlize</h4>
+<div class="outline-text-4" id="text-2-2-29">
 <p>
+<a href="https://github.com/hniksic/emacs-htmlize/tree/8db0aa6aab77475a732b7363f0d57bd3933c18fd">Link</a>
 Convert buffer text and decorations to HTML.
 </p>
 <div class="org-src-container">
@@ -1870,18 +1898,18 @@ Convert buffer text and decorations to HTML.
 </div>
 </div>
 </div>
-<div id="outline-container-orged792f6" class="outline-3">
-<h3 id="orged792f6"><span class="section-number-3">2.3</span> Navigation</h3>
+<div id="outline-container-orgb6528dc" class="outline-3">
+<h3 id="orgb6528dc"><span class="section-number-3">2.3</span> Navigation</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-orgbad7755" class="outline-4">
-<h4 id="orgbad7755"><span class="section-number-4">2.3.1</span> config</h4>
+<div id="outline-container-org29390e5" class="outline-4">
+<h4 id="org29390e5"><span class="section-number-4">2.3.1</span> config</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">setq</span> scroll-error-top-bottom t)
 
-(<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">smart-beginning-of-line</span> ()
-  <span style="color: #35a69c;">"Move point to first non-whitespace character or beginning-of-line."</span>
+(<span style="color: #859900;">defun</span> <span style="color: #b58900;">smart-beginning-of-line</span> ()
+  <span style="color: #35a69c; font-style: italic;">"Move point to first non-whitespace character or beginning-of-line."</span>
   (<span style="color: #859900;">interactive</span> <span style="color: #2aa198;">"^"</span>)
   (<span style="color: #859900;">let</span> ((oldpos (point)))
     (back-to-indentation)
@@ -1905,10 +1933,11 @@ Convert buffer text and decorations to HTML.
 </div>
 </div>
 </div>
-<div id="outline-container-org08cd9e0" class="outline-4">
-<h4 id="org08cd9e0"><span class="section-number-4">2.3.2</span> <a href="https://github.com/abo-abo/avy/tree/f91ae613a86187c8ca75e86f22e3f5ac9958399c">avy</a></h4>
+<div id="outline-container-org7a996ca" class="outline-4">
+<h4 id="org7a996ca"><span class="section-number-4">2.3.2</span> avy</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
+<a href="https://github.com/abo-abo/avy/tree/f91ae613a86187c8ca75e86f22e3f5ac9958399c">Link</a>
 Jump to arbitrary positions in visible text and select text quickly.
 </p>
 <div class="org-src-container">
@@ -1921,11 +1950,11 @@ Jump to arbitrary positions in visible text and select text quickly.
 </div>
 </div>
 </div>
-
-<div id="outline-container-org9e0271d" class="outline-4">
-<h4 id="org9e0271d"><span class="section-number-4">2.3.3</span> <a href="https://github.com/syohex/emacs-anzu/tree/592f8ee6d0b1bc543943b36a30063c2d1aac4b22">anzu</a></h4>
+<div id="outline-container-orga2b0a7b" class="outline-4">
+<h4 id="orga2b0a7b"><span class="section-number-4">2.3.3</span> anzu</h4>
 <div class="outline-text-4" id="text-2-3-3">
 <p>
+<a href="https://github.com/syohex/emacs-anzu/tree/592f8ee6d0b1bc543943b36a30063c2d1aac4b22">Link</a>
 Show number of matches in mode-line while searching
 </p>
 <div class="org-src-container">
@@ -1943,10 +1972,11 @@ Show number of matches in mode-line while searching
 </div>
 </div>
 </div>
-<div id="outline-container-org23f83a9" class="outline-4">
-<h4 id="org23f83a9"><span class="section-number-4">2.3.4</span> <a href="https://github.com/abo-abo/ace-window/tree/138a80cbc4e9ed17d3a085a3687f5223a142a9a3">ace-window</a></h4>
+<div id="outline-container-orgef7c138" class="outline-4">
+<h4 id="orgef7c138"><span class="section-number-4">2.3.4</span> ace-window</h4>
 <div class="outline-text-4" id="text-2-3-4">
 <p>
+<a href="https://github.com/abo-abo/ace-window/tree/138a80cbc4e9ed17d3a085a3687f5223a142a9a3">Link</a>
 Quickly switch windows.
 </p>
 <div class="org-src-container">
@@ -1955,7 +1985,7 @@ Quickly switch windows.
 <span style="color: #d33682; font-style: italic;">:config</span>
   (<span style="color: #859900;">setq</span> aw-scope 'frame))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">module/previous-window</span> ()
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">module/previous-window</span> ()
    (<span style="color: #859900;">interactive</span>)
    (<span style="color: #859900;">-let</span> [current (selected-window)]
      (<span style="color: #859900;">cond</span>
@@ -1969,7 +1999,7 @@ Quickly switch windows.
        (ace-select-window)))
      (<span style="color: #859900;">setq</span> module/--last-window current)))
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">module/select-window</span> ()
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">module/select-window</span> ()
    (<span style="color: #859900;">interactive</span>)
    (<span style="color: #859900;">setq</span> module/--last-window (selected-window))
    (ace-select-window))
@@ -1979,111 +2009,59 @@ Quickly switch windows.
  (global-set-key (kbd <span style="color: #2aa198;">"C-x o"</span>) 'module/previous-window)
  (global-set-key (kbd <span style="color: #2aa198;">"C-x C-o"</span>) 'module/select-window)
  (global-set-key (kbd <span style="color: #2aa198;">"C-x \\"</span>) 'ace-swap-window)
-
-
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf9288f3" class="outline-4">
-<h4 id="orgf9288f3"><span class="section-number-4">2.3.5</span> <a href="https://www.emacswiki.org/emacs/WindMove">windmove</a></h4>
+<div id="outline-container-org9734e7d" class="outline-4">
+<h4 id="org9734e7d"><span class="section-number-4">2.3.5</span> windmove</h4>
 <div class="outline-text-4" id="text-2-3-5">
 <p>
+<a href="https://www.emacswiki.org/emacs/WindMove">Link</a>
 Windmove lets you move point from window to window using Shift and the arrow keys.
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">windmove</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> (windmove-up windmove-down windmove-left windmove-right)
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> (windmove-up windmove-down windmove-left windmove-right))
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgac64964" class="outline-4">
-<h4 id="orgac64964"><span class="section-number-4">2.3.6</span> <a href="https://github.com/lukhas/buffer-move/tree/cb517ecf8409b5fdcda472d7190c6021f0c49751">buffer-move</a></h4>
+<div id="outline-container-orgbcd6c79" class="outline-4">
+<h4 id="orgbcd6c79"><span class="section-number-4">2.3.6</span> buffer-move</h4>
 <div class="outline-text-4" id="text-2-3-6">
 <p>
+<a href="https://github.com/lukhas/buffer-move/tree/cb517ecf8409b5fdcda472d7190c6021f0c49751">Link</a>
 This file is for people wanting to swap buffers without
-typing C-x b on each window. This is useful when you have :
+typing C-x b on each window.
 </p>
-
-<!-- This HTML table template is generated by emacs 27.0.50 -->
-<table border="1">
-  <tr>
-    <td align="left" valign="top">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;#emacs&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-    <td align="left" valign="top">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;#gnus&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="left" valign="top">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.emacs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-  </tr>
-</table>
-
-<p>
-and you want to have :
-</p>
-
-<!-- This HTML table template is generated by emacs 27.0.50 -->
-<table border="1">
-  <tr>
-    <td align="left" valign="top">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;#gnus&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-    <td align="left" valign="top">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;.emacs&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="left" valign="top">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#emacs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </td>
-  </tr>
-</table>
-
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">buffer-move</span>)
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org9a85899" class="outline-4">
-<h4 id="org9a85899"><span class="section-number-4">2.3.7</span> <a href="https://github.com/emacsorphanage/transpose-frame/tree/011f420c3496b69fc22d789f64cb8091834feba7">transpose-frame</a></h4>
+<div id="outline-container-org7872502" class="outline-4">
+<h4 id="org7872502"><span class="section-number-4">2.3.7</span> transpose-frame</h4>
 <div class="outline-text-4" id="text-2-3-7">
 <p>
+<a href="https://github.com/emacsorphanage/transpose-frame/tree/011f420c3496b69fc22d789f64cb8091834feba7">Link</a>
 Transpose windows arrangement in a frame
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">transpose-frame</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> tranpose-frame
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> tranpose-frame)
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgff5ff45" class="outline-4">
-<h4 id="orgff5ff45"><span class="section-number-4">2.3.8</span> beacon</h4>
+<div id="outline-container-org6923f3a" class="outline-4">
+<h4 id="org6923f3a"><span class="section-number-4">2.3.8</span> beacon</h4>
 <div class="outline-text-4" id="text-2-3-8">
+<p>
+<a href="https://github.com/Malabarba/beacon">Link</a>
+Highlight the cursor whenever the window scrolls
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">beacon</span>
    <span style="color: #d33682; font-style: italic;">:init</span>
@@ -2092,13 +2070,17 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-org66ac67a" class="outline-4">
-<h4 id="org66ac67a"><span class="section-number-4">2.3.9</span> dired</h4>
+<div id="outline-container-orgb4ae0be" class="outline-4">
+<h4 id="orgb4ae0be"><span class="section-number-4">2.3.9</span> dired</h4>
 <div class="outline-text-4" id="text-2-3-9">
 </div>
 <ol class="org-ol">
-<li><a id="org349bbff"></a>dired-k<br />
+<li><a id="org0f78db3"></a>dired-k<br />
 <div class="outline-text-5" id="text-2-3-9-1">
+<p>
+ <a href="https://github.com/syohex/emacs-dired-k">Link</a>
+highlight dired buffer by file size, modified time, git status
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> (<span style="color: #859900;">setq</span> global-auto-revert-non-file-buffers t)
  (<span style="color: #859900;">setq</span> auto-revert-verbose nil)
@@ -2119,8 +2101,8 @@ Transpose windows arrangement in a frame
    <span style="color: #d33682; font-style: italic;">:config</span>
    (<span style="color: #859900;">setq</span> dired-k-style 'git)
 
-   (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">+dired*dired-k-highlight</span> (orig-fn <span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
-     <span style="color: #35a69c;">"Butt out if the requested directory is remote (i.e. through tramp)."</span>
+   (<span style="color: #859900;">defun</span> <span style="color: #b58900;">+dired*dired-k-highlight</span> (orig-fn <span style="color: #b58900; font-style: italic;">&amp;rest</span> args)
+     <span style="color: #35a69c; font-style: italic;">"Butt out if the requested directory is remote (i.e. through tramp)."</span>
      (<span style="color: #859900;">unless</span> (file-remote-p default-directory)
        (apply orig-fn args)))
    (advice-add #'dired-k--highlight <span style="color: #d33682; font-style: italic;">:around</span> #'+dired*dired-k-highlight)
@@ -2133,8 +2115,8 @@ Transpose windows arrangement in a frame
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">This one is a bit dangerous, even with the yes/no question, so</span>
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">it's not bound to any key by default.</span>
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">Run it using M-x delete-current-buffer-file.</span>
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">delete-current-buffer-file</span> ()
-   <span style="color: #35a69c;">"Removes file connected to current buffer and kills buffer."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">delete-current-buffer-file</span> ()
+   <span style="color: #35a69c; font-style: italic;">"Removes file connected to current buffer and kills buffer."</span>
    (<span style="color: #859900;">interactive</span>)
    (<span style="color: #859900;">let</span> ((filename (buffer-file-name))
          (buffer (current-buffer))
@@ -2147,8 +2129,8 @@ Transpose windows arrangement in a frame
          (message <span style="color: #2aa198;">"File '%s' successfully removed"</span> filename)))))
 
  <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">And a function for renaming the file being edited, bound to C-x C-r.</span>
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">rename-current-buffer-file</span> ()
-   <span style="color: #35a69c;">"Renames current buffer and file it is visiting."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">rename-current-buffer-file</span> ()
+   <span style="color: #35a69c; font-style: italic;">"Renames current buffer and file it is visiting."</span>
    (<span style="color: #859900;">interactive</span>)
    (<span style="color: #859900;">let</span> ((name (buffer-name))
          (filename (buffer-file-name)))
@@ -2169,18 +2151,21 @@ Transpose windows arrangement in a frame
 
 (<span style="color: #859900;">setq</span> wdired-use-dired-vertical-movement 'sometimes)
 (define-key dired-mode-map (kbd <span style="color: #2aa198;">"C-s"</span>) #'dired-isearch-filenames)
-
 </pre>
 </div>
 </div>
 </li>
-<li><a id="org2750f54"></a>dired-hide-dotfiles<br />
+<li><a id="orgb358e38"></a>dired-hide-dotfiles<br />
 <div class="outline-text-5" id="text-2-3-9-2">
+<p>
+<a href="https://github.com/mattiasb/dired-hide-dotfiles">Link</a>
+Hide dotfiles in dired
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> (<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-hide-dotfiles</span>
  <span style="color: #d33682; font-style: italic;">:config</span>
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">my-dired-mode-hook</span> ()
-   <span style="color: #35a69c;">"My `</span><span style="color: #6c71c4;">dired</span><span style="color: #35a69c;">' mode hook."</span>
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">my-dired-mode-hook</span> ()
+   <span style="color: #35a69c; font-style: italic;">"My `</span><span style="color: #6c71c4; font-style: italic;">dired</span><span style="color: #35a69c; font-style: italic;">' mode hook."</span>
    <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">To hide dot-files by default</span>
    (dired-hide-dotfiles-mode)
 
@@ -2192,16 +2177,24 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </li>
-<li><a id="org2a44431"></a>dired-imenu<br />
+<li><a id="org07e3da8"></a>dired-imenu<br />
 <div class="outline-text-5" id="text-2-3-9-3">
+<p>
+<a href="https://github.com/DamienCassou/dired-imenu/tree/610e21fe0988c85931d34894d3eee2442c79ab0a">Link</a>
+imenu binding for dired mode
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-imenu</span>)
 </pre>
 </div>
 </div>
 </li>
-<li><a id="org34a8256"></a>dired-rsync<br />
+<li><a id="org18de674"></a>dired-rsync<br />
 <div class="outline-text-5" id="text-2-3-9-4">
+<p>
+<a href="https://github.com/stsquad/dired-rsync/tree/d7eb558c4efa73d9e1f50709dbd2374041c0f1a9">Link</a>
+Allow rsync from dired buffers
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-rsync</span>
   <span style="color: #d33682; font-style: italic;">:commands</span> dired-rsync
@@ -2211,25 +2204,36 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </li>
-
-<li><a id="org16cd5ca"></a>dired-hack-utils<br />
+<li><a id="org782fbdc"></a>dired-hack-utils<br />
 <div class="outline-text-5" id="text-2-3-9-5">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+Utilities and helpers for dired-hacks collection
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-hacks-utils</span>)
 </pre>
 </div>
 </div>
 </li>
-<li><a id="org1ec76e4"></a>dired-filter<br />
+<li><a id="orgabfd5b7"></a>dired-filter<br />
 <div class="outline-text-5" id="text-2-3-9-6">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+Ibuffer-like filtering for dired
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-filter</span>)
 </pre>
 </div>
 </div>
 </li>
-<li><a id="org406539b"></a>dired-avfs<br />
+<li><a id="org2c255d8"></a>dired-avfs<br />
 <div class="outline-text-5" id="text-2-3-9-7">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+AVFS support for dired
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-avfs</span>
 <span style="color: #d33682; font-style: italic;">:commands</span> dired-avfs-open)
@@ -2237,32 +2241,48 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </li>
-<li><a id="org8050e54"></a>dired-open<br />
+<li><a id="orgb155236"></a>dired-open<br />
 <div class="outline-text-5" id="text-2-3-9-8">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+Open files from dired using using custom actions
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-open</span>)
 </pre>
 </div>
 </div>
 </li>
-<li><a id="org8f5caa5"></a>dired-narrow<br />
+<li><a id="org8f584ed"></a>dired-narrow<br />
 <div class="outline-text-5" id="text-2-3-9-9">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+This package provides live filtering of files in dired buffers
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-narrow</span>)
 </pre>
 </div>
 </div>
 </li>
-<li><a id="orgfbb4af9"></a>dired-subtree<br />
+<li><a id="org5f3c21e"></a>dired-subtree<br />
 <div class="outline-text-5" id="text-2-3-9-10">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+Insert subdirectories in a tree-like fashion
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-subtree</span>)
 </pre>
 </div>
 </div>
 </li>
-<li><a id="orgac5a511"></a>dired-collapse<br />
+<li><a id="orge859c1a"></a>dired-collapse<br />
 <div class="outline-text-5" id="text-2-3-9-11">
+<p>
+<a href="https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30">Link</a>
+Collapse unique nested paths in dired listing
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">dired-collapse</span>)
 </pre>
@@ -2272,12 +2292,12 @@ Transpose windows arrangement in a frame
 </ol>
 </div>
 </div>
-<div id="outline-container-org43f9ff1" class="outline-3">
-<h3 id="org43f9ff1"><span class="section-number-3">2.4</span> Editing</h3>
+<div id="outline-container-org6f25b86" class="outline-3">
+<h3 id="org6f25b86"><span class="section-number-3">2.4</span> Editing</h3>
 <div class="outline-text-3" id="text-2-4">
 </div>
-<div id="outline-container-org5b37c50" class="outline-4">
-<h4 id="org5b37c50"><span class="section-number-4">2.4.1</span> config</h4>
+<div id="outline-container-org2d7db63" class="outline-4">
+<h4 id="org2d7db63"><span class="section-number-4">2.4.1</span> config</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">setq</span> bookmark-save-flag 1) <span style="color: #96A7A9; font-style: italic;">;; </span><span style="color: #96A7A9; font-style: italic;">save after every change</span>
@@ -2372,7 +2392,7 @@ Transpose windows arrangement in a frame
  (put 'erase-buffer 'disabled nil)
 
 
- (<span style="color: #859900;">defun</span> <span style="color: #b58900; font-weight: bold;">indent-buffer</span> ()
+ (<span style="color: #859900;">defun</span> <span style="color: #b58900;">indent-buffer</span> ()
    (<span style="color: #859900;">interactive</span>)
    (indent-region (point-min) (point-max)))
  (global-set-key (kbd <span style="color: #2aa198;">"C-c &lt;tab&gt;"</span>) 'indent-buffer)
@@ -2382,13 +2402,16 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 
-<div id="outline-container-org4f0c6de" class="outline-4">
-<h4 id="org4f0c6de"><span class="section-number-4">2.4.2</span> browse-kill-ring</h4>
+<div id="outline-container-org1b58a5f" class="outline-4">
+<h4 id="org1b58a5f"><span class="section-number-4">2.4.2</span> browse-kill-ring</h4>
 <div class="outline-text-4" id="text-2-4-2">
+<p>
+<a href="https://github.com/browse-kill-ring/browse-kill-ring/tree/8debc43e41d7e51532698331c6f283905890b904">Link</a>
+interactively insert items from kill-ring
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">browse-kill-ring</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> browse-kill-ring
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> browse-kill-ring)
  (<span style="color: #859900;">require</span> '<span style="color: #6c71c4;">browse-kill-ring</span>)
  (browse-kill-ring-default-keybindings)
  (global-set-key (kbd <span style="color: #2aa198;">"s-y"</span>) 'browse-kill-ring)
@@ -2396,9 +2419,13 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-org7379055" class="outline-4">
-<h4 id="org7379055"><span class="section-number-4">2.4.3</span> markdown-mode</h4>
+<div id="outline-container-org1cff35d" class="outline-4">
+<h4 id="org1cff35d"><span class="section-number-4">2.4.3</span> markdown-mode</h4>
 <div class="outline-text-4" id="text-2-4-3">
+<p>
+    <a href="https://github.com/jrblevin/markdown-mode/tree/115f77df9755c6a453f3e5d9623ff885d207ea82">Link</a>
+Major mode for Markdown-formatted text
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> (<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">markdown-mode</span>
    <span style="color: #d33682; font-style: italic;">:commands</span> markdown-mode
@@ -2410,8 +2437,12 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 <ol class="org-ol">
-<li><a id="orgcaed376"></a>gihub-flavored-markdown<br />
+<li><a id="orgbb06402"></a>gihub-flavored-markdown<br />
 <div class="outline-text-5" id="text-2-4-3-1">
+<p>
+<a href="https://github.com/larstvei/ox-gfm/tree/99f93011b069e02b37c9660b8fcb45dab086a07f">Link</a>
+Github Flavored Markdown Back-End for Org Export Engine
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">ox-gfm</span>)
 </pre>
@@ -2420,9 +2451,13 @@ Transpose windows arrangement in a frame
 </li>
 </ol>
 </div>
-<div id="outline-container-org02c2855" class="outline-4">
-<h4 id="org02c2855"><span class="section-number-4">2.4.4</span> flycheck</h4>
+<div id="outline-container-orgfac254c" class="outline-4">
+<h4 id="orgfac254c"><span class="section-number-4">2.4.4</span> flycheck</h4>
 <div class="outline-text-4" id="text-2-4-4">
+<p>
+    <a href="https://github.com/flycheck/flycheck/tree/bd8a93240aee78e90c83a54ab3799ff4d02f9f15">Link</a>
+On-the-fly syntax checking
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">flycheck</span>
   <span style="color: #d33682; font-style: italic;">:commands</span> flycheck-mode
@@ -2439,8 +2474,12 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 <ol class="org-ol">
-<li><a id="org40ec5b7"></a>flycheck-color-mode-line<br />
+<li><a id="orge15bac3"></a>flycheck-color-mode-line<br />
 <div class="outline-text-5" id="text-2-4-4-1">
+<p>
+<a href="https://github.com/flycheck/flycheck-color-mode-line/tree/cc474804d4e8088a627485faaf4217a5781aec7d">Link</a>
+Change mode line color with Flycheck status
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">flycheck-color-mode-line</span>
    <span style="color: #d33682; font-style: italic;">:config</span>
@@ -2453,9 +2492,13 @@ Transpose windows arrangement in a frame
 </li>
 </ol>
 </div>
-<div id="outline-container-orge09feaf" class="outline-4">
-<h4 id="orge09feaf"><span class="section-number-4">2.4.5</span> expand-region</h4>
+<div id="outline-container-org846e51d" class="outline-4">
+<h4 id="org846e51d"><span class="section-number-4">2.4.5</span> expand-region</h4>
 <div class="outline-text-4" id="text-2-4-5">
+<p>
+<a href="https://github.com/magnars/expand-region.el/tree/1c31447730443d98f90f65dfcb752f347d46ad1b">Link</a>
+Increase selected region by semantic units.
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">expand-region</span>
    <span style="color: #d33682; font-style: italic;">:commands</span> er/expand-region)
@@ -2463,20 +2506,27 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-orgd96c586" class="outline-4">
-<h4 id="orgd96c586"><span class="section-number-4">2.4.6</span> smartparens</h4>
+<div id="outline-container-orga9b8770" class="outline-4">
+<h4 id="orga9b8770"><span class="section-number-4">2.4.6</span> smartparens</h4>
 <div class="outline-text-4" id="text-2-4-6">
+<p>
+<a href="https://github.com/Fuco1/smartparens/tree/046440700f292c90c4a992f959c8d6725aa9a3bc">Link</a>
+Automatic insertion, wrapping and paredit-like navigation with user defined pairs.
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">smartparens</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> smartparens-mode
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> smartparens-mode)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7730b34" class="outline-4">
-<h4 id="org7730b34"><span class="section-number-4">2.4.7</span> projectile</h4>
+<div id="outline-container-org81e6caf" class="outline-4">
+<h4 id="org81e6caf"><span class="section-number-4">2.4.7</span> projectile</h4>
 <div class="outline-text-4" id="text-2-4-7">
+<p>
+<a href="https://github.com/bbatsov/projectile/tree/fd85829ef2bdb8b2c183ea1b3ccfd50925824d78">Link</a>
+Manage and navigate projects in Emacs easily
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">projectile</span>
   <span style="color: #d33682; font-style: italic;">:custom</span>
@@ -2502,11 +2552,34 @@ Transpose windows arrangement in a frame
     <span style="color: #2aa198;">"Show magit status."</span>
     (magit-status)))
 
-(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">counsel-projectile</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8025dde" class="outline-4">
+<h4 id="org8025dde"><span class="section-number-4">2.4.8</span> counsel-projectile</h4>
+<div class="outline-text-4" id="text-2-4-8">
+<p>
+<a href="https://github.com/ericdanan/counsel-projectile/tree/fb19569c9799e3edac7504d21a5ecf49231e9500">Link</a>
+Ivy integration for Projectile
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">counsel-projectile</span>
   <span style="color: #d33682; font-style: italic;">:after</span> ivy projectile
   <span style="color: #d33682; font-style: italic;">:bind</span> ((<span style="color: #2aa198;">"C-c s"</span> . counsel-projectile-rg)))
-
-(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">ibuffer-projectile</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3b7d30f" class="outline-4">
+<h4 id="org3b7d30f"><span class="section-number-4">2.4.9</span> ibuffer-projectile</h4>
+<div class="outline-text-4" id="text-2-4-9">
+<p>
+<a href="https://github.com/purcell/ibuffer-projectile/tree/76496214144687cee0b5139be2e61b1e400cac87">Link</a>
+Group ibuffer's list by projectile root
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">ibuffer-projectile</span>
   <span style="color: #d33682; font-style: italic;">:config</span>
   (add-hook 'ibuffer-hook
             (<span style="color: #859900;">lambda</span> ()
@@ -2518,13 +2591,17 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-orgd7ccc31" class="outline-3">
-<h3 id="orgd7ccc31"><span class="section-number-3">2.5</span> Help</h3>
+<div id="outline-container-org92a2c8e" class="outline-3">
+<h3 id="org92a2c8e"><span class="section-number-3">2.5</span> Help</h3>
 <div class="outline-text-3" id="text-2-5">
 </div>
-<div id="outline-container-orgc5df166" class="outline-4">
-<h4 id="orgc5df166"><span class="section-number-4">2.5.1</span> which-key</h4>
+<div id="outline-container-org0c44673" class="outline-4">
+<h4 id="org0c44673"><span class="section-number-4">2.5.1</span> which-key</h4>
 <div class="outline-text-4" id="text-2-5-1">
+<p>
+<a href="https://github.com/justbur/emacs-which-key/tree/ba03e7e5bcbe3f7d95be2cfddd71454151bb98c8">Link</a>
+Display available keybindings in popup
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">which-key</span>
   <span style="color: #d33682; font-style: italic;">:bind</span> (<span style="color: #2aa198;">"C-h C-k"</span> . which-key-show-top-level)
@@ -2538,15 +2615,18 @@ Transpose windows arrangement in a frame
         which-key-min-display-lines 7)
   (set-face-attribute 'which-key-local-map-description-face nil <span style="color: #d33682; font-style: italic;">:weight</span> 'bold)
   (which-key-setup-side-window-bottom)
-  (which-key-mode)
-)
+  (which-key-mode))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgff8ab6a" class="outline-4">
-<h4 id="orgff8ab6a"><span class="section-number-4">2.5.2</span> discover-my-major</h4>
+<div id="outline-container-org7472ed0" class="outline-4">
+<h4 id="org7472ed0"><span class="section-number-4">2.5.2</span> discover-my-major</h4>
 <div class="outline-text-4" id="text-2-5-2">
+<p>
+<a href="https://melpa.org/#/discover-my-major">Link</a>
+Discover key bindings and their meaning for the current Emacs major mode
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">discover-my-major</span>
   <span style="color: #d33682; font-style: italic;">:commands</span> (discover-my-major discover-my-mode)
@@ -2556,9 +2636,17 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-orgffcf40e" class="outline-3">
-<h3 id="orgffcf40e"><span class="section-number-3">2.6</span> Org</h3>
+<div id="outline-container-org2759cc1" class="outline-3">
+<h3 id="org2759cc1"><span class="section-number-3">2.6</span> Org</h3>
 <div class="outline-text-3" id="text-2-6">
+<p>
+<a href="https://orgmode.org/guide/">The compact Org-mode Guide: Top</a>
+<a href="https://orgmode.org/worg/">Hello Worg, the Org-Mode Community!</a>
+</p>
+
+<p>
+Org-mode is a powerful system for organizing your complex life with simple plain-text files. It seamlessly integrates all your notes, mindmaps, TODO lists, calendar, day planner, and project schedules into a single system that can be easily searched (e.g. by grep), encrypted (e.g. by GnuPG), backed up and synced (e.g. by Dropbox), imported/exported, and accessed on the go (e.g. on an iPhone or Android smartphone). It can even be used for authoring web pages and documents.
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> (<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">org</span>
    <span style="color: #d33682; font-style: italic;">:ensure</span> org-plus-contrib
@@ -2574,20 +2662,27 @@ Transpose windows arrangement in a frame
 </pre>
 </div>
 </div>
-<div id="outline-container-org508dbc4" class="outline-4">
-<h4 id="org508dbc4"><span class="section-number-4">2.6.1</span> org-cliplink</h4>
+<div id="outline-container-org92cee85" class="outline-4">
+<h4 id="org92cee85"><span class="section-number-4">2.6.1</span> org-cliplink</h4>
 <div class="outline-text-4" id="text-2-6-1">
+<p>
+<a href="https://github.com/rexim/org-cliplink/tree/82402cae7e118d67de7328417fd018a18f95fac2">Link</a>
+insert org-mode links from the clipboard
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">org-cliplink</span>
-<span style="color: #d33682; font-style: italic;">:commands</span> org-cliplink
-)
+<span style="color: #d33682; font-style: italic;">:commands</span> org-cliplink)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org38393e8" class="outline-4">
-<h4 id="org38393e8"><span class="section-number-4">2.6.2</span> org-download</h4>
+<div id="outline-container-org40a59cd" class="outline-4">
+<h4 id="org40a59cd"><span class="section-number-4">2.6.2</span> org-download</h4>
 <div class="outline-text-4" id="text-2-6-2">
+<p>
+<a href="https://github.com/abo-abo/org-download/tree/ac72bf8fce3e855da60687027b6b8601cf1de480">Link</a>
+Image drag-and-drop for Emacs org-mode
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"> (<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">org-download</span>
  <span style="color: #d33682; font-style: italic;">:commands</span> (org-download-screenshot org-download-yank)
@@ -2599,9 +2694,13 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-org7df0903" class="outline-4">
-<h4 id="org7df0903"><span class="section-number-4">2.6.3</span> org-journal</h4>
+<div id="outline-container-orgd26995b" class="outline-4">
+<h4 id="orgd26995b"><span class="section-number-4">2.6.3</span> org-journal</h4>
 <div class="outline-text-4" id="text-2-6-3">
+<p>
+<a href="https://github.com/bastibe/org-journal/tree/159794a3f5f28eeab8f87a0378d81d0b2d2cb6fc">Link</a>
+a simple org-mode based journaling mode
+</p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">org-journal</span>
    <span style="color: #d33682; font-style: italic;">:commands</span> (org-journal-new-entry)
@@ -2611,18 +2710,18 @@ Transpose windows arrangement in a frame
 </div>
 </div>
 </div>
-<div id="outline-container-org0eba719" class="outline-4">
-<h4 id="org0eba719"><span class="section-number-4">2.6.4</span> <a href="https://github.com/snosov1/toc-org">org-toc</a></h4>
+<div id="outline-container-orgd3ac3f1" class="outline-4">
+<h4 id="orgd3ac3f1"><span class="section-number-4">2.6.4</span> toc-org</h4>
 <div class="outline-text-4" id="text-2-6-4">
 <p>
+<a href="https://github.com/snosov1/toc-org/tree/2539b4be401d006e2752f6ad3b88e696889a7fc8">Link</a>
 toc-org helps you to have an up-to-date table of contents in org files without exporting.
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #859900;">use-package</span> <span style="color: #6c71c4;">toc-org</span>
 <span style="color: #d33682; font-style: italic;">:ensure</span> t
 <span style="color: #d33682; font-style: italic;">:config</span>
-(add-hook 'org-mode-hook 'toc-org-mode)
-)
+(add-hook 'org-mode-hook 'toc-org-mode))
 </pre>
 </div>
 </div>
@@ -2632,7 +2731,7 @@ toc-org helps you to have an up-to-date table of contents in org files without e
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: alexander</p>
-<p class="date">Created: 2019-06-13 Thu 10:03</p>
+<p class="date">Created: 2019-06-13 Thu 16:29</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

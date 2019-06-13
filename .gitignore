@@ -15,4 +15,9 @@
 !early-init.el
 !index.html
 !css
-!css/style.css
+!css/htmlize.css
+!css/readtheorg.css
+
+!js
+!js/jquery.stickytableheaders.js
+!js/readtheorg.js
