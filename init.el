@@ -14,7 +14,7 @@
 
 (message "I'm powering up... Be patient, Master %s!" current-user)
 
-(defvar dotfiles-personal-dir (expand-file-name ".personal.d" "~/")
+(defvar dotfiles-personal-dir (expand-file-name ".personal.d/" "~/")
   "This directory is for your personal configuration.")
 
 (defvar dotfiles-custom-dir (concat user-emacs-directory "lisp/")
@@ -40,9 +40,6 @@
      called. Use this for transient files that are generated on the fly like caches
      and temporary files. Anything that may need to be cleared if there are
      problems.")
-
-(defvar dotfiles-screencasts-dir (expand-file-name "screencasts" user-emacs-directory)
-  "The home of Emacs's core functionality.")
 
 (dolist (dir (list dotfiles-custom-dir dotfiles-personal-dir dotfiles-local-dir dotfiles-host-dir dotfiles-cache-dir dotfiles-etc-dir))
   (unless (file-directory-p dir)
@@ -152,9 +149,7 @@ Note the weekly scope of the command's precision.")
       (gc-cons-threshold most-positive-fixnum))
   (when (or (not (file-exists-p elfile))
             (file-newer-than-file-p orgfile elfile))
-    (tangle-config-org)
-    ;;(save-buffers-kill-emacs);; TEST: kill Emacs when config has been re-generated due to many issues when loading newly generated config.el
-    )
+    (tangle-config-org))
   (load-file elfile))
 
 ;; when config.org is saved, re-generate config.el:
@@ -213,28 +208,26 @@ Note the weekly scope of the command's precision.")
         (insert (apply 'concat (reverse body-list))))
       (message "—————• Wrote %s" output-file))))
 
+
 (defun tangle-personal-config-hook-func ()
   (when (string= "personal-config.org" (buffer-name))
-	(let ((orgfile (concat "~/.personal.d/" "personal-config.org"))
-		  (elfile (concat "~/.personal.d/" "personal-config.el")))
+	(let ((orgfile (concat    dotfiles-personal-dir "personal-config.org"))
+		  (pfile (concat dotfiles-personal-dir "personal-config.el")))
 	  (tangle-personal-config))))
 
 (add-hook 'after-save-hook 'tangle-personal-config-hook-func)
 
-;; Load the enabled modules.
 
-(cl-loop for file in (reverse (directory-files-recursively dotfiles-personal-dir "\\.el$"))
-         do (load file))
+      (let ((orgfile (concat dotfiles-personal-dir "personal-config.org"))
+            (pfile   (concat dotfiles-personal-dir "personal-config.el"))
+      (gc-cons-threshold most-positive-fixnum))
 
-(cl-loop for file in (reverse (directory-files-recursively dotfiles-custom-dir "\\.el$"))
-         do (load file))
-
+        (when (or (not (file-exists-p pfile))
+            (file-newer-than-file-p orgfile pfile))
+    (tangle-personal-config))
+  (load-file pfile))
 
 (run-hooks 'my/post-init-hook)
-
-(message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) init-el-start-time)))
-
-(message "I'm ready to do thy bidding, Master %s!" current-user)
 
 (add-hook! 'emacs-startup-hook
   (setq file-name-handler-alist dotfiles--file-name-handler-alist))
@@ -243,3 +236,6 @@ Note the weekly scope of the command's precision.")
   (add-hook! 'emacs-startup-hook
     (setq gc-cons-threshold 16777216
           gc-cons-percentage 0.1))
+
+(message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) init-el-start-time)))
+(message "I'm ready to do thy bidding, Master %s!" current-user)
