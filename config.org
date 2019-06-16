@@ -1408,7 +1408,6 @@ compilation."
    ("C-r" . counsel-minibuffer-history))
   :custom
   (counsel-find-file-at-point t)
-  (ivy-use-virtual-buffers nil)
   (ivy-display-style 'fancy)
   (ivy-use-selectable-prompt t)
   (ivy-re-builders-alist
@@ -1516,7 +1515,7 @@ go up multiple parent directories."
         smex-completion-method 'ivy                    ; use ivy for smex
         ivy-initial-inputs-alist nil                   ; don't use ^ as initial input
         ivy-format-function #'ivy-format-function-line ; highlight til EOL
-        ivy-use-virtual-buffers t                      ; dont' show recent files in switch-buffer
+        ivy-use-virtual-buffers nil                      ; dont' show recent files in switch-buffer
         ivy-virtual-abbreviate 'full                   ; show full path if showing virtual buffer
         ivy-magic-slash-non-match-action nil           ; disable magic slash on non-match
         ivy-on-del-error-function nil                  ; don't quit minibuffer on delete-error
@@ -1802,8 +1801,10 @@ go up multiple parent directories."
    #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure org-plus-contrib
+  :ensure t
   :bind(("C-x C-k" . org-cut-subtree))
   :config
+(require 'org-agenda)
   ;; Stop org-mode from highjacking shift-cursor keys.
   (setq org-replace-disputed-keys t)
   ;; Always use visual-line-mode in org-mode, and wrap it at column 80.
@@ -1822,13 +1823,28 @@ go up multiple parent directories."
   (setq org-startup-folded t)
   (setq org-agenda-sticky t)
 
+  (setq org-ellipsis "⤵")
+
+  (setq org-startup-folded 'content)
+
+(setq org-list-demote-modify-bullet (quote (("+" . "-")
+                                              ("*" . "-")
+                                              ("1." . "-")
+                                              ("1)" . "-")
+                                              ("A)" . "-")
+                                              ("B)" . "-")
+                                              ("a)" . "-")
+                                              ("b)" . "-")
+                                              ("A." . "-")
+                                              ("B." . "-")
+                                              ("a." . "-")
+                                              ("b." . "-"))))
 
   )
 
  #+END_SRC
 **** agenda functions
   #+BEGIN_SRC emacs-lisp
-;; Disable when refiled from org-capture
 (define-advice org-capture-refile (:around (oldfunc &rest args) org-disable-log-refile)
   "Set `org-log-refile' to nil while capturing."
   (let ((org-log-refile nil))
@@ -1860,6 +1876,7 @@ go up multiple parent directories."
   (org-cycle)
   (org-narrow-to-subtree)
   (outline-show-branches))
+
 
 (define-key org-agenda-mode-map (kbd "RET") 'my/org-agenda-switch-to)
 
@@ -1985,6 +2002,12 @@ kill-ring, prompting if not found.  With prefix, prompt for URL."
   :config
   (add-hook 'markdown-mode-hook 'visual-line-mode))
    #+END_SRC
+*** Epub
+**** Nov: Read EPUBs
+  #+BEGIN_SRC emacs-lisp
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
+  #+END_SRC
 *** Utilities
 **** [[https://github.com/ieure/scratch-el][scratch: Create scratch buffers that are in the same mode as the current buffer]]
    #+BEGIN_SRC emacs-lisp
@@ -2028,10 +2051,4 @@ kill-ring, prompting if not found.  With prefix, prompt for URL."
 **** [[https://github.com/hniksic/emacs-htmlize/tree/8db0aa6aab77475a732b7363f0d57bd3933c18fd][htmlize: Convert buffer text and decorations to HTML]]
   #+BEGIN_SRC emacs-lisp
 (use-package htmlize)
-  #+END_SRC
-*** Epub
-**** Nov: Read EPUBs
-  #+BEGIN_SRC emacs-lisp
-(use-package nov
-  :mode ("\\.epub\\'" . nov-mode))
   #+END_SRC
