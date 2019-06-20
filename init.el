@@ -1,4 +1,4 @@
-  (setq gc-cons-threshold 402653184
+(setq gc-cons-threshold 402653184
         gc-cons-percentage 0.6)
 
 
@@ -233,9 +233,10 @@ Note the weekly scope of the command's precision.")
   (setq file-name-handler-alist dotfiles--file-name-handler-alist))
 
 
+(message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) init-el-start-time)))
+(message "I'm ready to do thy bidding, Master %s!" current-user)
+
+
   (add-hook! 'emacs-startup-hook
     (setq gc-cons-threshold 16777216
           gc-cons-percentage 0.1))
-
-(message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) init-el-start-time)))
-(message "I'm ready to do thy bidding, Master %s!" current-user)

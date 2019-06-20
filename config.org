@@ -17,11 +17,11 @@
 #+EXPORT_EXCLUDE_TAGS: noexport
 :END:
 #+TITLE: Emacs Configuration
-#+TODO: ACTIVE | DISABLED
 
-* Core
-** Package
- #+BEGIN_SRC emacs-lisp
+* TODO Emacs Configuration
+** Core
+*** Package
+  #+BEGIN_SRC emacs-lisp
 ;; `(online?)` is a function that tries to detect whether you are online.
 ;; We want to refresh our package list on Emacs start if we are.
 (require 'cl)
@@ -80,10 +80,10 @@
 (setq use-package-always-ensure t)
 
 
-   #+END_SRC
-** Libraries
-*** config
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+*** Libraries
+**** config
+  #+BEGIN_SRC emacs-lisp
 (eval-when-compile (require 'cl-lib))
 
 (defun core/font-lock-replace-symbol (mode reg sym)
@@ -255,69 +255,70 @@ compilation."
   `add-hook!'."
   `(add-hook! :remove ,@args))
 
- #+END_SRC
-*** packages
-**** async
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+**** packages
+***** async
+  #+BEGIN_SRC emacs-lisp
 (use-package async :demand t
   :config
   (dired-async-mode 1))
- #+END_SRC
-**** subr-x
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** subr-x
+  #+BEGIN_SRC emacs-lisp
 (use-package subr-x :demand t :ensure nil)
 
- #+END_SRC
+  #+END_SRC
 
-**** dash
- #+BEGIN_SRC emacs-lisp
+***** dash
+  #+BEGIN_SRC emacs-lisp
 (use-package dash
   :ensure t
   :config
   (dash-enable-font-lock))
 (use-package dash-functional
   :ensure t)
- #+END_SRC
+  #+END_SRC
 
-**** f
- #+BEGIN_SRC emacs-lisp
+***** f
+  #+BEGIN_SRC emacs-lisp
 (use-package f
   :ensure t)
- #+END_SRC
+  #+END_SRC
 
-**** s
-  #+BEGIN_SRC emacs-lisp
+***** s
+   #+BEGIN_SRC emacs-lisp
 (use-package s
   :ensure t)
-  #+END_SRC
+   #+END_SRC
 
-**** ht
-  #+BEGIN_SRC emacs-lisp
+***** ht
+   #+BEGIN_SRC emacs-lisp
 (use-package ht
   :ensure t)
-  #+END_SRC
+   #+END_SRC
 
-**** a
- #+begin_src emacs-lisp
+***** a
+  #+begin_src emacs-lisp
 (require 'let-alist)
 (use-package a
   :ensure t)
- #+end_src
+  #+end_src
 
-**** persistent-soft
- #+BEGIN_SRC emacs-lisp
+***** persistent-soft
+  #+BEGIN_SRC emacs-lisp
 (use-package persistent-soft
   :ensure t)
- #+END_SRC
+  #+END_SRC
 
-**** request
- #+BEGIN_SRC emacs-lisp
-(use-package request :ensure t)
- #+END_SRC
-** Linux
+***** request
   #+BEGIN_SRC emacs-lisp
+(use-package request :ensure t)
+  #+END_SRC
+*** Linux
+   #+BEGIN_SRC emacs-lisp
 (use-package gpastel
-  :if (eq system-type 'gnu/linux))
+  :if (eq system-type 'gnu/linux)
+  :hook (exwm-init . gpastel-mode))
 
 (use-package exec-path-from-shell
   :if (eq system-type 'gnu/linux)
@@ -347,11 +348,12 @@ compilation."
     (unbind-key "s-l" desktop-environment-mode-map)
     (desktop-environment-mode)))
 
- #+END_SRC
+(menu-bar-mode -1)
+  #+END_SRC
 
-** macOS
-  #+BEGIN_SRC emacs-lisp
-(if (eq system-type 'gnu/linux)
+*** DISABLED macOS
+   #+BEGIN_SRC emacs-lisp
+(if (eq system-type 'darwin)
     (set-face-attribute 'default nil
                         :family "Hack Nerd Font"
                         :height 120
@@ -476,10 +478,10 @@ compilation."
 
 
 
-   #+END_SRC
-* Modules
-** General
- #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+** Modules
+*** General
+  #+BEGIN_SRC emacs-lisp
 (setq savehist-file (concat dotfiles-cache-dir "savehist")
       history-length 500
       savehist-save-minibuffer-history t
@@ -642,10 +644,10 @@ compilation."
   (global-unset-key (kbd (format "M-%d" n)))
   )
 
-  #+END_SRC
-** Appearance
-*** config
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+*** Appearance
+**** config
+   #+BEGIN_SRC emacs-lisp
 (if (eq system-type 'gnu/linux)
     (set-face-attribute 'default nil
                         :family "Source Code Pro"
@@ -762,10 +764,10 @@ compilation."
  global-hl-line-mode t
 
 
- jit-lock-defer-time nil             ; defer jit font locking slightly to [try to] improve Emacs performance
- jit-lock-stealth-nice 0.5           ; pause time between fontify chunks
- jit-lock-stealth-time 1             ; time to wait before start of stealth fontify
- jit-lock-stealth-verbose nil        ; silence stealth fontification
+; jit-lock-defer-time nil             ; defer jit font locking slightly to [try to] improve Emacs performance
+; jit-lock-stealth-nice 0.5           ; pause time between fontify chunks
+; jit-lock-stealth-time 1             ; time to wait before start of stealth fontify
+; jit-lock-stealth-verbose nil        ; silence stealth fontification
  ;; `pos-tip' defaults
  pos-tip-internal-border-width 6     ; increase pos-tip width
  pos-tip-border-width 1              ; define border width
@@ -773,23 +775,23 @@ compilation."
  ring-bell-function #'ignore         ; don't beep
  visible-bell nil)                   ; don't blink
 
-     #+END_SRC
+      #+END_SRC
 
-*** Icons
-**** [[https://github.com/domtronn/all-the-icons.el][all-the-icons: Utility for using and formatting various icon fonts.]]
+**** Icons
+***** [[https://github.com/domtronn/all-the-icons.el][all-the-icons: Utility for using and formatting various icon fonts.]]
 
-  Currently, this package provides an interface to the following Icon Fonts
-  - Atom File Icons,       found at https://atom.io/packages/file-icons
-  - FontAwesome Icons,     found at http://fontawesome.io/
-  - GitHub Octicons,       found at http://octicons.github.com
-  - Material Design Icons, found at http://google.github.io/material-design-icons/
-  - Weather Icons,         found at https://erikflowers.github.io/weather-icons/
-  - AllTheIcons,           a custom Icon Font maintained as part of this package
-   #+BEGIN_SRC emacs-lisp
+   Currently, this package provides an interface to the following Icon Fonts
+   - Atom File Icons,       found at https://atom.io/packages/file-icons
+   - FontAwesome Icons,     found at http://fontawesome.io/
+   - GitHub Octicons,       found at http://octicons.github.com
+   - Material Design Icons, found at http://google.github.io/material-design-icons/
+   - Weather Icons,         found at https://erikflowers.github.io/weather-icons/
+   - AllTheIcons,           a custom Icon Font maintained as part of this package
+    #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons)
-   #+END_SRC
-**** [[https://github.com/asok/all-the-icons-ivy][all-the-icons-ivy: Shows icons while using ivy and counsel]]
-  #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** [[https://github.com/asok/all-the-icons-ivy][all-the-icons-ivy: Shows icons while using ivy and counsel]]
+   #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons-ivy
   :ensure t
   :config
@@ -806,11 +808,11 @@ compilation."
                                       all-the-icons-faicon all-the-icons-fileicon
                                       all-the-icons-wicon all-the-icons-alltheicon))
     (advice-add fn :around #'my/*disable-all-the-icons-in-tty)))
-  #+END_SRC
+   #+END_SRC
 
-*** Doom
-**** [[https://github.com/hlissner/emacs-doom-themes][doom-themes: an opinionated pack of modern color-themes]]
-  #+BEGIN_SRC emacs-lisp
+**** Doom
+***** [[https://github.com/hlissner/emacs-doom-themes][doom-themes: an opinionated pack of modern color-themes]]
+   #+BEGIN_SRC emacs-lisp
 (use-package doom-themes
   :config
   :init
@@ -830,17 +832,17 @@ compilation."
 (if (eq system-type 'darwin)
     (load-theme 'doom-one))
 
-  #+END_SRC
-**** [[https://github.com/seagle0128/doom-modeline/tree/6293c63924732f4b5592a8ca580192df2504c159][doom-modeline: A minimal and modern mode-line]]
-    #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/seagle0128/doom-modeline/tree/6293c63924732f4b5592a8ca580192df2504c159][doom-modeline: A minimal and modern mode-line]]
+     #+BEGIN_SRC emacs-lisp
 (use-package doom-modeline
   :init
   (doom-modeline-mode +1))
-    #+END_SRC
+     #+END_SRC
 
-*** Discoverability
-**** [[https://github.com/justbur/emacs-which-key/tree/ba03e7e5bcbe3f7d95be2cfddd71454151bb98c8][which-key: Display available keybindings in popup]]
-   #+BEGIN_SRC emacs-lisp
+**** Discoverability
+***** [[https://github.com/justbur/emacs-which-key/tree/ba03e7e5bcbe3f7d95be2cfddd71454151bb98c8][which-key: Display available keybindings in popup]]
+    #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :init
   (which-key-mode +1)
@@ -855,15 +857,15 @@ compilation."
         which-key-min-display-lines 7)
   (set-face-attribute 'which-key-local-map-description-face nil :weight 'bold)
   (which-key-setup-side-window-bottom))
-   #+END_SRC
-**** [[https://melpa.org/#/discover-my-major][discover-my-major: Discover key bindings and their meaning for the current Emacs major mode]]
-  #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** [[https://melpa.org/#/discover-my-major][discover-my-major: Discover key bindings and their meaning for the current Emacs major mode]]
+   #+BEGIN_SRC emacs-lisp
 (use-package discover-my-major
   :commands (discover-my-major discover-my-mode)
   :bind ("<f1>" . discover-my-major))
-  #+END_SRC
-**** Helpful: A better help buffer
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** Helpful: A better help buffer
+   #+BEGIN_SRC emacs-lisp
 (use-package helpful
   :bind (("C-h f" . helpful-function)
          ("C-h v" . helpful-variable)
@@ -926,32 +928,32 @@ compilation."
     (interactive)
     (when (helpful-visit-reference)
       (org-babel-tangle-jump-to-org))))
-  #+END_SRC
+   #+END_SRC
 
-*** Defaults
-**** [[https://github.com/technomancy/better-defaults/tree/0937ac9a813632c48d114cf959768cda9676db3a][better-defaults: Fixes weird emacs quirks and poor defaults.]]
-  #+BEGIN_SRC emacs-lisp
+**** Defaults
+***** [[https://github.com/technomancy/better-defaults/tree/0937ac9a813632c48d114cf959768cda9676db3a][better-defaults: Fixes weird emacs quirks and poor defaults.]]
+   #+BEGIN_SRC emacs-lisp
 (use-package better-defaults)
 
 (setq mouse-autoselect-window t
       focus-follows-mouse t)
-  #+END_SRC
-**** [[https://github.com/Malabarba/beacon][beacon: Highlight the cursor whenever the window scrolls]]
-   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Malabarba/beacon][beacon: Highlight the cursor whenever the window scrolls]]
+    #+BEGIN_SRC emacs-lisp
 (use-package beacon
   :init
   (beacon-mode 1))
-   #+END_SRC
+    #+END_SRC
 
-**** [[https://github.com/tom-tan/hlinum-mode][hlinum: highlights the current line number]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://github.com/tom-tan/hlinum-mode][hlinum: highlights the current line number]]
+   #+BEGIN_SRC emacs-lisp
 ;; Highlight the line number of the current line.
 (use-package hlinum
   :config
   (hlinum-activate))
-  #+END_SRC
-**** [[https://github.com/joostkremers/visual-fill-column/tree/772d4b25ba19f57409cd03524be0f5bfdc2e8da1][visual-fill-column: Wraps lines at `fill-column']]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/joostkremers/visual-fill-column/tree/772d4b25ba19f57409cd03524be0f5bfdc2e8da1][visual-fill-column: Wraps lines at `fill-column']]
+   #+BEGIN_SRC emacs-lisp
 (use-package visual-fill-column
   :commands visual-fill-column-mode
   :config
@@ -961,10 +963,10 @@ compilation."
    ;; take Emacs 26 line numbers into account
    (+ (if (boundp 'display-line-numbers) 6 0)
       fill-column)))
-  #+END_SRC
-** Navigation
-*** config
- #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+*** Navigation
+**** config
+  #+BEGIN_SRC emacs-lisp
 (setq scroll-error-top-bottom t)
 
 (defun smart-beginning-of-line ()
@@ -988,10 +990,10 @@ compilation."
    (save-excursion
      (other-window 1)
      (quit-window))))
- #+END_SRC
-*** Buffers and Windows
-**** [[https://github.com/abo-abo/ace-window/tree/138a80cbc4e9ed17d3a085a3687f5223a142a9a3][ace-window: Quickly switch windows]]
-   #+BEGIN_SRC emacs-lisp :tangle
+  #+END_SRC
+**** Buffers and Windows
+***** [[https://github.com/abo-abo/ace-window/tree/138a80cbc4e9ed17d3a085a3687f5223a142a9a3][ace-window: Quickly switch windows]]
+    #+BEGIN_SRC emacs-lisp :tangle
 (use-package ace-window
   :commands ace-window
   :config
@@ -1021,25 +1023,25 @@ compilation."
 (global-set-key (kbd "C-x o") 'module/previous-window)
 (global-set-key (kbd "C-x C-o") 'module/select-window)
 (global-set-key (kbd "C-x \\") 'ace-swap-window)
-   #+END_SRC
-**** [[https://www.emacswiki.org/emacs/WindMove][windmove: Move point from window to window using Shift and the arrow keys]]
-  #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** [[https://www.emacswiki.org/emacs/WindMove][windmove: Move point from window to window using Shift and the arrow keys]]
+   #+BEGIN_SRC emacs-lisp
 (use-package windmove
   :commands (windmove-up windmove-down windmove-left windmove-right))
-  #+END_SRC
-**** [[https://github.com/lukhas/buffer-move/tree/cb517ecf8409b5fdcda472d7190c6021f0c49751][buffer-move: Swap buffers without typing C-x b on each window]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/lukhas/buffer-move/tree/cb517ecf8409b5fdcda472d7190c6021f0c49751][buffer-move: Swap buffers without typing C-x b on each window]]
+   #+BEGIN_SRC emacs-lisp
 (use-package buffer-move)
-  #+END_SRC
-**** [[https://github.com/emacsorphanage/transpose-frame/tree/011f420c3496b69fc22d789f64cb8091834feba7][transpose-frame: Transpose windows arrangement in a frame]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/emacsorphanage/transpose-frame/tree/011f420c3496b69fc22d789f64cb8091834feba7][transpose-frame: Transpose windows arrangement in a frame]]
+   #+BEGIN_SRC emacs-lisp
 (use-package transpose-frame
   :commands tranpose-frame)
-  #+END_SRC
+   #+END_SRC
 
-*** Directory
-**** [[https://github.com/syohex/emacs-dired-k][dired-k: highlight dired buffer by file size, modified time, git status]]
-   #+BEGIN_SRC emacs-lisp
+**** directory
+***** [[https://github.com/syohex/emacs-dired-k][dired-k: highlight dired buffer by file size, modified time, git status]]
+    #+BEGIN_SRC emacs-lisp
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
@@ -1109,9 +1111,9 @@ compilation."
 
 (setq wdired-use-dired-vertical-movement 'sometimes)
 (define-key dired-mode-map (kbd "C-s") #'dired-isearch-filenames)
-    #+END_SRC
-**** [[https://github.com/mattiasb/dired-hide-dotfiles][dired-hide-dotfiles: Hide dotfiles in dired]]
-   #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+***** [[https://github.com/mattiasb/dired-hide-dotfiles][dired-hide-dotfiles: Hide dotfiles in dired]]
+    #+BEGIN_SRC emacs-lisp
 (use-package dired-hide-dotfiles
   :config
   (defun my-dired-mode-hook ()
@@ -1123,50 +1125,50 @@ compilation."
     (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
 
   (add-hook 'dired-mode-hook #'my-dired-mode-hook))
-  #+END_SRC
-**** [[https://github.com/DamienCassou/dired-imenu/tree/610e21fe0988c85931d34894d3eee2442c79ab0a][dired-imenu: imenu binding for dired mode]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/DamienCassou/dired-imenu/tree/610e21fe0988c85931d34894d3eee2442c79ab0a][dired-imenu: imenu binding for dired mode]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-imenu)
-  #+END_SRC
-**** [[https://github.com/stsquad/dired-rsync/tree/d7eb558c4efa73d9e1f50709dbd2374041c0f1a9][dired-rsync: Allow rsync from dired buffers]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/stsquad/dired-rsync/tree/d7eb558c4efa73d9e1f50709dbd2374041c0f1a9][dired-rsync: Allow rsync from dired buffers]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-rsync
   :commands dired-rsync
   :config
   (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-hack-utils: Utilities and helpers for dired-hacks collection]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-hack-utils: Utilities and helpers for dired-hacks collection]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-hacks-utils)
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-filter: Ibuffer-like filtering for dired]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-filter: Ibuffer-like filtering for dired]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-filter)
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-avfs: AVFS support for dired]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-avfs: AVFS support for dired]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-avfs
   :commands dired-avfs-open)
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-open: Open files from dired using using custom actions]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-open: Open files from dired using using custom actions]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-open)
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-narrow: Provides live filtering of files in dired buffers]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-narrow: Provides live filtering of files in dired buffers]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-narrow)
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-subtree: Insert subdirectories in a tree-like fashion]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-subtree: Insert subdirectories in a tree-like fashion]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-subtree)
-  #+END_SRC
-**** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-collapse: Collapse unique nested paths in dired listing]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/dired-hacks/tree/20631398b1927e2da36ac2dd818001db544e9f30][dired-collapse: Collapse unique nested paths in dired listing]]
+   #+BEGIN_SRC emacs-lisp
 (use-package dired-collapse)
-  #+END_SRC
-** Editor
-*** config
- #+BEGIN_SRC emacs-lisp :tangle
+   #+END_SRC
+*** Editor
+**** config
+  #+BEGIN_SRC emacs-lisp :tangle
 (setq bookmark-save-flag 1) ;; save after every change
 
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
@@ -1264,56 +1266,56 @@ compilation."
   (indent-region (point-min) (point-max)))
 (global-set-key (kbd "C-c <tab>") 'indent-buffer)
 
- #+END_SRC
+  #+END_SRC
 
-*** Jump / Goto
-**** [[https://github.com/abo-abo/avy/tree/f91ae613a86187c8ca75e86f22e3f5ac9958399c][avy: Jump to arbitrary positions in visible text and select text quickly]]
-  #+BEGIN_SRC emacs-lisp
+**** Jump / Goto
+***** [[https://github.com/abo-abo/avy/tree/f91ae613a86187c8ca75e86f22e3f5ac9958399c][avy: Jump to arbitrary positions in visible text and select text quickly]]
+   #+BEGIN_SRC emacs-lisp
 (use-package avy
   :commands avy-goto-word
   :config
   (setq avy-background t)
   (setq avy-style 'at-full))
-  #+END_SRC
+   #+END_SRC
 
-**** goto-chg
-  #+BEGIN_SRC emacs-lisp
+***** goto-chg
+   #+BEGIN_SRC emacs-lisp
 (use-package goto-chg
   :bind (("C-c \\" . goto-last-change)
          ("C-c |" . goto-last-change-reverse)))
-  #+END_SRC
+   #+END_SRC
 
-*** Selection / Insertion
-**** [[https://github.com/magnars/expand-region.el/tree/1c31447730443d98f90f65dfcb752f347d46ad1b][expand-region: Increase selected region by semantic units]]
-  #+BEGIN_SRC emacs-lisp
+**** Selection / Insertion
+***** [[https://github.com/magnars/expand-region.el/tree/1c31447730443d98f90f65dfcb752f347d46ad1b][expand-region: Increase selected region by semantic units]]
+   #+BEGIN_SRC emacs-lisp
 (use-package expand-region
   :commands er/expand-region)
-  #+END_SRC
-**** [[https://github.com/Fuco1/smartparens/tree/046440700f292c90c4a992f959c8d6725aa9a3bc][smartparens: Automatic insertion, wrapping of parens]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fuco1/smartparens/tree/046440700f292c90c4a992f959c8d6725aa9a3bc][smartparens: Automatic insertion, wrapping of parens]]
+   #+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :commands smartparens-mode)
-  #+END_SRC
-**** [[https://github.com/Fanael/edit-indirect/tree/de645d8144e8a08f039a9c88185121ec81d957ef][edit-indirect: Edit a region in a separate buffer]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Fanael/edit-indirect/tree/de645d8144e8a08f039a9c88185121ec81d957ef][edit-indirect: Edit a region in a separate buffer]]
+   #+BEGIN_SRC emacs-lisp
 (use-package edit-indirect
   :bind (("C-c '" . edit-indirect-dwim)
          :map edit-indirect-mode-map
          ("C-x n" . edit-indirect-commit)))
-  #+END_SRC
+   #+END_SRC
 
-**** [[https://github.com/browse-kill-ring/browse-kill-ring/tree/8debc43e41d7e51532698331c6f283905890b904][browse-kill-ring: Interactively insert items from kill-ring]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://github.com/browse-kill-ring/browse-kill-ring/tree/8debc43e41d7e51532698331c6f283905890b904][browse-kill-ring: Interactively insert items from kill-ring]]
+   #+BEGIN_SRC emacs-lisp
 (use-package browse-kill-ring
   :commands browse-kill-ring)
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
 (global-set-key (kbd "s-y") 'browse-kill-ring)
-  #+END_SRC
+   #+END_SRC
 
-*** Syntax checking
-**** [[https://github.com/flycheck/flycheck/tree/bd8a93240aee78e90c83a54ab3799ff4d02f9f15][flycheck: On-the-fly syntax checking]]
-  #+BEGIN_SRC emacs-lisp
+**** Syntax checking
+***** [[https://github.com/flycheck/flycheck/tree/bd8a93240aee78e90c83a54ab3799ff4d02f9f15][flycheck: On-the-fly syntax checking]]
+   #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :commands flycheck-mode
   :config
@@ -1325,33 +1327,33 @@ compilation."
               (when (not (equal 'emacs-lisp-mode major-mode))
                 (flycheck-mode)))))
 
-  #+END_SRC
-**** [[https://github.com/flycheck/flycheck-color-mode-line/tree/cc474804d4e8088a627485faaf4217a5781aec7d][flycheck-color-mode-line: Change mode line color with Flycheck status]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/flycheck/flycheck-color-mode-line/tree/cc474804d4e8088a627485faaf4217a5781aec7d][flycheck-color-mode-line: Change mode line color with Flycheck status]]
+   #+BEGIN_SRC emacs-lisp
 (use-package flycheck-color-mode-line
   :config
   (with-eval-after-load "flycheck"
     (setq flycheck-highlighting-mode 'symbols)
     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
-  #+END_SRC
+   #+END_SRC
 
-*** Search / Replace
-**** [[https://github.com/mhayashi1120/Emacs-wgrep/tree/379afd89ebd76f63842c8589127d66096a8bb595][wgrep: Writable grep buffer and apply the changes to files]]
-  #+BEGIN_SRC emacs-lisp
+**** Search / Replace
+***** [[https://github.com/mhayashi1120/Emacs-wgrep/tree/379afd89ebd76f63842c8589127d66096a8bb595][wgrep: Writable grep buffer and apply the changes to files]]
+   #+BEGIN_SRC emacs-lisp
 (use-package wgrep
   :commands
   wgrep-change-to-wgrep-mode
   ivy-wgrep-change-to-wgrep-mode)
-  #+END_SRC
-**** [[https://github.com/Wilfred/deadgrep/tree/caeb37b8d6ab83f0eba353d6bbb29678190d4419][deadgrep: Fast, friendly searching with ripgrep]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/Wilfred/deadgrep/tree/caeb37b8d6ab83f0eba353d6bbb29678190d4419][deadgrep: Fast, friendly searching with ripgrep]]
+   #+BEGIN_SRC emacs-lisp
 (use-package deadgrep
   :commands deadgrep
   :bind* (("M-s" . deadgrep)))
-  #+END_SRC
+   #+END_SRC
 
-**** [[https://github.com/syohex/emacs-anzu/tree/592f8ee6d0b1bc543943b36a30063c2d1aac4b22][anzu: Show number of matches in mode-line while searching]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://github.com/syohex/emacs-anzu/tree/592f8ee6d0b1bc543943b36a30063c2d1aac4b22][anzu: Show number of matches in mode-line while searching]]
+   #+BEGIN_SRC emacs-lisp
 (use-package anzu
   :commands anzy-query-replace
   :config
@@ -1362,10 +1364,10 @@ compilation."
         ("M-%" . anzu-query-replace)
         ("C-M-%" . anzu-query-replace-regexp))
   )
-  #+END_SRC
+   #+END_SRC
 
-**** [[https://github.com/abo-abo/swiper/tree/b528f0f3aaa86a40fdec06bdb06c603ce1418bcb][swiper: Display current regex search candidates]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://github.com/abo-abo/swiper/tree/b528f0f3aaa86a40fdec06bdb06c603ce1418bcb][swiper: Display current regex search candidates]]
+   #+BEGIN_SRC emacs-lisp
 (use-package swiper
   :commands swiper
   :bind
@@ -1380,10 +1382,10 @@ compilation."
    "rg -i -M 160 --no-heading --line-number --color never %s .")
   (counsel-grep-base-command
    "rg -i -M 160 --no-heading --line-number --color never '%s' %s"))
-  #+END_SRC
-***** Counsel
-****** [[https://github.com/abo-abo/swiper/][counsel: Various completion functions using Ivy]]
-    #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+****** Counsel
+******* [[https://github.com/abo-abo/swiper/][counsel: Various completion functions using Ivy]]
+     #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :hook
   (after-init . ivy-mode)
@@ -1439,9 +1441,9 @@ compilation."
 
 
 )
-    #+END_SRC
-****** [[https://github.com/ericdanan/counsel-projectile/tree/fb19569c9799e3edac7504d21a5ecf49231e9500][counsel-projectile: Ivy integration for Projectile]]
-    #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+******* [[https://github.com/ericdanan/counsel-projectile/tree/fb19569c9799e3edac7504d21a5ecf49231e9500][counsel-projectile: Ivy integration for Projectile]]
+     #+BEGIN_SRC emacs-lisp
 (use-package counsel-projectile
   :after ivy projectile
   :bind (("C-c s" . counsel-projectile-rg))
@@ -1502,10 +1504,10 @@ go up multiple parent directories."
   (ivy-set-occur 'counsel-projectile 'counsel-projectile-find-file-occur)
 
   (counsel-projectile-mode))
-    #+END_SRC
-*** Completion
-**** [[https://github.com/abo-abo/swiper][ivy: Incremental Vertical completion]]
-    #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+**** Completion
+***** [[https://github.com/abo-abo/swiper][ivy: Incremental Vertical completion]]
+     #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :config
   (setq ivy-height 15                                  ; slightly longer ivy completions list
@@ -1525,14 +1527,14 @@ go up multiple parent directories."
 
 
   (after! magit     (setq magit-completing-read-function #'ivy-completing-read)))
-   #+END_SRC
-***** [[https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a][ivy-historian: Persistently store selected minibuffer candidates]]
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** [[https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a][ivy-historian: Persistently store selected minibuffer candidates]]
+    #+BEGIN_SRC emacs-lisp
 (use-package ivy-historian
 :commands (ivy-historian))
-   #+END_SRC
-***** [[https://github.com/Yevgnen/ivy-rich/tree/f6bfa293c6df0b43cc411876b665816ec3f03d08][ivy-rich: More friendly display transformer for ivy]]
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** [[https://github.com/Yevgnen/ivy-rich/tree/f6bfa293c6df0b43cc411876b665816ec3f03d08][ivy-rich: More friendly display transformer for ivy]]
+    #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
   :config
 (setq ivy-rich-display-transformers-list
@@ -1560,38 +1562,38 @@ go up multiple parent directories."
 (setq ivy-rich-path-style 'abbrev)
 
   (ivy-rich-mode +1))
-   #+END_SRC
-***** [[https://github.com/alexmurray/ivy-xref/tree/1a35fc0f070388701b05b0a455cbe262e924d547][ivy-xref: Ivy interface for xref results]]
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** [[https://github.com/alexmurray/ivy-xref/tree/1a35fc0f070388701b05b0a455cbe262e924d547][ivy-xref: Ivy interface for xref results]]
+    #+BEGIN_SRC emacs-lisp
 (use-package ivy-xref
   :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
-   #+END_SRC
-***** ivy-hydra
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** ivy-hydra
+    #+BEGIN_SRC emacs-lisp
 (use-package ivy-hydra
   :after (ivy hydra))
-   #+END_SRC
-***** ivy-prescient
-#+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** ivy-prescient
+ #+BEGIN_SRC emacs-lisp
 (use-package ivy-prescient
   :after ivy
   :config (ivy-prescient-mode))
 
-#+END_SRC
-**** [[https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a][historian: Persistently store selected minibuffer candidates]]
-  #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** [[https://github.com/PythonNut/historian.el/tree/64f4ef8cd4e417dfa090138a2d4ea1e72fd4456a][historian: Persistently store selected minibuffer candidates]]
+   #+BEGIN_SRC emacs-lisp
 (use-package historian
   :commands (historian))
-  #+END_SRC
-**** [[https://github.com/nonsequitur/smex][smex: M-x Interface with Ido-style fuzzy matching]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/nonsequitur/smex][smex: M-x Interface with Ido-style fuzzy matching]]
+   #+BEGIN_SRC emacs-lisp
 (use-package smex
   :config
   (setq smex-save-file (concat dotfiles-cache-dir "/smex-items"))
   (smex-initialize))
-  #+END_SRC
-**** [[https://github.com/company-mode/company-mode][company: Modular text completion framework]]
-   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/company-mode/company-mode][company: Modular text completion framework]]
+    #+BEGIN_SRC emacs-lisp
 (use-package company
   :config
   ;; Enable company-mode globally.
@@ -1609,68 +1611,68 @@ go up multiple parent directories."
   ;; Sort completion candidates that already occur in the current
   ;; buffer at the top of the candidate list.
   (setq company-transformers '(company-sort-by-occurrence)))
-   #+END_SRC
-***** company-quickhelp
-#+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** company-quickhelp
+ #+BEGIN_SRC emacs-lisp
 (use-package company-quickhelp
        :config
        (setq company-quickhelp-delay 1)
        (company-quickhelp-mode 1))
-#+END_SRC
-***** company-emoji
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** company-emoji
+ #+BEGIN_SRC emacs-lisp
  (use-package company-emoji
        :config
        (company-emoji-init))
 
-#+END_SRC
-***** company-try-hard
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** company-try-hard
+ #+BEGIN_SRC emacs-lisp
 (use-package company-try-hard
   :commands company-try-hard)
 
-#+END_SRC
-***** company-prescient
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+****** company-prescient
+ #+BEGIN_SRC emacs-lisp
 (use-package company-prescient
   :after company
   :config (company-prescient-mode))
 
-#+END_SRC
-**** Prescient: Sorting and filtering for Emacs
-  #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** Prescient: Sorting and filtering for Emacs
+   #+BEGIN_SRC emacs-lisp
 (use-package prescient
   :defer t
   :config (prescient-persist-mode))
-  #+END_SRC
+   #+END_SRC
 
-*** Utilities
-**** [[https://github.com/bbatsov/crux/tree/308f17d914e2cd79cbc809de66d02b03ceb82859][crux: Collection of Ridiculously Useful eXtensions]]
-  #+BEGIN_SRC emacs-lisp
+**** Utilities
+***** [[https://github.com/bbatsov/crux/tree/308f17d914e2cd79cbc809de66d02b03ceb82859][crux: Collection of Ridiculously Useful eXtensions]]
+   #+BEGIN_SRC emacs-lisp
 (use-package crux
   :defer 0.1)
-  #+END_SRC
-**** [[https://github.com/m00natic/vlfi][vlf: Visits part of large file without loading it entirely]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/m00natic/vlfi][vlf: Visits part of large file without loading it entirely]]
+   #+BEGIN_SRC emacs-lisp
 (use-package vlf
   :commands (vlf))
-  #+END_SRC
+   #+END_SRC
 
-**** [[https://github.com/bbatsov/super-save/tree/2a905b8bdfc93bee16e2d62a61c6211bbe009331][super-save: Auto-save buffers, based on your activity.]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://github.com/bbatsov/super-save/tree/2a905b8bdfc93bee16e2d62a61c6211bbe009331][super-save: Auto-save buffers, based on your activity.]]
+   #+BEGIN_SRC emacs-lisp
 (use-package super-save)
-  #+END_SRC
-**** [[https://github.com/dacap/keyfreq/tree/9c665c8c219d18866403897936427bb408e3d6b9][keyfrq: Track command frequencies]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/dacap/keyfreq/tree/9c665c8c219d18866403897936427bb408e3d6b9][keyfrq: Track command frequencies]]
+   #+BEGIN_SRC emacs-lisp
 (use-package keyfreq
   :if (eq system-type 'gnu/linux)
   :init
   (keyfreq-mode +1))
 
-  #+END_SRC
+   #+END_SRC
 
-**** [[https://github.com/sshaw/copy-as-format/tree/a0962b670e26b723ce304b14e3397da453aef84e][copy-as-format: Copy text as GitHub/Slack/JIRA/HipChat/... formatted code]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://github.com/sshaw/copy-as-format/tree/a0962b670e26b723ce304b14e3397da453aef84e][copy-as-format: Copy text as GitHub/Slack/JIRA/HipChat/... formatted code]]
+   #+BEGIN_SRC emacs-lisp
 (use-package copy-as-format
   :bind (:map mode-specific-map
               :prefix-map copy-as-format-prefix-map
@@ -1694,10 +1696,10 @@ go up multiple parent directories."
     (interactive)
     (setq copy-as-format-default "hipchat-pidgin")
     (copy-as-format)))
-  #+END_SRC
+   #+END_SRC
 
-**** [[https://www.emacswiki.org/emacs/RecentFiles][recentf: Builds a list of recently opened files]]
-  #+BEGIN_SRC emacs-lisp
+***** [[https://www.emacswiki.org/emacs/RecentFiles][recentf: Builds a list of recently opened files]]
+   #+BEGIN_SRC emacs-lisp
 (use-package recentf
   :config
   (setq recentf-save-file (concat dotfiles-etc-dir "recentf")
@@ -1705,35 +1707,35 @@ go up multiple parent directories."
         recentf-max-saved-items 100)
   (recentf-mode))
 
-  #+END_SRC
+   #+END_SRC
 
-**** hideshow
-#+BEGIN_SRC emacs-lisp
+***** hideshow
+ #+BEGIN_SRC emacs-lisp
 (use-package hideshow
   :hook (prog-mode  . hs-minor-mode))
-#+END_SRC
-**** outline
-#+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** outline
+ #+BEGIN_SRC emacs-lisp
 (use-package outline
   :hook ((prog-mode message-mode markdown-mode) . outline-minor-mode))
-#+END_SRC
-**** bicyle
-     #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** bicyle
+      #+BEGIN_SRC emacs-lisp
 (use-package bicycle
   :after outline
   :bind (:map outline-minor-mode-map
               ([C-tab] . bicycle-cycle)
               ([backtab] . bicycle-cycle-global)))
-     #+END_SRC
+      #+END_SRC
 
-**** elmacro
-   #+BEGIN_SRC emacs-lisp
+***** elmacro
+    #+BEGIN_SRC emacs-lisp
 (use-package elmacro
   :commands elmacro-mode)
-   #+END_SRC
-** Project Management
-*** [[https://github.com/bbatsov/projectile/tree/fd85829ef2bdb8b2c183ea1b3ccfd50925824d78][projectile: Manage and navigate projects in Emacs easily]]
-     #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+*** Project Management
+**** [[https://github.com/bbatsov/projectile/tree/fd85829ef2bdb8b2c183ea1b3ccfd50925824d78][projectile: Manage and navigate projects in Emacs easily]]
+      #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :custom
   (projectile-use-git-grep t)
@@ -1758,9 +1760,9 @@ go up multiple parent directories."
     "Show magit status."
     (magit-status)))
 
-  #+END_SRC
-*** [[https://github.com/purcell/ibuffer-projectile/tree/76496214144687cee0b5139be2e61b1e400cac87][ibuffer-projectile: Group ibuffer's list by projectile root]]
- #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+**** [[https://github.com/purcell/ibuffer-projectile/tree/76496214144687cee0b5139be2e61b1e400cac87][ibuffer-projectile: Group ibuffer's list by projectile root]]
+  #+BEGIN_SRC emacs-lisp
 (use-package ibuffer-projectile
   :config
   (add-hook 'ibuffer-hook
@@ -1768,37 +1770,37 @@ go up multiple parent directories."
               (ibuffer-projectile-set-filter-groups)
               (unless (eq ibuffer-sorting-mode 'alphabetic)
                 (ibuffer-do-sort-by-alphabetic)))))
-    #+END_SRC
+     #+END_SRC
 
-** Version Control
-*** [[https://github.com/magit/magit/tree/0984d77fbdae0fe85b38dd27036318212b9a1e5d][magit: Interface to the version control system Git]]
- implemented as an Emacs package
-    #+BEGIN_SRC emacs-lisp
+*** Version Control
+**** [[https://github.com/magit/magit/tree/0984d77fbdae0fe85b38dd27036318212b9a1e5d][magit: Interface to the version control system Git]]
+  implemented as an Emacs package
+     #+BEGIN_SRC emacs-lisp
 (use-package magit
   :commands magit-status
   :bind ("C-x g" . magit-status))
-  #+END_SRC
-*** [[https://melpa.org/#/gist][gist: Emacs integration for gist.github.com]]
- #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+**** [[https://melpa.org/#/gist][gist: Emacs integration for gist.github.com]]
+  #+BEGIN_SRC emacs-lisp
 (use-package gist
   :commands gist-mode)
- #+END_SRC
-*** [[https://gitlab.com/pidu/git-timemachine/tree/b97f93d66cffcd69281346845d3a1e32197eda29][git-timemachine: Walk through git revisions of a file]]
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+**** [[https://gitlab.com/pidu/git-timemachine/tree/b97f93d66cffcd69281346845d3a1e32197eda29][git-timemachine: Walk through git revisions of a file]]
+  #+BEGIN_SRC emacs-lisp
 (use-package git-timemachine
   :commands git-timemachine)
- #+END_SRC
-*** gitpatch
- #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+**** gitpatch
+  #+BEGIN_SRC emacs-lisp
 (use-package gitpatch
   :defer t)
- #+END_SRC
+  #+END_SRC
 
-** Languages
-*** [[https://orgmode.org/guide/][org-mode: a powerful system for organizing your complex life with simple plain-text files]]
+*** Languages
+**** [[https://orgmode.org/guide/][org-mode: a powerful system for organizing your complex life with simple plain-text files]]
 
- Org-mode is a powerful system for organizing your complex life with simple plain-text files. It seamlessly integrates all your notes, mindmaps, TODO lists, calendar, day planner, and project schedules into a single system that can be easily searched (e.g. by grep), encrypted (e.g. by GnuPG), backed up and synced (e.g. by Dropbox), imported/exported, and accessed on the go (e.g. on an iPhone or Android smartphone). It can even be used for authoring web pages and documents.
-   #+BEGIN_SRC emacs-lisp
+  Org-mode is a powerful system for organizing your complex life with simple plain-text files. It seamlessly integrates all your notes, mindmaps, TODO lists, calendar, day planner, and project schedules into a single system that can be easily searched (e.g. by grep), encrypted (e.g. by GnuPG), backed up and synced (e.g. by Dropbox), imported/exported, and accessed on the go (e.g. on an iPhone or Android smartphone). It can even be used for authoring web pages and documents.
+    #+BEGIN_SRC emacs-lisp
 (use-package org
   :ensure org-plus-contrib
   :ensure t
@@ -1825,7 +1827,6 @@ go up multiple parent directories."
 
   (setq org-ellipsis "⤵")
 
-  (setq org-startup-folded 'content)
 
 (setq org-list-demote-modify-bullet (quote (("+" . "-")
                                               ("*" . "-")
@@ -1842,9 +1843,9 @@ go up multiple parent directories."
 
   )
 
- #+END_SRC
-**** agenda functions
-  #+BEGIN_SRC emacs-lisp
+  #+END_SRC
+***** agenda functions
+   #+BEGIN_SRC emacs-lisp
 (define-advice org-capture-refile (:around (oldfunc &rest args) org-disable-log-refile)
   "Set `org-log-refile' to nil while capturing."
   (let ((org-log-refile nil))
@@ -1901,10 +1902,10 @@ go up multiple parent directories."
 ;; Record time and note when a task is refiled
 (defvar org-blocks-hidden nil)
 
-  #+END_SRC
+   #+END_SRC
 
-**** export settings
-#+BEGIN_SRC emacs-lisp
+***** export settings
+ #+BEGIN_SRC emacs-lisp
 (setq org-export-backends '(ascii html icalendar latex org odt md))
 
 (setq org-agenda-exporter-settings
@@ -1912,9 +1913,9 @@ go up multiple parent directories."
         (ps-landscape-mode t)
         (org-agenda-add-entry-text-maxlines 5)
         (htmlize-output-type 'css)))
-#+END_SRC
-**** org-attach
-  #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+***** org-attach
+   #+BEGIN_SRC emacs-lisp
 (setq org-attach-auto-tag nil)
 (setq org-attach-method 'mv)
 
@@ -1953,102 +1954,106 @@ kill-ring, prompting if not found.  With prefix, prompt for URL."
         (delete-directory temp-dir)))))
 
 
-  #+END_SRC
-**** packages
-***** [[https://github.com/rexim/org-cliplink/tree/82402cae7e118d67de7328417fd018a18f95fac2][org-cliplink: Insert org-mode links from the clipboard]]
-    #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** packages
+****** [[https://github.com/rexim/org-cliplink/tree/82402cae7e118d67de7328417fd018a18f95fac2][org-cliplink: Insert org-mode links from the clipboard]]
+     #+BEGIN_SRC emacs-lisp
 (use-package org-cliplink
   :commands org-cliplink)
-    #+END_SRC
-***** [[https://github.com/abo-abo/org-download/tree/ac72bf8fce3e855da60687027b6b8601cf1de480][org-download: Image drag-and-drop for Emacs org-mode]]
-    #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+****** [[https://github.com/abo-abo/org-download/tree/ac72bf8fce3e855da60687027b6b8601cf1de480][org-download: Image drag-and-drop for Emacs org-mode]]
+     #+BEGIN_SRC emacs-lisp
 (use-package org-download
   :commands (org-download-screenshot org-download-yank)
   :init
   (setq org-download-method 'attach)
   (setq org-image-actual-width 600))
 
-    #+END_SRC
-***** [[https://github.com/bastibe/org-journal/tree/159794a3f5f28eeab8f87a0378d81d0b2d2cb6fc][org-journal: a simple org-mode based journaling mode]]
-    #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+****** [[https://github.com/bastibe/org-journal/tree/159794a3f5f28eeab8f87a0378d81d0b2d2cb6fc][org-journal: a simple org-mode based journaling mode]]
+     #+BEGIN_SRC emacs-lisp
 (use-package org-journal
   :commands (org-journal-new-entry)
   :init
   (setq org-journal-file-format "%Y-%m-%d.org"))
-    #+END_SRC
-***** [[https://github.com/snosov1/toc-org/tree/2539b4be401d006e2752f6ad3b88e696889a7fc8][toc-org: up-to-date table of contents in org files without exporting]]
-   #+BEGIN_SRC emacs-lisp
+     #+END_SRC
+****** [[https://github.com/snosov1/toc-org/tree/2539b4be401d006e2752f6ad3b88e696889a7fc8][toc-org: up-to-date table of contents in org files without exporting]]
+    #+BEGIN_SRC emacs-lisp
 (use-package toc-org
   :ensure t
   :config
   (add-hook 'org-mode-hook 'toc-org-mode))
-   #+END_SRC
-***** org-pomodoro
-    #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+****** org-pomodoro
+     #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
   :commands org-pomodoro)
-    #+END_SRC
-*** Markup
-**** [[https://github.com/larstvei/ox-gfm/tree/99f93011b069e02b37c9660b8fcb45dab086a07f][ox-gfm: Github Flavored Markdown Back-End for Org Export Engine]]
-  #+BEGIN_SRC emacs-lisp
-(use-package ox-gfm)
-  #+END_SRC
-**** [[https://github.com/jrblevin/markdown-mode/tree/115f77df9755c6a453f3e5d9623ff885d207ea82][markdown-mode: Major mode for Markdown-formatted text]]
+     #+END_SRC
+**** Markup
+***** [[https://github.com/larstvei/ox-gfm/tree/99f93011b069e02b37c9660b8fcb45dab086a07f][ox-gfm: Github Flavored Markdown Back-End for Org Export Engine]]
    #+BEGIN_SRC emacs-lisp
+(use-package ox-gfm)
+   #+END_SRC
+***** [[https://github.com/jrblevin/markdown-mode/tree/115f77df9755c6a453f3e5d9623ff885d207ea82][markdown-mode: Major mode for Markdown-formatted text]]
+    #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :commands markdown-mode
   :mode (("\\.markdown$" . markdown-mode)
          ("\\.md$" . markdown-mode))
   :config
   (add-hook 'markdown-mode-hook 'visual-line-mode))
-   #+END_SRC
-*** Epub
-**** Nov: Read EPUBs
-  #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+**** Epub
+***** Nov: Read EPUBs
+   #+BEGIN_SRC emacs-lisp
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
-  #+END_SRC
-*** Utilities
-**** [[https://github.com/ieure/scratch-el][scratch: Create scratch buffers that are in the same mode as the current buffer]]
-   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+**** Utilities
+***** [[https://github.com/ieure/scratch-el][scratch: Create scratch buffers that are in the same mode as the current buffer]]
+    #+BEGIN_SRC emacs-lisp
 (use-package scratch
   :commands
   (scratch))
-   #+END_SRC
-**** [[https://github.com/Fanael/persistent-scratch/tree/71371a7ce9846754276350fd577dc7543eb52878][persistent-scratch: Preserve the scratch buffer across Emacs sessions]]
-  #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** [[https://github.com/Fanael/persistent-scratch/tree/71371a7ce9846754276350fd577dc7543eb52878][persistent-scratch: Preserve the scratch buffer across Emacs sessions]]
+   #+BEGIN_SRC emacs-lisp
 (use-package persistent-scratch
   :init
   (persistent-scratch-setup-default))
-  #+END_SRC
-**** [[https://github.com/EricCrosson/unkillable-scratch/tree/b24c2a760529833f230c14cb02ff6e7ec92288ab][unkillable-scratch: Disallow the scratch buffer from being killed]]
-   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/EricCrosson/unkillable-scratch/tree/b24c2a760529833f230c14cb02ff6e7ec92288ab][unkillable-scratch: Disallow the scratch buffer from being killed]]
+    #+BEGIN_SRC emacs-lisp
 (use-package unkillable-scratch
   :ensure t
   :config
   (unkillable-scratch t)
   (setq unkillable-scratch-do-not-reset-scratch-buffer t))
-   #+END_SRC
-**** [[https://github.com/joaotavora/yasnippet/tree/e45e3de357fbd4289fcfa3dd26aaa7be357fb0b8][yasnippet: Snippet Extension for Emacs]]
-   #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** [[https://github.com/joaotavora/yasnippet/tree/e45e3de357fbd4289fcfa3dd26aaa7be357fb0b8][yasnippet: Snippet Extension for Emacs]]
+    #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :commands (yas-insert-snippet)
   :config
   (yas-global-mode 1))
-   #+END_SRC
-**** [[https://github.com/AndreaCrotti/yasnippet-snippets/tree/15e4b08f7484c049d6b043263c5e09bc73846e32][yasnippet-snippet: Collection of yasnippet snippets]]
-  #+BEGIN_SRC emacs-lisp
+    #+END_SRC
+***** [[https://github.com/AndreaCrotti/yasnippet-snippets/tree/15e4b08f7484c049d6b043263c5e09bc73846e32][yasnippet-snippet: Collection of yasnippet snippets]]
+   #+BEGIN_SRC emacs-lisp
 (use-package yasnippet-snippets
   :config
   (require 'yasnippet-snippets))
-  #+END_SRC
-**** [[https://github.com/abo-abo/auto-yasnippet/tree/624b0d9711222073a2a3f2186e2605eb99fc83c9][auto-yasnippet: Quickly create disposable yasnippets]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/abo-abo/auto-yasnippet/tree/624b0d9711222073a2a3f2186e2605eb99fc83c9][auto-yasnippet: Quickly create disposable yasnippets]]
+   #+BEGIN_SRC emacs-lisp
 (use-package auto-yasnippet
   :config
   (require 'auto-yasnippet))
-  #+END_SRC
-**** [[https://github.com/hniksic/emacs-htmlize/tree/8db0aa6aab77475a732b7363f0d57bd3933c18fd][htmlize: Convert buffer text and decorations to HTML]]
-  #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+***** [[https://github.com/hniksic/emacs-htmlize/tree/8db0aa6aab77475a732b7363f0d57bd3933c18fd][htmlize: Convert buffer text and decorations to HTML]]
+   #+BEGIN_SRC emacs-lisp
 (use-package htmlize)
-  #+END_SRC
+   #+END_SRC
+*** new test
+    :PROPERTIES:
+    :CREATED:  [2019-06-18 Tue 15:40]
+    :END:
